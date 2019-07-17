@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  arlas-server:
+    image: gisaia/arlas-server:${ARLAS_VERSION:-latest}
+    container_name: arlas-server
+    environment:
+      - ARLAS_HOST="arlas-server"
+      - ARLAS_ELASTIC_CLUSTER="docker-cluster"
+      - ARLAS_ELASTIC_NODES=elasticsearch:9300
+      - ARLAS_PREFIX="${ARLAS_PREFIX:-/arlas}"
+      - ARLAS_APP_PATH="${ARLAS_APP_PATH:-/}"
+      - ARLAS_BASE_URI="${ARLAS_BASE_URI:-http://arlas-server:9999/arlas/}"
+      - ARLAS_SERVICE_EXPLORE_ENABLE="${ARLAS_SERVICE_EXPLORE_ENABLE:-true}"
+    ports:
+      - 19999:9999
+    command: ["/opt/app/wait-for-elasticsearch.sh"]
+
