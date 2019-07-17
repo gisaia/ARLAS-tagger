@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.arlas</groupId>
+    <artifactId>arlas-tagger-core</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>ARLAS Tagger core</name>
+
+    <parent>
+        <artifactId>arlas-tagger-parent</artifactId>
+        <groupId>io.arlas</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-core</artifactId>
+            <version>${dropwizard.version}</version>
+        </dependency>
+        <!-- ____________________________________________________ -->
+        <!-- SWAGGER -->
+        <!-- ____________________________________________________ -->
+        <dependency>
+            <groupId>com.smoketurner</groupId>
+            <artifactId>dropwizard-swagger</artifactId>
+            <version>${dropwizard.swagger.version}</version>
+            <exclusions>
+                <exclusion><groupId>org.glassfish.jersey.containers</groupId><artifactId>jersey-container-servlet-core</artifactId></exclusion>
+                <exclusion><groupId>org.reflections</groupId><artifactId>reflections</artifactId></exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.10</version>
+            <exclusions>
+                <exclusion><groupId>com.google.guava</groupId><artifactId>guava</artifactId></exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- ____________________________________________________ -->
+        <!-- ARLAS-server -->
+        <!-- ____________________________________________________ -->
+        <dependency>
+            <groupId>io.arlas</groupId>
+            <artifactId>arlas-core</artifactId>
+            <version>${arlas-server.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.arlas</groupId>
+            <artifactId>arlas-tests</artifactId>
+            <version>${arlas-server.version}</version>
+            <type>test-jar</type>
+        </dependency>
+
+
+        <!-- ____________________________________________________ -->
+        <!-- ELASTICSEARCH -->
+        <!-- ____________________________________________________ -->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>transport</artifactId>
+            <version>${elastic.version}</version>
+        </dependency>
+
+        <!-- ____________________________________________________ -->
+        <!-- KAFKA -->
+        <!-- ____________________________________________________ -->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>${kafka.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>connect-json</artifactId>
+            <version>${kafka-connect.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>
