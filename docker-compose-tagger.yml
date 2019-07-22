@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  arlas-tagger:
+    build:
+      context: .
+      dockerfile: ${DOCKERFILE:-Dockerfile-package-only-tagger}
+    image: gisaia/arlas-tagger:${ARLAS_TAGGER_VERSION:-latest}
+    container_name: arlas-tagger
+    environment:
+      - ARLAS_ELASTIC_CLUSTER="docker-cluster"
+      - ARLAS_ELASTIC_NODES=elasticsearch:9300
+      - ARLAS_SERVER_NODE=${ARLAS_SERVER_NODE}
+      - ARLAS_TAGGER_PREFIX=${ARLAS_TAGGER_PREFIX:-/arlas_tagger}
+      - ARLAS_TAGGER_APP_PATH=${ARLAS_TAGGER_APP_PATH:-/}
+      - KAFKA_BATCH_SIZE="${KAFKA_BATCH_SIZE:-10}"
+      - KAFKA_BROKERS=${KAFKA_BROKERS:-kafka:9092}
+      - KAFKA_CONSUMER_GROUP_ID_TAGREF_LOG="${KAFKA_CONSUMER_GROUP_ID_TAGREF_LOG:-tagref_log_consumer_group}"
+      - KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS="${KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS:-execute_tags_consumer_group}"
+      - KAFKA_TOPIC_TAGREF_LOG="${KAFKA_TOPIC_TAGREF_LOG:-tagref_log}"
+      - KAFKA_TOPIC_EXECUTE_TAGS="${KAFKA_TOPIC_EXECUTE_TAGS:-execute_tags}"
+    ports:
+      - 19998:9998
+    command: ["/opt/app/wait-for-tagger-deps.sh $$KAFKA_BROKERS $$ARLAS_ELASTIC_NODES $$ARLAS_SERVER_NODE"]
