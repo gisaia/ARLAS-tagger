@@ -14,6 +14,21 @@
     </modules>
     <packaging>pom</packaging>
 
+    <repositories>
+        <repository>
+            <id>gisaia-public</id>
+            <url>https://dl.cloudsmith.io/public/gisaia/public/maven</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <properties>
         <!-- PROJECT-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -49,21 +64,6 @@
 
     </properties>
 
-    <repositories>
-        <repository>
-            <id>gisaia-public</id>
-            <url>https://dl.cloudsmith.io/public/gisaia/public/maven</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-    
     <dependencies>
         <!-- ____________________________________________________ -->
         <!-- DEV -->

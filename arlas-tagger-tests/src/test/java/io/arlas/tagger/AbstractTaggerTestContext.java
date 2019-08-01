@@ -19,7 +19,6 @@
 
 package io.arlas.tagger;
 
-import io.arlas.server.AbstractTestContext;
 import io.restassured.RestAssured;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

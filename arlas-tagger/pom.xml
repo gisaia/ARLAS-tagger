@@ -21,12 +21,6 @@
             <artifactId>arlas-tagger-rest</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
-        <dependency>
-            <groupId>io.arlas</groupId>
-            <artifactId>arlas-server</artifactId>
-            <version>${arlas-server.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
