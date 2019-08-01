@@ -19,10 +19,9 @@
 
 package io.arlas.tagger.rest.tag;
 
-import io.arlas.server.AbstractTestWithCollection;
-import io.arlas.server.CollectionTool;
-import io.arlas.server.rest.explore.SearchServiceIT;
 import io.arlas.tagger.AbstractTaggerTestContext;
+import io.arlas.tagger.ArlasServerContext;
+import io.arlas.tagger.CollectionTool;
 import io.arlas.tagger.model.Tag;
 import io.arlas.tagger.model.request.TagRequest;
 import org.hamcrest.Description;
@@ -50,7 +49,7 @@ public class TagIT extends AbstractTaggerTestContext {
     Logger LOGGER = LoggerFactory.getLogger(TagIT.class);
 
     @Override
-    public String getUrlPath(String collection) {
+    public String getTaggerUrlPath(String collection) {
         super.setTaggerRestAssured();
         LOGGER.info(arlasTaggerPath);
         return arlasTaggerPath + "write/"+collection;
@@ -59,13 +58,13 @@ public class TagIT extends AbstractTaggerTestContext {
     @Before
     public void before(){
         super.setServerRestAssured();
-        AbstractTestWithCollection.beforeClass();
+        ArlasServerContext.beforeClass();
     }
 
     @After
     public void after() throws IOException {
         super.setServerRestAssured();
-        AbstractTestWithCollection.afterClass();
+        ArlasServerContext.afterClass();
     }
 
     @Test
@@ -79,7 +78,7 @@ public class TagIT extends AbstractTaggerTestContext {
         given().contentType("application/json")
                 .body(tr)
                 .when()
-                .post(getUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
+                .post(getTaggerUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
                 .then()
                 .statusCode(200);
 
@@ -87,7 +86,7 @@ public class TagIT extends AbstractTaggerTestContext {
 
         super.setServerRestAssured();
         given()
-                .get(new SearchServiceIT().getUrlPath(CollectionTool.COLLECTION_NAME))
+                .get(ArlasServerContext.getArlasServerUrlPath(CollectionTool.COLLECTION_NAME))
                 .then()
                 .statusCode(200)
                 .body("hits[0].data.params.tags.size()",equalTo(1))
@@ -100,7 +99,7 @@ public class TagIT extends AbstractTaggerTestContext {
         given().contentType("application/json")
                 .body(tr)
                 .when()
-                .post(getUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
+                .post(getTaggerUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
                 .then()
                 .statusCode(200);
 
@@ -108,7 +107,7 @@ public class TagIT extends AbstractTaggerTestContext {
 
         super.setServerRestAssured();
         given()
-                .get(new SearchServiceIT().getUrlPath(CollectionTool.COLLECTION_NAME))
+                .get(ArlasServerContext.getArlasServerUrlPath(CollectionTool.COLLECTION_NAME))
                 .then()
                 .statusCode(200)
                 .body("hits[0].data.params.tags.size()",equalTo(2))
@@ -140,7 +139,7 @@ public class TagIT extends AbstractTaggerTestContext {
         given().contentType("application/json")
                 .body(tr)
                 .when()
-                .post(getUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
+                .post(getTaggerUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
                 .then()
                 .statusCode(200);
 
@@ -148,7 +147,7 @@ public class TagIT extends AbstractTaggerTestContext {
 
         super.setServerRestAssured();
         given()
-                .get(new SearchServiceIT().getUrlPath(CollectionTool.COLLECTION_NAME))
+                .get(ArlasServerContext.getArlasServerUrlPath(CollectionTool.COLLECTION_NAME))
                 .then()
                 .statusCode(200)
                 .body("hits[0].data.params.job.size()",equalTo(2))
@@ -169,7 +168,7 @@ public class TagIT extends AbstractTaggerTestContext {
         given().contentType("application/json")
                 .body(tr)
                 .when()
-                .post(getUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
+                .post(getTaggerUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
                 .then()
                 .statusCode(200);
 
@@ -180,7 +179,7 @@ public class TagIT extends AbstractTaggerTestContext {
         given().contentType("application/json")
                 .body(tr)
                 .when()
-                .post(getUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
+                .post(getTaggerUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
                 .then()
                 .statusCode(200);
 
@@ -191,7 +190,7 @@ public class TagIT extends AbstractTaggerTestContext {
         given().contentType("application/json")
                 .body(tr)
                 .when()
-                .post(getUrlPath(CollectionTool.COLLECTION_NAME)+UNTAG_SUFFIX)
+                .post(getTaggerUrlPath(CollectionTool.COLLECTION_NAME)+UNTAG_SUFFIX)
                 .then()
                 .statusCode(200);
 
@@ -200,7 +199,7 @@ public class TagIT extends AbstractTaggerTestContext {
         super.setServerRestAssured();
         // Only v2 remains
         given()
-                .get(new SearchServiceIT().getUrlPath(CollectionTool.COLLECTION_NAME))
+                .get(ArlasServerContext.getArlasServerUrlPath(CollectionTool.COLLECTION_NAME))
                 .then()
                 .statusCode(200)
                 .body("hits[0].data.params.tags.size()", equalTo(1))
@@ -213,7 +212,7 @@ public class TagIT extends AbstractTaggerTestContext {
         given().contentType("application/json")
                 .body(tr)
                 .when()
-                .post(getUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
+                .post(getTaggerUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
                 .then()
                 .statusCode(200);
         Thread.currentThread().sleep(30000);
@@ -225,14 +224,14 @@ public class TagIT extends AbstractTaggerTestContext {
         given().contentType("application/json")
                 .body(remove)
                 .when()
-                .post(getUrlPath(CollectionTool.COLLECTION_NAME)+UNTAG_SUFFIX)
+                .post(getTaggerUrlPath(CollectionTool.COLLECTION_NAME)+UNTAG_SUFFIX)
                 .then()
                 .statusCode(200);
 
         boolean success = doUntil(o -> {
                     super.setServerRestAssured();
                     return given()
-                            .get(new SearchServiceIT().getUrlPath(CollectionTool.COLLECTION_NAME))
+                            .get(ArlasServerContext.getArlasServerUrlPath(CollectionTool.COLLECTION_NAME))
                             .then()
                             .extract().path("hits.data.params.tags"); }
                 , everyItem(nullValue()), 10, 10);

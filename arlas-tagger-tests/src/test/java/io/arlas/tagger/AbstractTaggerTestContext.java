@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
-public abstract class AbstractTaggerTestContext extends AbstractTestContext {
+public abstract class AbstractTaggerTestContext {
     static Logger LOGGER = LoggerFactory.getLogger(AbstractTaggerTestContext.class);
 
     protected static String arlasTaggerPath;
@@ -60,4 +60,6 @@ public abstract class AbstractTaggerTestContext extends AbstractTestContext {
         RestAssured.port = arlasPort;
         RestAssured.basePath = "";
     }
+    protected abstract String getTaggerUrlPath(String collection);
+
 }
