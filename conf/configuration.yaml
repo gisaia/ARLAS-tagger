@@ -1,0 +1,49 @@
+server:
+  requestLog:
+    appenders:
+      - type: file
+        currentLogFilename: ${ARLAS_TAGGER_ACCESS_LOG_FILE:-arlas-tagger-access.log}
+        archivedLogFilenamePattern: ${ACCESS_TAGGER_LOG_FILE_ARCHIVE:-arlas-tagger-access-%d.log.gz}
+  registerDefaultExceptionMappers: false
+  type: simple
+  rootPath: ${ARLAS_TAGGER_PREFIX:-/arlas_tagger}
+  applicationContextPath: ${ARLAS_TAGGER_APP_PATH:-/}
+  adminContextPath: ${ARLAS_TAGGER_ADMIN_PATH:-/admin}
+  connector:
+    type: http
+    port: ${ARLAS_TAGGER_PORT:-9998}
+  maxThreads: ${ARLAS_TAGGER_MAX_THREADS:-1024}
+  minThreads: ${ARLAS_TAGGER_MIN_THREADS:-8}
+  maxQueuedRequests: ${ARLAS_TAGGER_MAX_QUEUED_REQUESTS:-1024}
+
+########################################################
+############ ARLAS TAGGER                ###############
+########################################################
+swagger: # Configuration of SWAGGER for generating documentation and APIs
+  resourcePackage: io.arlas.tagger.rest # The java package to process for extracting the APIs
+
+kafka-configuration:
+  status-timeout: ${TAGGING_STATUS_TIMEOUT:-3600000}
+  kafka-consumer-poll-timeout: ${KAFKA_CONSUMER_POLL_TIMEOUT:-100}
+  kafka-batch-size: ${KAFKA_BATCH_SIZE:-10}
+  kafka-bootstrap-servers: ${KAFKA_BROKERS:-localhost:9092}
+  kafka-consumer-group-id-tagref-log: ${KAFKA_CONSUMER_GROUP_ID_TAGREF_LOG:-tagref_log_consumer_group}
+  kafka-consumer-group-id-execute-tags: ${KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS:-execute_tags_consumer_group}
+  kafka-topic-tagref-log: ${KAFKA_TOPIC_TAGREF_LOG:-tagref_log}
+  kafka-topic-execute-tags: ${KAFKA_TOPIC_EXECUTE_TAGS:-execute_tags}
+
+elastic-configuration:
+  elastic-nodes: ${ARLAS_ELASTIC_NODES:-localhost:9300}
+  elastic-sniffing: ${ARLAS_ELASTIC_SNIFFING:-false}
+  elastic-cluster: ${ARLAS_ELASTIC_CLUSTER:-elasticsearch}
+
+arlas-collections-configuration:
+  arlas-index:  ${ARLAS_COLLECTION_INDEX:-.arlas}
+  arlas-cache-size: ${ARLAS_CACHE_SIZE:-1000}
+  arlas-cache-timeout: ${ARLAS_CACHE_TIMEOUT:-60}
+
+arlas-cors-enabled: ${ARLAS_TAGGER_CORS_ENABLED:-true}
+
+
+
+
