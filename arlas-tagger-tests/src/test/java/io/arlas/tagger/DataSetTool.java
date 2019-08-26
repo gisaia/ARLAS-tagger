@@ -31,15 +31,12 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
-import org.geojson.LngLatAlt;
-import org.geojson.Polygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,43 +46,19 @@ public class DataSetTool {
     public final static String DATASET_INDEX_NAME="dataset";
     public final static String DATASET_TYPE_NAME="mytype";
     public final static String DATASET_ID_PATH="id";
-    public final static String DATASET_GEO_PARAMS="geo_params";
     public final static String DATASET_GEOMETRY_PATH="geo_params.geometry";
     public final static String DATASET_CENTROID_PATH="geo_params.centroid";
     public final static String DATASET_TIMESTAMP_PATH="params.startdate";
-    public final static String DATASET_EXCLUDE_FIELDS = "params.ci*";
     public final static String DATASET_TAGGABLE_FIELDS="params.tags,params.job";
-    public final static String DATASET_EXCLUDE_WFS_FIELDS="params.country";
-    public final static String DATASET_TIMESTAMP_FORMAT = "epoch_millis";
-    public static final String DATASET_INSPIRE_LINEAGE = "Dataset loaded for testing";
-    public static final String DATASET_INSPIRE_TOPIC_CATEGORY = "biota";
-    public static final String DATASET_DUBLIN_CORE_TITLE = "geodata";
-    public static final String DATASET_DUBLIN_CORE_DESCRIPTION = "geodata set for testing";
-    public static final String DATASET_DUBLIN_CORE_LANGUAGE = "eng";
     public static final String[] jobs = {"Actor", "Announcers", "Archeologists", "Architect", "Brain Scientist", "Chemist", "Coach", "Coder", "Cost Estimator", "Dancer", "Drafter"};
-    public static final String[] cities = {"Paris", "London", "New York", "Tokyo", "Toulouse", "Marseille", "Lyon", "Bordeaux", "Lille", "Albi", "Calais"};
-    public static final String[] countries = {"Afghanistan",
-            "Albania",
-            "Algeria",
-            "Andorra",
-            "Angola",
-            "Antigua",
-            "Barbuda",
-            "Argentina",
-            "Armenia",
-            "Aruba",
-            "Australia",
-            "Austria"
-    };
 
     public static AdminClient adminClient;
     public static Client client;
-    public static boolean ALIASED_COLLECTION;
 
     static {
         try {
             Settings settings = null;
-            List<Pair<String,Integer>> nodes = ElasticConfiguration.getElasticNodes(Optional.ofNullable(System.getenv("ARLAS_ELASTIC_NODES")).orElse("localhost:9300"));
+            List<Pair<String,Integer>> nodes = ElasticConfiguration.getElasticNodes(Optional.ofNullable(System.getenv("ARLAS_ELASTIC_NODES")).orElse("localhost:19300"));
             if ("localhost".equals(nodes.get(0).getLeft())) {
                 settings = Settings.EMPTY;
             } else {
@@ -94,8 +67,7 @@ public class DataSetTool {
             client = new PreBuiltTransportClient(settings)
                     .addTransportAddress(new TransportAddress(InetAddress.getByName(nodes.get(0).getLeft()), nodes.get(0).getRight()));
             adminClient = client.admin();
-            ALIASED_COLLECTION = Optional.ofNullable(System.getenv("ALIASED_COLLECTION")).orElse("false").equals("true");
-            LOGGER.info("Load data in " + nodes.get(0).getLeft() + ":" + nodes.get(0).getRight() + " with ALIASED_COLLECTION=" + ALIASED_COLLECTION);
+            LOGGER.info("Load data in " + nodes.get(0).getLeft() + ":" + nodes.get(0).getRight());
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
         }
@@ -106,21 +78,9 @@ public class DataSetTool {
     }
 
     public static void loadDataSet() throws IOException {
-        if(!ALIASED_COLLECTION) {
-            //Create a single index with all data
-            createIndex(DATASET_INDEX_NAME,"dataset.mapping.json");
-            fillIndex(DATASET_INDEX_NAME,-170,170,-80,80);
-            LOGGER.info("Index created : " + DATASET_INDEX_NAME);
-        } else {
-            //Create 2 indeces, split data between them and create an alias above these 2 indeces
-            createIndex(DATASET_INDEX_NAME+"_original","dataset.mapping.json");
-            fillIndex(DATASET_INDEX_NAME+"_original",-170,0,-80,80);
-            createIndex(DATASET_INDEX_NAME+"_alt","dataset.alternate.mapping.json");
-            fillIndex(DATASET_INDEX_NAME+"_alt",10,170,-80,80);
-            adminClient.indices().prepareAliases().addAlias(DATASET_INDEX_NAME+"*",DATASET_INDEX_NAME).get();
-            LOGGER.info("Indeces created : " + DATASET_INDEX_NAME + "_original," + DATASET_INDEX_NAME + "_alt");
-            LOGGER.info("Alias created : " + DATASET_INDEX_NAME);
-        }
+        createIndex(DATASET_INDEX_NAME,"dataset.mapping.json");
+        fillIndex(DATASET_INDEX_NAME,-170,170,-80,80);
+        LOGGER.info("Index created : " + DATASET_INDEX_NAME);
     }
 
     private static void createIndex(String indexName, String mappingFileName) throws IOException {
@@ -149,12 +109,7 @@ public class DataSetTool {
     }
 
     public static void clearDataSet() {
-        if(!ALIASED_COLLECTION) {
-            adminClient.indices().prepareDelete(DATASET_INDEX_NAME).get();
-        } else {
-            adminClient.indices().prepareDelete(DATASET_INDEX_NAME+"_original").get();
-            adminClient.indices().prepareDelete(DATASET_INDEX_NAME+"_alt").get();
-        }
+        adminClient.indices().prepareDelete(DATASET_INDEX_NAME).get();
     }
 
     public static void close() {

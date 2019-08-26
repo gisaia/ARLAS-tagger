@@ -22,7 +22,6 @@ package io.arlas.tagger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.arlas.server.model.CollectionReferenceParameters;
 import io.arlas.server.model.DublinCoreElementName;
-import io.arlas.server.model.Inspire;
 import io.arlas.server.model.enumerations.OperatorEnum;
 import io.arlas.server.model.request.Expression;
 import io.arlas.server.model.request.Filter;
@@ -32,7 +31,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import static io.restassured.RestAssured.given;
@@ -77,18 +75,7 @@ public class CollectionTool extends ArlasServerContext {
             params.geometryPath = DataSetTool.DATASET_GEOMETRY_PATH;
             params.centroidPath = DataSetTool.DATASET_CENTROID_PATH;
             params.timestampPath = DataSetTool.DATASET_TIMESTAMP_PATH;
-            params.excludeFields = DataSetTool.DATASET_EXCLUDE_FIELDS;
-            params.excludeWfsFields = DataSetTool.DATASET_EXCLUDE_WFS_FIELDS;
             params.taggableFields = DataSetTool.DATASET_TAGGABLE_FIELDS;
-            params.inspire = new Inspire();
-            params.inspire.lineage = DataSetTool.DATASET_INSPIRE_LINEAGE;
-            params.inspire.topicCategories = new ArrayList<>();
-            params.inspire.topicCategories.add(DataSetTool.DATASET_INSPIRE_TOPIC_CATEGORY);
-            params.dublinCoreElementName = new DublinCoreElementName();
-            params.dublinCoreElementName.title = DataSetTool.DATASET_DUBLIN_CORE_TITLE;
-            params.dublinCoreElementName.description = DataSetTool.DATASET_DUBLIN_CORE_DESCRIPTION;
-            params.dublinCoreElementName.language = DataSetTool.DATASET_DUBLIN_CORE_LANGUAGE;
-
 
             // PUT new collection
             given().contentType("application/json").body(params).when().put(getUrlPath()).then().statusCode(200);
@@ -129,8 +116,6 @@ public class CollectionTool extends ArlasServerContext {
                         params.geometryPath = DataSetTool.DATASET_GEOMETRY_PATH;
                         params.centroidPath = DataSetTool.DATASET_CENTROID_PATH;
                         params.timestampPath = DataSetTool.DATASET_TIMESTAMP_PATH;
-                        params.excludeFields = DataSetTool.DATASET_EXCLUDE_FIELDS;
-                        params.excludeWfsFields = DataSetTool.DATASET_EXCLUDE_WFS_FIELDS;
                         params.taggableFields = DataSetTool.DATASET_TAGGABLE_FIELDS;
                         params.dublinCoreElementName=dublinCoreElementName;
                         String url = arlasPath + "collections/" + dublinCoreElementName.title.split(" ")[0].toLowerCase();

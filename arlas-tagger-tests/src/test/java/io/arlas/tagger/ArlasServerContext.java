@@ -19,29 +19,25 @@ package io.arlas.tagger;
  */
 
 import io.restassured.RestAssured;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public abstract class ArlasServerContext {
     static Logger LOGGER = LoggerFactory.getLogger(ArlasServerContext.class);
 
     protected static String arlasPath;
-    protected List<Pair<String, String>> extraParams = new ArrayList<>();
 
     public ArlasServerContext() {
     }
 
     static {
         String arlasHost = Optional.ofNullable(System.getenv("ARLAS_HOST")).orElse("localhost");
-        int arlasPort = Integer.valueOf(Optional.ofNullable(System.getenv("ARLAS_PORT")).orElse("9999"));
+        int arlasPort = Integer.valueOf(Optional.ofNullable(System.getenv("ARLAS_PORT")).orElse("19999"));
         RestAssured.baseURI = "http://" + arlasHost;
         RestAssured.port = arlasPort;
         RestAssured.basePath = "";

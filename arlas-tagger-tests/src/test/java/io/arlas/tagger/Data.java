@@ -19,26 +19,11 @@
 
 package io.arlas.tagger;
 
-import org.geojson.Polygon;
-
 public class Data {
     public String id;
-    public String fullname;
     public DataParams params = new DataParams();
-    public GeometryParams geo_params = new GeometryParams();
 
     public class DataParams {
         public String job;
-        public int age;
-        public Integer weight;
-        public String city;
-        public String country;
-        public Long startdate;
-        public Long stopdate;
-    }
-
-    public class GeometryParams {
-        public Polygon geometry;
-        public String centroid;
     }
 }
