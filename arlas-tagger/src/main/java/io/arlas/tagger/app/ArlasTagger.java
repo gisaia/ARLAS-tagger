@@ -20,11 +20,9 @@
 package io.arlas.tagger.app;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import io.arlas.server.exceptions.*;
-import io.arlas.server.health.ElasticsearchHealthCheck;
 import io.arlas.server.utils.ElasticNodesInfo;
 import io.arlas.server.utils.InsensitiveCaseFilter;
 import io.arlas.server.utils.PrettyPrintFilter;
@@ -116,9 +114,6 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
         //filters
         environment.jersey().register(PrettyPrintFilter.class);
         environment.jersey().register(InsensitiveCaseFilter.class);
-
-        //healthchecks
-        environment.healthChecks().register("elasticsearch", new ElasticsearchHealthCheck(client));
 
         //cors
         if (configuration.arlascorsenabled) {
