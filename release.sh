@@ -156,6 +156,8 @@ fi
 
 echo "=> Start arlas-tagger stack"
 export ARLAS_SERVER_NODE=""
+export ELASTIC_DATADIR="/tmp"
+export KAFKA_DATADIR="/tmp"
 docker-compose -f docker-compose-tagger.yml -f docker-compose-kafka.yml -f docker-compose-elasticsearch.yml --project-name arlas up -d --build
 DOCKER_IP=$(docker-machine ip || echo "localhost")
 

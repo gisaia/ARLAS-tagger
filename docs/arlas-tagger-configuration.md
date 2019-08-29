@@ -88,8 +88,8 @@ docker run -ti -d \
 | Environment variable | ARLAS Tagger configuration variable | Default | Description |
 | --- | --- | --- | --- |
 | ARLAS_COLLECTION_INDEX    | arlas-index      | .arlas         | name of the index that is used for storing ARLAS collections |
-| ARLAS_CACHE_SIZE       | arlas-cache-size                  | 1000 | Size of the cache used for managing the collections  |
-| ARLAS_CACHE_TIMEOUT    | arlas-cache-timeout               | 60 | Number of seconds for the cache used for managing the collections |
+| ARLAS_COLLECTION_CACHE_SIZE       | arlas-cache-size                  | 1000 | Size of the cache used for managing the collections  |
+| ARLAS_COLLECTION_CACHE_TIMEOUT    | arlas-cache-timeout               | 60 | Number of seconds for the cache used for managing the collections |
 
 ### Server
 
