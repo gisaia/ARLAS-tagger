@@ -13,8 +13,7 @@ case $i in
     ;;
     -k=*|--kafka=*)
     export KAFKA_DATADIR="${i#*=}"
-    DOCKER_COMPOSE_ARGS="${DOCKER_COMPOSE_ARGS} -f docker-compose-kafka.yml"
-    shift # past argument=value
+    shift # past argument with no value
     ;;
     --server=*)
     DOCKER_COMPOSE_ARGS="${DOCKER_COMPOSE_ARGS} -f docker-compose-arlas-server.yml"

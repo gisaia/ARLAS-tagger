@@ -15,7 +15,7 @@ RELEASE="NO"
 #########################################
 function clean_docker {
     echo "===> Stop arlas-tagger stack"
-    docker-compose -f docker-compose-tagger.yml -f docker-compose-kafka.yml -f docker-compose-elasticsearch.yml --project-name arlas down -v
+    docker-compose -f docker-compose-tagger.yml -f docker-compose-elasticsearch.yml --project-name arlas down -v
 }
 
 function clean_exit {
@@ -158,7 +158,7 @@ echo "=> Start arlas-tagger stack"
 export ARLAS_SERVER_NODE=""
 export ELASTIC_DATADIR="/tmp"
 export KAFKA_DATADIR="/tmp"
-docker-compose -f docker-compose-tagger.yml -f docker-compose-kafka.yml -f docker-compose-elasticsearch.yml --project-name arlas up -d --build
+docker-compose -f docker-compose-tagger.yml -f docker-compose-elasticsearch.yml --project-name arlas up -d --build
 DOCKER_IP=$(docker-machine ip || echo "localhost")
 
 echo "=> Wait for arlas-tagger up and running"
@@ -170,7 +170,7 @@ i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/swagger.json -o tar
 i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/swagger.yaml -o target/tmp/swagger.yaml; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i + 1)); done
 
 echo "=> Stop arlas-tagger stack"
-docker-compose -f docker-compose-tagger.yml -f docker-compose-kafka.yml -f docker-compose-elasticsearch.yml --project-name arlas down -v
+docker-compose -f docker-compose-tagger.yml -f docker-compose-elasticsearch.yml --project-name arlas down -v
 
 itests() {
 	echo "=> Run integration tests"
