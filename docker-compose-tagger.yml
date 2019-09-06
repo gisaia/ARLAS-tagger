@@ -19,6 +19,8 @@ services:
       - KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS="${KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS:-execute_tags_consumer_group}"
       - KAFKA_TOPIC_TAGREF_LOG="${KAFKA_TOPIC_TAGREF_LOG:-tagref_log}"
       - KAFKA_TOPIC_EXECUTE_TAGS="${KAFKA_TOPIC_EXECUTE_TAGS:-execute_tags}"
+    depends_on:
+      - kafka
     ports:
       - 19998:9998
     command: ["/opt/app/wait-for-tagger-deps.sh $$KAFKA_BROKERS $$ARLAS_ELASTIC_NODES $$ARLAS_SERVER_NODE"]
