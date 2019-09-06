@@ -115,6 +115,9 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
         environment.jersey().register(PrettyPrintFilter.class);
         environment.jersey().register(InsensitiveCaseFilter.class);
 
+        //healthchecks
+        environment.healthChecks().register("arlas-tagger", new DefaultHealthCheck());
+
         //cors
         if (configuration.arlascorsenabled) {
             configureCors(environment);

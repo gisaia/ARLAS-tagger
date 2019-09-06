@@ -39,8 +39,8 @@ elastic-configuration:
 
 arlas-collections-configuration:
   arlas-index:  ${ARLAS_COLLECTION_INDEX:-.arlas}
-  arlas-cache-size: ${ARLAS_CACHE_SIZE:-1000}
-  arlas-cache-timeout: ${ARLAS_CACHE_TIMEOUT:-60}
+  arlas-cache-size: ${ARLAS_COLLECTION_CACHE_SIZE:-1000}
+  arlas-cache-timeout: ${ARLAS_COLLECTION_CACHE_TIMEOUT:-60}
 
 arlas-cors-enabled: ${ARLAS_TAGGER_CORS_ENABLED:-true}
 

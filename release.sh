@@ -15,7 +15,7 @@ RELEASE="NO"
 #########################################
 function clean_docker {
     echo "===> Stop arlas-tagger stack"
-    docker-compose --project-name arlas down
+    docker-compose -f docker-compose-tagger.yml -f docker-compose-elasticsearch.yml --project-name arlas down -v
 }
 
 function clean_exit {
@@ -40,7 +40,8 @@ trap clean_exit EXIT
 #### Available arguments ################
 #########################################
 usage(){
-	echo "Usage: ./release.sh -api=X -es=Y -rel=Z -dev=Z+1 [--no-tests]"
+	echo "Usage: ./release.sh -api-major=X -api-minor=Y -api-patch=Z -dev=Z+1 -es=Y [--no-tests]"
+    echo " -es |--elastic-range           elasticsearch versions supported"
 	echo " -api-major|--api-version       release arlas-tagger API major version"
 	echo " -api-minor|--api-minor-version release arlas-tagger API minor version"
 	echo " -api-patch|--api-patch-version release arlas-tagger API patch version"
@@ -72,6 +73,10 @@ case $i in
     API_PATCH_VERSION="${i#*=}"
     shift # past argument=value
     ;;
+    -es=*|--elastic-range=*)
+    ELASTIC_RANGE="${i#*=}"
+    shift # past argument=value
+    ;;
     --no-tests)
     TESTS="NO"
     shift # past argument with no value
@@ -86,11 +91,23 @@ case $i in
 esac
 done
 
+ELASTIC_VERSIONS_6=("6.0.1","6.1.3","6.2.4","6.3.2","6.4.3","6.5.4","6.6.2","6.7.2","6.8.1")
+case $ELASTIC_RANGE in
+    "6")
+        ELASTIC_VERSIONS=( "${ELASTIC_VERSIONS_6[@]}" )
+        ;;
+    *)
+        echo "Unknown --elasticsearch-range value"
+        echo "Possible values : "
+        echo "   -es=6 for versions ${ELASTIC_VERSIONS_6[*]}"
+        usage
+esac
 
 #########################################
 #### Recap of chosen arguments ##########
 #########################################
 
+if [ -z ${ELASTIC_VERSIONS+x} ]; then usage;   else echo "Elasticsearch versions support : ${ELASTIC_VERSIONS[*]}"; fi
 if [ -z ${API_MAJOR_VERSION+x} ]; then usage;  else    echo "API MAJOR version           : ${API_MAJOR_VERSION}"; fi
 if [ -z ${API_MINOR_VERSION+x} ]; then usage;  else    echo "API MINOR version           : ${API_MINOR_VERSION}"; fi
 if [ -z ${API_PATCH_VERSION+x} ]; then usage;  else    echo "API PATCH version           : ${API_PATCH_VERSION}"; fi
@@ -113,8 +130,8 @@ fi
 #########################################
 #### Setting versions ###################
 #########################################
-export ARLAS_TAGGER_VERSION="${API_MAJOR_VERSION}.${API_MINOR_VERSION}.${API_PATCH_VERSION}"
-ARLAS_DEV_VERSION="${API_MAJOR_VERSION}.${API_MINOR_VERSION}.${ARLAS_DEV}"
+export ARLAS_TAGGER_VERSION="${API_MAJOR_VERSION}.${ELASTIC_RANGE}.${API_PATCH_VERSION}"
+ARLAS_DEV_VERSION="${API_MAJOR_VERSION}.${ELASTIC_RANGE}.${ARLAS_DEV}"
 FULL_API_VERSION=${API_MAJOR_VERSION}"."${API_MINOR_VERSION}"."${API_PATCH_VERSION}
 echo "Release : ${ARLAS_TAGGER_VERSION}"
 echo "API     : ${FULL_API_VERSION}"
@@ -137,7 +154,7 @@ mvn versions:set -DnewVersion=${ARLAS_TAGGER_VERSION}
 sed -i.bak 's/\"API_VERSION\"/\"'${FULL_API_VERSION}'\"/' arlas-tagger-rest/src/main/java/io/arlas/tagger/rest/tag/TagRESTService.java
 
 if [ "RELEASE" == "YES" ]; then
-    export DOCKERFILE="Dockerfile"
+    export DOCKERFILE="Dockerfile-tagger"
 else
     echo "=> Build arlas-tagger"
     docker run \
@@ -156,7 +173,9 @@ fi
 
 echo "=> Start arlas-tagger stack"
 export ARLAS_SERVER_NODE=""
-docker-compose -f docker-compose-tagger.yml -f docker-compose-elasticsearch.yml -f docker-compose-kafka.yml --project-name arlas up -d --build
+export ELASTIC_DATADIR="/tmp"
+export KAFKA_DATADIR="/tmp"
+docker-compose -f docker-compose-tagger.yml -f docker-compose-elasticsearch.yml --project-name arlas up -d --build
 DOCKER_IP=$(docker-machine ip || echo "localhost")
 
 echo "=> Wait for arlas-tagger up and running"
@@ -164,11 +183,11 @@ i=1; until nc -w 2 ${DOCKER_IP} 19999; do if [ $i -lt 30 ]; then sleep 1; else b
 
 echo "=> Get swagger documentation"
 mkdir -p target/tmp || echo "target/tmp exists"
-i=1; until curl -XGET http://${DOCKER_IP}:19999/arlas_tagger/swagger.json -o target/tmp/swagger.json; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i + 1)); done
-i=1; until curl -XGET http://${DOCKER_IP}:19999/arlas_tagger/swagger.yaml -o target/tmp/swagger.yaml; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i + 1)); done
+i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/swagger.json -o target/tmp/swagger.json; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i + 1)); done
+i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/swagger.yaml -o target/tmp/swagger.yaml; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i + 1)); done
 
 echo "=> Stop arlas-tagger stack"
-docker-compose --project-name arlas down
+docker-compose -f docker-compose-tagger.yml -f docker-compose-elasticsearch.yml --project-name arlas down -v
 
 itests() {
 	echo "=> Run integration tests"
@@ -253,8 +272,7 @@ cd ${BASEDIR}
 
 if [ "$RELEASE" == "YES" ]; then
     echo "=> Tag arlas-tagger docker image"
-    docker tag arlas-tagger:${ARLAS_TAGGER_VERSION} gisaia/arlas-tagger:${ARLAS_TAGGER_VERSION}
-    docker tag arlas-tagger:${ARLAS_TAGGER_VERSION} gisaia/arlas-tagger:latest
+    docker tag gisaia/arlas-tagger:${ARLAS_TAGGER_VERSION} gisaia/arlas-tagger:latest
     echo "=> Push arlas-tagger docker image"
     docker push gisaia/arlas-tagger:${ARLAS_TAGGER_VERSION}
     docker push gisaia/arlas-tagger:latest
