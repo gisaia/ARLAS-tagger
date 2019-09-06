@@ -294,7 +294,7 @@ if [ "$RELEASE" == "YES" ]; then
     git tag -d v${ARLAS_TAGGER_VERSION}
     git push origin :v${ARLAS_TAGGER_VERSION}
     echo "=> Commit release version"
-    git commit -a -m "release version ${ARLAS_TAGGER_VERSION}"
+    qq
     git tag v${ARLAS_TAGGER_VERSION}
     git push origin v${ARLAS_TAGGER_VERSION}
     git push origin develop
