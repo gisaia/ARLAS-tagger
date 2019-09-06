@@ -1,0 +1,27 @@
+
+ARLAS-tagger
+Copyright 2019 and onwards Gisaïa
+
+
+ARLAS-tagger embeds the following components and their dependencies :
+
++ DROPWIZARD
+    - Dropwizard            (Apache License Version 2.0 - http://www.dropwizard.io/)
+    - dropwizard-swagger    (Apache License Version 2.0 - https://github.com/smoketurner/dropwizard-swagger)
+
++ KAFKA client library      (Apache License Version 2.0 - https://kafka.apache.org/)
+
++ Elasticsearch client library    (Apache License Version 2.0 - https://www.elastic.co/products/elasticsearch)
+
++ ARLAS-server client library     (Apache License Version 2.0 - http://docs.arlas.io/arlas-tech/current/arlas-api/)
+
++ TOOLS
+    - SelfExpiringHashMap   (MIT License - https://gist.github.com/pcan)
+
++ TESTS
+    - Rest-assured          (Apache License Version 2.0 - https://github.com/rest-assured/rest-assured)
+    - JUnit                 (Eclipse Public License v 1.0 - https://junit.org/junit4/)
+    - Hamcrest              (BSD License - http://hamcrest.org/)
+
++ LOGS
+    - log4j                 (Apache License Version 2.0 - https://github.com/apache/log4j)
