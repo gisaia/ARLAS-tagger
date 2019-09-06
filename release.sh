@@ -143,7 +143,7 @@ echo "Dev     : ${ARLAS_DEV_VERSION}"
 #########################################
 
 echo "=> Get develop branch"
-if [ "RELEASE" == "YES" ]; then
+if [ "$RELEASE" == "YES" ]; then
     git checkout develop
     git pull origin develop
 else echo "=> Skip develop checkout"; fi
@@ -153,7 +153,7 @@ mvn clean
 mvn versions:set -DnewVersion=${ARLAS_TAGGER_VERSION}
 sed -i.bak 's/\"API_VERSION\"/\"'${FULL_API_VERSION}'\"/' arlas-tagger-rest/src/main/java/io/arlas/tagger/rest/tag/TagRESTService.java
 
-if [ "RELEASE" == "YES" ]; then
+if [ "$RELEASE" == "YES" ]; then
     export DOCKERFILE="Dockerfile-tagger"
 else
     echo "=> Build arlas-tagger"
