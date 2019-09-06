@@ -13,7 +13,7 @@
         <dependency>
             <groupId>io.arlas</groupId>
             <artifactId>arlas-tagger-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>11.6.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

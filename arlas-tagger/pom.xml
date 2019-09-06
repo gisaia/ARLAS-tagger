@@ -6,13 +6,13 @@
 
     <groupId>io.arlas</groupId>
     <artifactId>arlas-tagger</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>11.6.1-SNAPSHOT</version>
     <name>ARLAS Tagger</name>
 
     <parent>
         <groupId>io.arlas</groupId>
         <artifactId>arlas-tagger-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>11.6.1-SNAPSHOT</version>
     </parent>
 
     <dependencies>
