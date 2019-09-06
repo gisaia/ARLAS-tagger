@@ -40,7 +40,8 @@ trap clean_exit EXIT
 #### Available arguments ################
 #########################################
 usage(){
-	echo "Usage: ./release.sh -api-major=X -api-minor=Y -api-patch=Z -dev=Z+1 [--no-tests]"
+	echo "Usage: ./release.sh -api-major=X -api-minor=Y -api-patch=Z -dev=Z+1 -es=Y [--no-tests]"
+    echo " -es |--elastic-range           elasticsearch versions supported"
 	echo " -api-major|--api-version       release arlas-tagger API major version"
 	echo " -api-minor|--api-minor-version release arlas-tagger API minor version"
 	echo " -api-patch|--api-patch-version release arlas-tagger API patch version"
@@ -72,6 +73,10 @@ case $i in
     API_PATCH_VERSION="${i#*=}"
     shift # past argument=value
     ;;
+    -es=*|--elastic-range=*)
+    ELASTIC_RANGE="${i#*=}"
+    shift # past argument=value
+    ;;
     --no-tests)
     TESTS="NO"
     shift # past argument with no value
@@ -86,11 +91,23 @@ case $i in
 esac
 done
 
+ELASTIC_VERSIONS_6=("6.0.1","6.1.3","6.2.4","6.3.2","6.4.3","6.5.4","6.6.2","6.7.2","6.8.1")
+case $ELASTIC_RANGE in
+    "6")
+        ELASTIC_VERSIONS=( "${ELASTIC_VERSIONS_6[@]}" )
+        ;;
+    *)
+        echo "Unknown --elasticsearch-range value"
+        echo "Possible values : "
+        echo "   -es=6 for versions ${ELASTIC_VERSIONS_6[*]}"
+        usage
+esac
 
 #########################################
 #### Recap of chosen arguments ##########
 #########################################
 
+if [ -z ${ELASTIC_VERSIONS+x} ]; then usage;   else echo "Elasticsearch versions support : ${ELASTIC_VERSIONS[*]}"; fi
 if [ -z ${API_MAJOR_VERSION+x} ]; then usage;  else    echo "API MAJOR version           : ${API_MAJOR_VERSION}"; fi
 if [ -z ${API_MINOR_VERSION+x} ]; then usage;  else    echo "API MINOR version           : ${API_MINOR_VERSION}"; fi
 if [ -z ${API_PATCH_VERSION+x} ]; then usage;  else    echo "API PATCH version           : ${API_PATCH_VERSION}"; fi
@@ -113,8 +130,8 @@ fi
 #########################################
 #### Setting versions ###################
 #########################################
-export ARLAS_TAGGER_VERSION="${API_MAJOR_VERSION}.${API_MINOR_VERSION}.${API_PATCH_VERSION}"
-ARLAS_DEV_VERSION="${API_MAJOR_VERSION}.${API_MINOR_VERSION}.${ARLAS_DEV}"
+export ARLAS_TAGGER_VERSION="${API_MAJOR_VERSION}.${ELASTIC_RANGE}.${API_PATCH_VERSION}"
+ARLAS_DEV_VERSION="${API_MAJOR_VERSION}.${ELASTIC_RANGE}.${ARLAS_DEV}"
 FULL_API_VERSION=${API_MAJOR_VERSION}"."${API_MINOR_VERSION}"."${API_PATCH_VERSION}
 echo "Release : ${ARLAS_TAGGER_VERSION}"
 echo "API     : ${FULL_API_VERSION}"
