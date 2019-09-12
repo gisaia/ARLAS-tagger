@@ -7,7 +7,7 @@
  * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE_2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -20,29 +20,39 @@
 package io.arlas.tagger.app;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.arlas.tagger.util.StringToMap;
+
+import java.util.Map;
 
 public class KafkaConfiguration {
-    @JsonProperty("status-timeout")
+    @JsonProperty("status_timeout")
     public Long statusTimeout;
 
-    @JsonProperty("kafka-batch-size")
+    @JsonProperty("kafka_batch_size")
     public Integer batchSize;
 
-    @JsonProperty("kafka-bootstrap-servers")
+    @JsonProperty("kafka_bootstrap_servers")
     public String bootstrapServers;
 
-    @JsonProperty("kafka-consumer-poll-timeout")
+    @JsonProperty("kafka_consumer_poll_timeout")
     public Long consumerPollTimeout;
 
-    @JsonProperty("kafka-consumer-group-id-tagref-log")
+    @JsonProperty("kafka_consumer_group_id_tagref_log")
     public String tagRefLogConsumerGroupId;
 
-    @JsonProperty("kafka-consumer-group-id-execute-tags")
+    @JsonProperty("kafka_consumer_group_id_execute_tags")
     public String executeTagsConsumerGroupId;
 
-    @JsonProperty("kafka-topic-tagref-log")
+    @JsonProperty("kafka_topic_tagref_log")
     public String tagRefLogTopic;
 
-    @JsonProperty("kafka-topic-execute-tags")
+    @JsonProperty("kafka_topic_execute_tags")
     public String executeTagsTopic;
+
+    @JsonProperty("kafka_extra_properties")
+    public String kafkaExtraProperties;
+
+    public Map<String, String> getExtraPropertiesAsMap() {
+        return StringToMap.parse(kafkaExtraProperties);
+    }
 }

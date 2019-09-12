@@ -17,18 +17,26 @@
  * under the License.
  */
 
-package io.arlas.tagger.app;
+package io.arlas.tagger.util;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.StringUtils;
 
-public class ArlasCollectionsConfiguration {
-    @JsonProperty("arlas_cache_size")
-    public int arlascachesize;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-    @JsonProperty("arlas_cache_timeout")
-    public int arlascachetimeout;
+public class StringToMap {
 
-    @JsonProperty("arlas_index")
-    public String arlasindex;
-
+    public static Map<String, String> parse(String mapAsString) {
+        if (StringUtils.isEmpty(mapAsString)) {
+            return new HashMap<>();
+        } else {
+            return Arrays.stream(mapAsString.split(","))
+                    .map(entry -> entry.indexOf("=") != -1 ?
+                            new String[]{ entry.substring(0, entry.indexOf("=")), entry.substring(entry.indexOf("=") + 1) } :
+                            new String[]{ entry, "" })
+                    .collect(Collectors.toMap(entry -> entry[0], entry -> entry[1]));
+        }
+    }
 }
