@@ -29,13 +29,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ElasticConfiguration {
-    @JsonProperty("elastic-nodes")
+    @JsonProperty("elastic_nodes")
     public String elasticnodes;
 
-    @JsonProperty("elastic-sniffing")
+    @JsonProperty("elastic_sniffing")
     public Boolean elasticsniffing;
 
-    @JsonProperty("elastic-cluster")
+    @JsonProperty("elastic_cluster")
     public String elasticcluster;
 
     public static List<Pair<String,Integer>> getElasticNodes(String esNodes) {

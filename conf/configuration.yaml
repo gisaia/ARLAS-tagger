@@ -22,27 +22,28 @@ server:
 swagger: # Configuration of SWAGGER for generating documentation and APIs
   resourcePackage: io.arlas.tagger.rest # The java package to process for extracting the APIs
 
-kafka-configuration:
-  status-timeout: ${TAGGING_STATUS_TIMEOUT:-3600000}
-  kafka-consumer-poll-timeout: ${KAFKA_CONSUMER_POLL_TIMEOUT:-100}
-  kafka-batch-size: ${KAFKA_BATCH_SIZE:-10}
-  kafka-bootstrap-servers: ${KAFKA_BROKERS:-localhost:9092}
-  kafka-consumer-group-id-tagref-log: ${KAFKA_CONSUMER_GROUP_ID_TAGREF_LOG:-tagref_log_consumer_group}
-  kafka-consumer-group-id-execute-tags: ${KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS:-execute_tags_consumer_group}
-  kafka-topic-tagref-log: ${KAFKA_TOPIC_TAGREF_LOG:-tagref_log}
-  kafka-topic-execute-tags: ${KAFKA_TOPIC_EXECUTE_TAGS:-execute_tags}
+kafka_configuration:
+  status_timeout: ${TAGGING_STATUS_TIMEOUT:-3600000}
+  kafka_consumer_poll_timeout: ${KAFKA_CONSUMER_POLL_TIMEOUT:-100}
+  kafka_batch_size: ${KAFKA_BATCH_SIZE:-10}
+  kafka_bootstrap_servers: ${KAFKA_BROKERS:-localhost:9092}
+  kafka_consumer_group_id_tagref_log: ${KAFKA_CONSUMER_GROUP_ID_TAGREF_LOG:-tagref_log_consumer_group}
+  kafka_consumer_group_id_execute_tags: ${KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS:-execute_tags_consumer_group}
+  kafka_topic_tagref_log: ${KAFKA_TOPIC_TAGREF_LOG:-tagref_log}
+  kafka_topic_execute_tags: ${KAFKA_TOPIC_EXECUTE_TAGS:-execute_tags}
+  kafka_extra_properties: ${KAFKA_EXTRA_PROPS:-}
 
-elastic-configuration:
-  elastic-nodes: ${ARLAS_ELASTIC_NODES:-localhost:9300}
-  elastic-sniffing: ${ARLAS_ELASTIC_SNIFFING:-false}
-  elastic-cluster: ${ARLAS_ELASTIC_CLUSTER:-elasticsearch}
+elastic_configuration:
+  elastic_nodes: ${ARLAS_ELASTIC_NODES:-localhost:9300}
+  elastic_sniffing: ${ARLAS_ELASTIC_SNIFFING:-false}
+  elastic_cluster: ${ARLAS_ELASTIC_CLUSTER:-elasticsearch}
 
-arlas-collections-configuration:
-  arlas-index:  ${ARLAS_COLLECTION_INDEX:-.arlas}
-  arlas-cache-size: ${ARLAS_COLLECTION_CACHE_SIZE:-1000}
-  arlas-cache-timeout: ${ARLAS_COLLECTION_CACHE_TIMEOUT:-60}
+arlas_collections_configuration:
+  arlas_index:  ${ARLAS_COLLECTION_INDEX:-.arlas}
+  arlas_cache_size: ${ARLAS_COLLECTION_CACHE_SIZE:-1000}
+  arlas_cache_timeout: ${ARLAS_COLLECTION_CACHE_TIMEOUT:-60}
 
-arlas-cors-enabled: ${ARLAS_TAGGER_CORS_ENABLED:-true}
+arlas_cors_enabled: ${ARLAS_TAGGER_CORS_ENABLED:-true}
 
 
 

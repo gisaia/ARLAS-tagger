@@ -74,6 +74,7 @@ public class TagKafkaProducer extends KafkaProducer<String, String> {
         kafkaProperties.put(ProducerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString());
         kafkaProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         kafkaProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        kafkaProperties.putAll(configuration.kafkaConfiguration.getExtraPropertiesAsMap());
 
         return new TagKafkaProducer(kafkaProperties,
                 configuration.kafkaConfiguration.tagRefLogTopic,

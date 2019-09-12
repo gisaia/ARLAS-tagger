@@ -20,8 +20,6 @@
 package io.arlas.tagger.app;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.arlas.server.app.ArlasServerConfiguration;
-import io.arlas.server.exceptions.ArlasConfigurationException;
 import io.dropwizard.Configuration;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 
@@ -29,16 +27,16 @@ public class ArlasTaggerConfiguration extends Configuration {
     @JsonProperty("swagger")
     public SwaggerBundleConfiguration swaggerBundleConfiguration;
 
-    @JsonProperty("elastic-configuration")
+    @JsonProperty("elastic_configuration")
     public ElasticConfiguration elasticConfiguration;
 
-    @JsonProperty("kafka-configuration")
+    @JsonProperty("kafka_configuration")
     public KafkaConfiguration kafkaConfiguration;
 
-    @JsonProperty("arlas-collections-configuration")
+    @JsonProperty("arlas_collections_configuration")
     public ArlasCollectionsConfiguration arlasCollectionsConfiguration;
 
-    @JsonProperty("arlas-cors-enabled")
+    @JsonProperty("arlas_cors_enabled")
     public Boolean arlascorsenabled;
 }
 

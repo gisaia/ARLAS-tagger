@@ -43,6 +43,7 @@ public class TagKafkaConsumer extends KafkaConsumer<String, String> {
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, configuration.kafkaConfiguration.batchSize);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        props.putAll(configuration.kafkaConfiguration.getExtraPropertiesAsMap());
 
         TagKafkaConsumer consumer = new TagKafkaConsumer(props);
         consumer.subscribe(Collections.singletonList(topic));
