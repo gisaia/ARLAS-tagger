@@ -36,4 +36,4 @@ HEALTHCHECK --interval=5m --timeout=3s \
   CMD curl http://localhost:9998/admin/healthcheck | grep -v "\"healthy\":false" || exit 1
 
 ENTRYPOINT ["bash", "-c"]
-CMD /opt/app/start-tagger.sh
+CMD ["/opt/app/start-tagger.sh"]

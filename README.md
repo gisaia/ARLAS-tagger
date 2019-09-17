@@ -45,13 +45,7 @@ Then, go to `http://localhost:9998/arlas_tagger/swagger` for testing the API.
 ### Docker
 
 ```sh
-docker run arlas-tagger:latest
-```
-
-or
-
-```sh
-docker-compose -f docker-compose-tagger.yml -f docker-compose-elasticsearch.yml -f docker-compose-kafka.yml up
+docker run -d -e KAFKA_BROKERS=localhost:9092 -e ARLAS_ELASTIC_NODES=localhost:9300 -e ARLAS_ELASTIC_CLUSTER=elasticsearch  gisaia/arlas-tagger:latest
 ```
 
 ## Running the tests
