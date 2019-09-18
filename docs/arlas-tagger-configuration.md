@@ -20,6 +20,7 @@ ARLAS Tagger can run as a docker container. A rich set of properties of the conf
 docker run -ti -d \
    --name arlas-tagger \
    -e "ARLAS_ELASTIC_CLUSTER=my-own-cluster" \
+   -e "ARLAS_ELASTIC_NODES=my-host:my-port" \
    -e "KAFKA_BROKERS=my-own-kafka-brokers" \
    gisaia/arlas-tagger:latest
 ```
@@ -64,9 +65,9 @@ docker run -ti -d \
 
 | Environment variable   | ARLAS Tagger configuration variable | Default | Description |
 | --- | --- | --- | ---  |
-| ARLAS_ELASTIC_NODES    | elastic-nodes    | localhost:9300 | comma separated list of elasticsearch nodes as host:port values |
-| ARLAS_ELASTIC_SNIFFING | elastic-sniffing | false          | allow elasticsearch to dynamically add new hosts and remove old ones (*)|
-| ARLAS_ELASTIC_CLUSTER  | elastic-cluster  | elasticsearch  | clustername of the elasticsearch cluster that is used for storing ARLAS configuration |
+| ARLAS_ELASTIC_NODES    | elastic_configuration.elastic_nodes    | localhost:9300 | comma separated list of elasticsearch nodes as host:port values |
+| ARLAS_ELASTIC_SNIFFING | elastic_configuration.elastic_sniffing | false          | allow elasticsearch to dynamically add new hosts and remove old ones (*)|
+| ARLAS_ELASTIC_CLUSTER  | elastic_configuration.elastic_cluster  | elasticsearch  | clustername of the elasticsearch cluster that is used for storing ARLAS configuration |
 
 !!! note 
     (*) Note that the IP addresses the sniffer connects to are the ones declared as the publish address in those node’s Elasticsearch config.
@@ -75,27 +76,28 @@ docker run -ti -d \
 
 | Environment variable | ARLAS Tagger configuration variable | Default | Description |
 | --- | --- | --- | --- |
-| TAGGING_STATUS_TIMEOUT | arlas-tagger.status-timeout | 3600000 | Delay before tagging status is discarded |
-| KAFKA_CONSUMER_POLL_TIMEOUT | arlas-tagger.kafka-consumer-poll-timeout | 100 | Kafka consumer poll timeout |
-| KAFKA_BATCH_SIZE | arlas-tagger.kafka-batch-size | 10 | Kafka consumer batch size |
-| KAFKA_BROKERS | arlas-tagger.kafka-bootstrap-servers | kafka:9092 | Kafka brokers|
-| KAFKA_CONSUMER_GROUP_ID_TAGREF_LOG | arlas-tagger.kafka-consumer-group-id-tagref-log | tagref_log_consumer_group | Kafka consumer group for `tagref_log` topic |
-| KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS | arlas-tagger.kafka-consumer-group-id-execute-tags | execute_tags_consumer_group | Kafka consumer group for `execute_tags` topic |
-| KAFKA_TOPIC_TAGREF_LOG | arlas-tagger.kafka-topic-tagref-log | tagref_log | Kafka topic for tag requests queue (tag log, retained) |
-| KAFKA_TOPIC_EXECUTE_TAGS | arlas-tagger.kafka-topic-execute-tags | execute_tags | Kafka topic for actual tag requests (actually executed, not retained) |
+| TAGGING_STATUS_TIMEOUT | kafka_configuration.status_timeout | 3600000 | Delay before tagging status is discarded |
+| KAFKA_CONSUMER_POLL_TIMEOUT | kafka_configuration.kafka_consumer_poll_timeout | 100 | Kafka consumer poll timeout |
+| KAFKA_BATCH_SIZE | kafka_configuration.kafka_batch_size | 10 | Kafka consumer batch size |
+| KAFKA_BROKERS | kafka_configuration.kafka_bootstrap_servers | kafka:9092 | Kafka brokers|
+| KAFKA_CONSUMER_GROUP_ID_TAGREF_LOG | kafka_configuration.kafka_consumer_group_id_tagref_log | tagref_log_consumer_group | Kafka consumer group for `tagref_log` topic |
+| KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS | kafka_configuration.kafka_consumer_group_id_execute_tags | execute_tags_consumer_group | Kafka consumer group for `execute_tags` topic |
+| KAFKA_TOPIC_TAGREF_LOG | kafka_configuration.kafka_topic_tagref_log | tagref_log | Kafka topic for tag requests queue (tag log, retained) |
+| KAFKA_TOPIC_EXECUTE_TAGS | kafka_configuration.kafka_topic_execute_tags | execute_tags | Kafka topic for actual tag requests (actually executed, not retained) |
+| KAFKA_EXTRA_PROPS | kafka_configuration.kafka_extra_properties | - | Additional properties for configuring the kafka client. For instance `kafka_configuration.kafka_extra_properties: ssl.endpoint.identification.algorithm=https` |
 
 ### ARLAS Collection 
 | Environment variable | ARLAS Tagger configuration variable | Default | Description |
 | --- | --- | --- | --- |
-| ARLAS_COLLECTION_INDEX    | arlas-index      | .arlas         | name of the index that is used for storing ARLAS collections |
-| ARLAS_COLLECTION_CACHE_SIZE       | arlas-cache-size                  | 1000 | Size of the cache used for managing the collections  |
-| ARLAS_COLLECTION_CACHE_TIMEOUT    | arlas-cache-timeout               | 60 | Number of seconds for the cache used for managing the collections |
+| ARLAS_COLLECTION_INDEX    | arlas_collections_configuration.arlas_index      | .arlas         | name of the index that is used for storing ARLAS collections |
+| ARLAS_COLLECTION_CACHE_SIZE       | arlas_collections_configuration.arlas_cache_size                  | 1000 | Size of the cache used for managing the collections  |
+| ARLAS_COLLECTION_CACHE_TIMEOUT    | arlas_collections_configuration.arlas_cache_timeout               | 60 | Number of seconds for the cache used for managing the collections |
 
 ### Server
 
 | Environment variable | ARLAS Tagger configuration variable | Default |
 | --- | --- | --- |
-| ARLAS_TAGGER_CORS_ENABLED | arlas-cors-enabled            | whether the Cross-Origin Resource Sharing (CORS) mechanism is enabled or not. Default : true. |
+| ARLAS_TAGGER_CORS_ENABLED | arlas_cors_enabled            | whether the Cross-Origin Resource Sharing (CORS) mechanism is enabled or not. Default : true. |
 | ARLAS_TAGGER_ACCESS_LOG_FILE | server.requestLog.appenders.currentLogFilename | arlas-access.log |
 | ACCESS_TAGGER_LOG_FILE_ARCHIVE | server.requestLog.appenders.archivedLogFilenamePattern | arlas-access-%d.log.gz |
 | ARLAS_TAGGER_PREFIX | server.applicationContextPath | /arlas/ |
