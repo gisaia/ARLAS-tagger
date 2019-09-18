@@ -84,7 +84,7 @@ docker run -ti -d \
 | KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS | kafka_configuration.kafka_consumer_group_id_execute_tags | execute_tags_consumer_group | Kafka consumer group for `execute_tags` topic |
 | KAFKA_TOPIC_TAGREF_LOG | kafka_configuration.kafka_topic_tagref_log | tagref_log | Kafka topic for tag requests queue (tag log, retained) |
 | KAFKA_TOPIC_EXECUTE_TAGS | kafka_configuration.kafka_topic_execute_tags | execute_tags | Kafka topic for actual tag requests (actually executed, not retained) |
-| KAFKA_EXTRA_PROPS | kafka_configuration.kafka_extra_properties | - | Additional properties for configuring the kafka client. For instance `kafka_configuration.kafka_extra_properties: ssl.endpoint.identification.algorithm=https` |
+| KAFKA_EXTRA_PROPS | kafka_configuration.kafka_extra_properties | - | Comma separated properties for configuring the kafka client. For instance `kafka_configuration.kafka_extra_properties: ssl.endpoint.identification.algorithm=https,sasl.mechanism=PLAIN` |
 
 ### ARLAS Collection 
 | Environment variable | ARLAS Tagger configuration variable | Default | Description |
