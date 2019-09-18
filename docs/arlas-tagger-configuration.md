@@ -61,6 +61,12 @@ docker run -ti -d \
 ```
 ## ARLAS Tagger configuration properties
 
+### ARLAS Tagger
+
+| Environment variable   | ARLAS Tagger configuration variable | Default | Description |
+| --- | --- | --- | ---  |
+| TAGGING_STATUS_TIMEOUT | tagging_status_timeout | 3600000 | Delay before tagging status is discarded |
+
 ### Elasticsearch
 
 | Environment variable   | ARLAS Tagger configuration variable | Default | Description |
@@ -76,7 +82,6 @@ docker run -ti -d \
 
 | Environment variable | ARLAS Tagger configuration variable | Default | Description |
 | --- | --- | --- | --- |
-| TAGGING_STATUS_TIMEOUT | kafka_configuration.status_timeout | 3600000 | Delay before tagging status is discarded |
 | KAFKA_CONSUMER_POLL_TIMEOUT | kafka_configuration.kafka_consumer_poll_timeout | 100 | Kafka consumer poll timeout |
 | KAFKA_BATCH_SIZE | kafka_configuration.kafka_batch_size | 10 | Kafka consumer batch size |
 | KAFKA_BROKERS | kafka_configuration.kafka_bootstrap_servers | kafka:9092 | Kafka brokers|

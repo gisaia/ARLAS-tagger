@@ -23,6 +23,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 
+import java.util.Map;
+
 public class ArlasTaggerConfiguration extends Configuration {
     @JsonProperty("swagger")
     public SwaggerBundleConfiguration swaggerBundleConfiguration;
@@ -38,6 +40,7 @@ public class ArlasTaggerConfiguration extends Configuration {
 
     @JsonProperty("arlas_cors_enabled")
     public Boolean arlascorsenabled;
+
+    @JsonProperty("tagging_status_timeout")
+    public Long statusTimeout;
 }
-
-

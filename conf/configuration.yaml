@@ -23,7 +23,6 @@ swagger: # Configuration of SWAGGER for generating documentation and APIs
   resourcePackage: io.arlas.tagger.rest # The java package to process for extracting the APIs
 
 kafka_configuration:
-  status_timeout: ${TAGGING_STATUS_TIMEOUT:-3600000}
   kafka_consumer_poll_timeout: ${KAFKA_CONSUMER_POLL_TIMEOUT:-100}
   kafka_batch_size: ${KAFKA_BATCH_SIZE:-10}
   kafka_bootstrap_servers: ${KAFKA_BROKERS:-localhost:9092}
@@ -42,6 +41,8 @@ arlas_collections_configuration:
   arlas_index:  ${ARLAS_COLLECTION_INDEX:-.arlas}
   arlas_cache_size: ${ARLAS_COLLECTION_CACHE_SIZE:-1000}
   arlas_cache_timeout: ${ARLAS_COLLECTION_CACHE_TIMEOUT:-60}
+
+tagging_status_timeout: ${TAGGING_STATUS_TIMEOUT:-3600000}
 
 arlas_cors_enabled: ${ARLAS_TAGGER_CORS_ENABLED:-true}
 
