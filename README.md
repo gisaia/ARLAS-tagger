@@ -45,7 +45,7 @@ Then, go to `http://localhost:9998/arlas_tagger/swagger` for testing the API.
 ### Docker
 
 ```sh
-docker run -d -e KAFKA_BROKERS=localhost:9092 -e ARLAS_ELASTIC_NODES=localhost:9300 -e ARLAS_ELASTIC_CLUSTER=elasticsearch  gisaia/arlas-tagger:latest
+docker run -d -e KAFKA_BROKERS=my-host-1:9092 -e ARLAS_ELASTIC_NODES=my-host-2:9300 -e ARLAS_ELASTIC_CLUSTER=elasticsearch  gisaia/arlas-tagger:latest
 ```
 
 ## Running the tests
