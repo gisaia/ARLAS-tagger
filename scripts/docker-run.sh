@@ -1,14 +1,19 @@
 #!/bin/bash
 set -e
 
+SCRIPT_DIRECTORY="$(cd "$(dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd)"
+PROJECT_ROOT_DIRECTORY="$(dirname "$SCRIPT_DIRECTORY")"
 BUILD_OPTS="--no-build"
+DOCKER_COMPOSE_TAGGER="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compose-tagger.yml"
+DOCKER_COMPOSE_ES="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compose-elasticsearch.yml"
+DOCKER_COMPOSE_ARLAS_SERVER="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compose-arlas-server.yml"
 
 for i in "$@"
 do
 case $i in
     -es=*|--elasticsearch=*)
     export ELASTIC_DATADIR="${i#*=}"
-    DOCKER_COMPOSE_ARGS="${DOCKER_COMPOSE_ARGS} -f docker-compose-elasticsearch.yml"
+    DOCKER_COMPOSE_ARGS="${DOCKER_COMPOSE_ARGS} -f ${DOCKER_COMPOSE_ES}"
     shift # past argument=value
     ;;
     -k=*|--kafka=*)
@@ -16,7 +21,7 @@ case $i in
     shift # past argument with no value
     ;;
     --server=*)
-    DOCKER_COMPOSE_ARGS="${DOCKER_COMPOSE_ARGS} -f docker-compose-arlas-server.yml"
+    DOCKER_COMPOSE_ARGS="${DOCKER_COMPOSE_ARGS} -f ${DOCKER_COMPOSE_ARLAS_SERVER}"
     shift # past argument with no value
     ;;
     --build)
@@ -52,7 +57,7 @@ docker run --rm \
 echo "arlas-tagger:${ARLAS_TAGGER_VERSION}"
 
 echo "===> start arlas-tagger stack"
-docker-compose -f docker-compose-tagger.yml ${DOCKER_COMPOSE_ARGS} --project-name arlas up -d ${BUILD_OPTS}
+docker-compose -f ${DOCKER_COMPOSE_TAGGER} ${DOCKER_COMPOSE_ARGS} --project-name arlas up -d ${BUILD_OPTS}
 
 #docker logs -f arlas-tagger &
 
