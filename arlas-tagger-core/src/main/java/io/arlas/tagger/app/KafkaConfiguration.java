@@ -25,9 +25,6 @@ import io.arlas.tagger.util.StringToMap;
 import java.util.Map;
 
 public class KafkaConfiguration {
-    @JsonProperty("status_timeout")
-    public Long statusTimeout;
-
     @JsonProperty("kafka_batch_size")
     public Integer batchSize;
 

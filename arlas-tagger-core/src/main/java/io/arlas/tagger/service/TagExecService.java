@@ -50,7 +50,7 @@ public class TagExecService extends KafkaConsumerRunner {
         super(configuration, topic, consumerGroupId);
         this.updateServices = updateServices;
         this.taggingStatus = TaggingStatus.getInstance();
-        this.statusTimeout = configuration.kafkaConfiguration.statusTimeout;
+        this.statusTimeout = configuration.statusTimeout;
     }
 
     @Override

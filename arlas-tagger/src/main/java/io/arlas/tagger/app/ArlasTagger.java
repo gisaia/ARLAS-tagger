@@ -108,7 +108,7 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
         environment.jersey().register(new JsonProcessingExceptionMapper());
         environment.jersey().register(new ConstraintViolationExceptionMapper());
         environment.jersey().register(new ElasticsearchExceptionMapper());
-        environment.jersey().register(new TagRESTService(tagKafkaProducer, configuration.kafkaConfiguration.statusTimeout));
+        environment.jersey().register(new TagRESTService(tagKafkaProducer, configuration.statusTimeout));
         environment.jersey().register(new TagStatusRESTService());
 
         //filters

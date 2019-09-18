@@ -19,6 +19,7 @@ services:
       - KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS="${KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS:-execute_tags_consumer_group}"
       - KAFKA_TOPIC_TAGREF_LOG="${KAFKA_TOPIC_TAGREF_LOG:-tagref_log}"
       - KAFKA_TOPIC_EXECUTE_TAGS="${KAFKA_TOPIC_EXECUTE_TAGS:-execute_tags}"
+      - KAFKA_EXTRA_PROPS="${KAFKA_EXTRA_PROPS}"
     depends_on:
       - kafka
     ports:

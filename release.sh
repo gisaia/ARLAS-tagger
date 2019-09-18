@@ -179,7 +179,7 @@ docker-compose -f docker-compose-tagger.yml -f docker-compose-elasticsearch.yml 
 DOCKER_IP=$(docker-machine ip || echo "localhost")
 
 echo "=> Wait for arlas-tagger up and running"
-i=1; until nc -w 2 ${DOCKER_IP} 19999; do if [ $i -lt 30 ]; then sleep 1; else break; fi; i=$(($i + 1)); done
+i=1; until nc -w 2 ${DOCKER_IP} 19998; do if [ $i -lt 30 ]; then sleep 1; else break; fi; i=$(($i + 1)); done
 
 echo "=> Get swagger documentation"
 mkdir -p target/tmp || echo "target/tmp exists"
@@ -294,7 +294,7 @@ if [ "$RELEASE" == "YES" ]; then
     git tag -d v${ARLAS_TAGGER_VERSION}
     git push origin :v${ARLAS_TAGGER_VERSION}
     echo "=> Commit release version"
-    qq
+    git commit -a -m "release version ${ARLAS_TAGGER_VERSION}"
     git tag v${ARLAS_TAGGER_VERSION}
     git push origin v${ARLAS_TAGGER_VERSION}
     git push origin develop

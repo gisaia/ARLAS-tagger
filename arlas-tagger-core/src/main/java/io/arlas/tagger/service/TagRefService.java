@@ -58,7 +58,7 @@ public class TagRefService extends KafkaConsumerRunner {
         this.tagKafkaProducer = tagKafkaProducer;
         this.updateServices = updateServices;
         this.taggingStatus = TaggingStatus.getInstance();
-        this.statusTimeout = configuration.kafkaConfiguration.statusTimeout;
+        this.statusTimeout = configuration.statusTimeout;
     }
 
     @Override
