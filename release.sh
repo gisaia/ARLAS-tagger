@@ -9,13 +9,16 @@ PROJECT_ROOT_DIRECTORY="$SCRIPT_DIRECTORY"
 #########################################
 TEST="YES"
 RELEASE="NO"
+BASEDIR=$PWD
+DOCKER_COMPOSE_TAGGER="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compose-tagger.yml"
+DOCKER_COMPOSE_ES="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compose-elasticsearch.yml"
 
 #########################################
 #### Cleaning functions #################
 #########################################
 function clean_docker {
     echo "===> Stop arlas-tagger stack"
-    docker-compose -f docker-compose-tagger.yml -f docker-compose-elasticsearch.yml --project-name arlas down -v
+    docker-compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} --project-name arlas down -v
 }
 
 function clean_exit {
@@ -154,7 +157,7 @@ mvn versions:set -DnewVersion=${ARLAS_TAGGER_VERSION}
 sed -i.bak 's/\"API_VERSION\"/\"'${FULL_API_VERSION}'\"/' arlas-tagger-rest/src/main/java/io/arlas/tagger/rest/tag/TagRESTService.java
 
 if [ "$RELEASE" == "YES" ]; then
-    export DOCKERFILE="Dockerfile-tagger"
+    export DOCKERFILE="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/Dockerfile-tagger"
 else
     echo "=> Build arlas-tagger"
     docker run \
@@ -175,7 +178,7 @@ echo "=> Start arlas-tagger stack"
 export ARLAS_SERVER_NODE=""
 export ELASTIC_DATADIR="/tmp"
 export KAFKA_DATADIR="/tmp"
-docker-compose -f docker-compose-tagger.yml -f docker-compose-elasticsearch.yml --project-name arlas up -d --build
+docker-compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} --project-name arlas up -d --build
 DOCKER_IP=$(docker-machine ip || echo "localhost")
 
 echo "=> Wait for arlas-tagger up and running"
@@ -187,7 +190,7 @@ i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/swagger.json -o tar
 i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/swagger.yaml -o target/tmp/swagger.yaml; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i + 1)); done
 
 echo "=> Stop arlas-tagger stack"
-docker-compose -f docker-compose-tagger.yml -f docker-compose-elasticsearch.yml --project-name arlas down -v
+docker-compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} --project-name arlas down -v
 
 itests() {
 	echo "=> Run integration tests"
@@ -201,7 +204,6 @@ if [ "$TESTS" == "YES" ]; then itests; else echo "=> Skip integration tests"; fi
 #########################################
 
 echo "=> Generate API clients"
-BASEDIR=$PWD
 ls target/tmp/
 
 mkdir -p target/tmp/typescript-fetch

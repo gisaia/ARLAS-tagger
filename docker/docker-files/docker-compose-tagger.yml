@@ -3,8 +3,8 @@ version: '3'
 services:
   arlas-tagger:
     build:
-      context: .
-      dockerfile: ${DOCKERFILE:-Dockerfile-package-only-tagger}
+      context: ../../.
+      dockerfile: ${DOCKERFILE:-docker/docker-files/Dockerfile-package-only-tagger}
     image: gisaia/arlas-tagger:${ARLAS_TAGGER_VERSION:-latest}
     container_name: arlas-tagger
     environment:
