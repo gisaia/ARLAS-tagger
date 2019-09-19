@@ -11,6 +11,8 @@
 
     <artifactId>arlas-tagger-tests</artifactId>
     <name>ARLAS Tagger tests</name>
+    <packaging>jar</packaging>
+
 
     <dependencies>
         <dependency>

@@ -7,6 +7,8 @@
     <groupId>io.arlas</groupId>
     <artifactId>arlas-tagger-core</artifactId>
     <name>ARLAS Tagger core</name>
+    <packaging>jar</packaging>
+
 
     <parent>
         <artifactId>arlas-tagger-parent</artifactId>
