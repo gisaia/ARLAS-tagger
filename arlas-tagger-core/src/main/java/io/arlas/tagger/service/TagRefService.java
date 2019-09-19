@@ -171,7 +171,7 @@ public class TagRefService extends KafkaConsumerRunner {
         MultiBucketsAggregation mbAggregation = (MultiBucketsAggregation) response.getAggregations().asList().get(0);
 
         AggregationResponse aggregationResponse = new AggregationResponse();
-        aggregationResponse.totalnb = response.getHits().getTotalHits();
+        aggregationResponse.totalnb = response.getHits().getTotalHits().value;
         aggregationResponse = updateServices.formatAggregationResult(mbAggregation, aggregationResponse, collectionReference.collectionName);
         return aggregationResponse;
     }
