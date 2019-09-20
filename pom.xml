@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.arlas</groupId>
     <artifactId>arlas-tagger-parent</artifactId>
-    <version>11.6.1-SNAPSHOT</version>
+    <version>11.6.1</version>
     <name>ARLAS Tagger parent</name>
 
     <modules>
