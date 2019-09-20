@@ -86,4 +86,10 @@ function test_tagger() {
         mvn -Dit.test=TagIT verify -DskipTests=false -DfailIfNoTests=false
 }
 
+function test_doc() {
+    ./mkDocs.sh
+}
+
 if [ "$STAGE" == "TAG" ]; then test_tagger; fi
+if [ "$STAGE" == "DOC" ]; then test_doc; fi
+
