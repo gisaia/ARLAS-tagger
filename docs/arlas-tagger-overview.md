@@ -2,10 +2,10 @@
 
 The ARLAS Tagger offers 3 APIs:
 
-- an API for [tagging](arlas-api-tagging.md), meaning adding (or removing) a value to a field in ARLAS `collections` (`http://.../arlas_tagger/write/`)
-- an API for monitoring the `tagging` operation status (`http://.../arlas_tagger/status/`
+- a `write` API for [tagging](arlas-api-tagging.md), meaning adding (or removing) a value to a field in ARLAS `collections` (`http://.../arlas_tagger/write/`)
+- an `status` API for monitoring the `tagging` operation status (`http://.../arlas_tagger/status/`
 - an API for monitoring the server health and performances
-- endpoints for testing the tagging API and the status API with swagger
+- endpoints for testing the write API and the status API with swagger
 
 ## Monitoring
 
@@ -13,7 +13,7 @@ The monitoring API provides some information about the health and the performanc
 
 | URL | Description |
 | --- | --- |
-| http://.../admin/metrics?pretty=true  |  Metrics about the performances of the ARLAS server. Metrics about the collection API  are prefixed with `io.arlas.server.rest.collections` and metrics about the explore API are prefixed with `io.arlas.server.rest.explore`|
+| http://.../admin/metrics?pretty=true  |  Metrics about the performances of the ARLAS Tagger. Metrics about the `write` and `status` APIs are prefixed with `io.arlas.tagger`|
 | http://.../admin/ping | Returns pong  |
 | http://.../admin/threads | List of running threads |
 | http://.../admin/healthcheck?pretty=true  |  Whether the service is healthy or not |

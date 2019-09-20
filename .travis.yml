@@ -7,6 +7,7 @@ services:
 
 env:
   - STAGE=TAG DOCKER_COMPOSE_VERSION=1.17.1
+  - STAGE=DOC DOCKER_COMPOSE_VERSION=1.17.1
 
 before_install:
   - sudo apt-get update
