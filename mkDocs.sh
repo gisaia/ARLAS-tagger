@@ -107,10 +107,10 @@ docker run --rm \
     -v $PWD:/opt/maven \
 	-v $HOME/.m2:/root/.m2 \
 	busybox \
-        sh -c 'cat /opt/maven/target/generated-docs/overview.md > /opt/maven/target/generated-docs/reference.md \
-        && cat /opt/maven/target/generated-docs/paths.md >> /opt/maven/target/generated-docs/reference.md \
-        && cat /opt/maven/target/generated-docs/definitions.md >> /opt/maven/target/generated-docs/reference.md \
-        && cat /opt/maven/target/generated-docs/security.md >> /opt/maven/target/generated-docs/reference.md'
+        sh -c 'cat /opt/maven/target/generated-docs/overview.md > /opt/maven/target/generated-docs/tagger_reference.md \
+        && cat /opt/maven/target/generated-docs/paths.md >> /opt/maven/target/generated-docs/tagger_reference.md \
+        && cat /opt/maven/target/generated-docs/definitions.md >> /opt/maven/target/generated-docs/tagger_reference.md \
+        && cat /opt/maven/target/generated-docs/security.md >> /opt/maven/target/generated-docs/tagger_reference.md'
 
 echo "=> Copy CHANGELOG.md"
 docker run --rm \
@@ -121,10 +121,10 @@ docker run --rm \
 
 echo "=> Check generated documentation"
 if [[ ! -f ${BASEDIR}/target/generated-docs/typescript-doc/classes/_api_.writeapi.md ]] ; then
-    echo 'File "_api_.writeapi.md" is not generated, aborting.'
+    echo 'File "_api_.writeapi.md" was not generated, aborting.'
     exit -1
 fi
-if [[ ! -f ${BASEDIR}/target/generated-docs/reference.md ]] ; then
-    echo 'File "reference.md" is not generated, aborting.'
+if [[ ! -f ${BASEDIR}/target/generated-docs/tagger_reference.md ]] ; then
+    echo 'File "tagger_reference.md" was not generated, aborting.'
     exit -1
 fi
