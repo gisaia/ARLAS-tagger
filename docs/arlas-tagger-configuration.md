@@ -112,6 +112,18 @@ docker run -ti -d \
 | ARLAS_TAGGER_MIN_THREADS | server.minThreads | 8 |
 | ARLAS_TAGGER_MAX_QUEUED_REQUESTS | server.maxQueuedRequests | 1024 |
 
+### Logging
+
+| Environment variable | ARLAS Server configuration variable | Default |
+| --- | --- | --- |
+| ARLAS_LOGGING_LEVEL | logging.level | INFO |
+| ARLAS_LOGGING_CONSOLE_LEVEL | logging.appenders[type: console].threshold | INFO |
+| ARLAS_LOGGING_FILE | logging.appenders[type: file].currentLogFilename | arlas.log |
+| ARLAS_LOGGING_FILE_LEVEL | logging.appenders[type: file].threshold | INFO |
+| ARLAS_LOGGING_FILE_ARCHIVE | logging.appenders[type: file].archive | true |
+| ARLAS_LOGGING_FILE_ARCHIVE_FILE_PATTERN | logging.appenders[type: file].archivedLogFilenamePattern | arlas-%d.log |
+| ARLAS_LOGGING_FILE_ARCHIVE_FILE_COUNT |logging.appenders[type: file].archivedFileCount  | 5 |
+
 ### JAVA
 
 | Environment variable | Description |
