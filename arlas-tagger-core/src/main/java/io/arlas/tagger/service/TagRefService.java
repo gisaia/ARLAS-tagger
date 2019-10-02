@@ -86,6 +86,10 @@ public class TagRefService extends KafkaConsumerRunner {
                     AggregationResponse aggregationResponse = getArlasAggregation(tagRequest);
                     int nbResult = aggregationResponse.elements.size();
                     updateResponse.propagated = nbResult;
+                    if (nbResult == 0 ) {
+                        updateResponse.progress = 100f;
+                        taggingStatus.updateStatus(tagRequest.id, updateResponse, statusTimeout);
+                    }
                     for (int i = 0; i < nbResult; i++) {
                         AggregationResponse a = aggregationResponse.elements.get(i);
                         Filter filter = getFilter(tagRequest.propagation.filter);
@@ -103,7 +107,6 @@ public class TagRefService extends KafkaConsumerRunner {
                         search.filter = filter;
                         tagKafkaProducer.sendToExecuteTags(TagRefRequest.fromTagRefRequest(tagRequest, search, (int)(i+1)*100/nbResult));
                         taggingStatus.updateStatus(tagRequest.id, updateResponse, statusTimeout);
-
                     }
                 }
             } catch (IOException e) {

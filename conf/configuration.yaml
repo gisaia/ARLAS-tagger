@@ -17,6 +17,22 @@ server:
   maxQueuedRequests: ${ARLAS_TAGGER_MAX_QUEUED_REQUESTS:-1024}
 
 ########################################################
+############ LOGGING                     ###############
+########################################################
+# Configuration console and file LOGGING
+logging:
+  level: ${ARLAS_LOGGING_LEVEL:-INFO}
+  appenders:
+    - type: console
+      threshold:  ${ARLAS_LOGGING_CONSOLE_LEVEL:-INFO}
+    - type: file
+      currentLogFilename: ${ARLAS_LOGGING_FILE:-arlas.log}
+      threshold: ${ARLAS_LOGGING_FILE_LEVEL:-INFO}
+      archive: ${ARLAS_LOGGING_FILE_ARCHIVE:-true}
+      archivedLogFilenamePattern: ${ARLAS_LOGGING_FILE_ARCHIVE_FILE_PATTERN:-arlas-%d.log}
+      archivedFileCount: ${ARLAS_LOGGING_FILE_ARCHIVE_FILE_COUNT:-5}
+
+########################################################
 ############ ARLAS TAGGER                ###############
 ########################################################
 swagger: # Configuration of SWAGGER for generating documentation and APIs
