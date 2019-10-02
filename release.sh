@@ -123,6 +123,7 @@ if [ -z ${ARLAS_DEV+x} ]; then usage;          else    echo "Next development ve
 #########################################
 
 if [ "$RELEASE" == "YES" ]; then
+    export npmlogin=`npm whoami`
     if  [ -z "$npmlogin"  ] ; then echo "Your are not logged on to npm"; exit -1; else  echo "logged as "$npmlogin ; fi
 
     if  [ -z "$PIP_LOGIN"  ] ; then echo "Please set PIP_LOGIN environment variable"; exit -1; fi
