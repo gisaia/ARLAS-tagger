@@ -114,7 +114,7 @@ docker run -ti -d \
 
 ### Logging
 
-| Environment variable | ARLAS Server configuration variable | Default |
+| Environment variable | ARLAS Tagger configuration variable | Default |
 | --- | --- | --- |
 | ARLAS_LOGGING_LEVEL | logging.level | INFO |
 | ARLAS_LOGGING_CONSOLE_LEVEL | logging.appenders[type: console].threshold | INFO |
