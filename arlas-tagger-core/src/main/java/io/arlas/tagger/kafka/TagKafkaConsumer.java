@@ -34,14 +34,14 @@ public class TagKafkaConsumer extends KafkaConsumer<String, String> {
         super(properties);
     }
 
-    public static TagKafkaConsumer build(ArlasTaggerConfiguration configuration, String topic, String consumerGroupId) {
+    public static TagKafkaConsumer build(ArlasTaggerConfiguration configuration, String topic, String consumerGroupId, Integer batchSize) {
         final Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, configuration.kafkaConfiguration.bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId);
         props.put(ConsumerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString());
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, configuration.kafkaConfiguration.batchSize);
+        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, batchSize);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         props.putAll(configuration.kafkaConfiguration.getExtraPropertiesAsMap());
 

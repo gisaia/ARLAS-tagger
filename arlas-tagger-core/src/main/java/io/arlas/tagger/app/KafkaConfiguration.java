@@ -25,8 +25,14 @@ import io.arlas.tagger.util.StringToMap;
 import java.util.Map;
 
 public class KafkaConfiguration {
-    @JsonProperty("kafka_batch_size")
-    public Integer batchSize;
+    @JsonProperty("kafka_commit_max_retries")
+    public Integer commitMaxRetries;
+
+    @JsonProperty("kafka_batch_size_tagref")
+    public Integer batchSizeTagRef;
+
+    @JsonProperty("kafka_batch_size_tagexec")
+    public Integer batchSizeTagExec;
 
     @JsonProperty("kafka_bootstrap_servers")
     public String bootstrapServers;
