@@ -63,6 +63,7 @@ public class TagRefService extends KafkaConsumerRunner {
 
     @Override
     public void processRecords(ConsumerRecords<String, String> records) {
+        long start = System.currentTimeMillis();
         for (ConsumerRecord<String, String> record : records) {
 
             try {
@@ -72,21 +73,25 @@ public class TagRefService extends KafkaConsumerRunner {
                 updateResponse.action = tagRequest.action;
                 updateResponse.label = tagRequest.label;
                 if (tagRequest.propagation == null) {
-                    LOGGER.debug("No propagation requested: " + record.value());
+                    LOGGER.debug("No propagation requested: {}", record.value());
                     tagRequest.progress = 100f; // only one request
                     tagKafkaProducer.sendToExecuteTags(tagRequest);
                     taggingStatus.updateStatus(tagRequest.id, updateResponse, statusTimeout);
+                    LOGGER.trace("Sent to Kafka with processtime={}ms", (System.currentTimeMillis() - start));
                 } else {
                     LOGGER.debug("Propagation requested: " + record.value());
 
+                    long t0 = System.currentTimeMillis();
                     AggregationResponse aggregationResponse = getArlasAggregation(tagRequest);
                     int nbResult = aggregationResponse.elements.size();
+                    LOGGER.trace("Arlas aggregation request returned {} hits with processtime={}ms", nbResult, (System.currentTimeMillis() - t0));
                     updateResponse.propagated = nbResult;
                     if (nbResult == 0 ) {
                         updateResponse.progress = 100f;
                         taggingStatus.updateStatus(tagRequest.id, updateResponse, statusTimeout);
                     }
                     for (int i = 0; i < nbResult; i++) {
+                        t0 = System.currentTimeMillis();
                         AggregationResponse a = aggregationResponse.elements.get(i);
                         Filter filter = getFilter(tagRequest.propagation.filter);
 
@@ -103,6 +108,7 @@ public class TagRefService extends KafkaConsumerRunner {
                         search.filter = filter;
                         tagKafkaProducer.sendToExecuteTags(TagRefRequest.fromTagRefRequest(tagRequest, search, (int)(i+1)*100/nbResult));
                         taggingStatus.updateStatus(tagRequest.id, updateResponse, statusTimeout);
+                        LOGGER.trace("Sent to Kafka {}/{} with processtime={}ms", i, nbResult, (System.currentTimeMillis() - t0));
                     }
                 }
             } catch (IOException e) {
@@ -117,7 +123,7 @@ public class TagRefService extends KafkaConsumerRunner {
                 LOGGER.warn("Arlas exception for " + record.value(), e);
             }
         }
-        LOGGER.debug("End of records processing");
+        LOGGER.debug("Finished processing {} tagref records with processtime={}ms", records.count(), (System.currentTimeMillis() - start));
     }
 
     private Filter getFilter(Filter inFilter) {

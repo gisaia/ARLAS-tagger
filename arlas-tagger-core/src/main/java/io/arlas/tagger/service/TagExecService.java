@@ -55,11 +55,13 @@ public class TagExecService extends KafkaConsumerRunner {
 
     @Override
     public void processRecords(ConsumerRecords<String, String> records) {
+        long start = System.currentTimeMillis();
         for (ConsumerRecord<String, String> record : records) {
 
             try {
+                long t0 = System.currentTimeMillis();
                 final TagRefRequest tagRequest = MAPPER.readValue(record.value(), TagRefRequest.class);
-                LOGGER.debug("Processing record " + tagRequest.toString());
+                LOGGER.debug("Processing record {}", tagRequest.toString());
                 CollectionReference collectionReference = Optional
                         .ofNullable(updateServices.getDaoCollectionReference().getCollectionReference(tagRequest.collection))
                         .orElseThrow(() -> new NotFoundException(tagRequest.collection));
@@ -87,6 +89,7 @@ public class TagExecService extends KafkaConsumerRunner {
                         break;
                 }
                 taggingStatus.updateStatus(tagRequest.id, updateResponse, statusTimeout);
+                LOGGER.trace("Tagged {} documents (failed={}) with processtime={}ms", updateResponse.updated, updateResponse.failed, (System.currentTimeMillis() - t0));
             } catch (IOException e) {
                 LOGGER.warn("Could not parse record " + record.value());
             } catch (NotFoundException e) {
@@ -99,6 +102,6 @@ public class TagExecService extends KafkaConsumerRunner {
                 LOGGER.warn("Arlas exception for " + record.value(), e);
             }
         }
-        LOGGER.debug("End of records processing");
+        LOGGER.debug("Finished processing {} tagexec records with processtime={}ms", records.count(), (System.currentTimeMillis() - start));
     }
 }
