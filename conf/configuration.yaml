@@ -39,8 +39,10 @@ swagger: # Configuration of SWAGGER for generating documentation and APIs
   resourcePackage: io.arlas.tagger.rest # The java package to process for extracting the APIs
 
 kafka_configuration:
+  kafka_commit_max_retries: ${KAFKA_COMMIT_MAX_RETRIES:-3}
   kafka_consumer_poll_timeout: ${KAFKA_CONSUMER_POLL_TIMEOUT:-100}
-  kafka_batch_size: ${KAFKA_BATCH_SIZE:-10}
+  kafka_batch_size_tagref: ${KAFKA_BATCH_SIZE_TAGREF:-1}
+  kafka_batch_size_tagexec: ${KAFKA_BATCH_SIZE_TAGEXEC:-10}
   kafka_bootstrap_servers: ${KAFKA_BROKERS:-localhost:9092}
   kafka_consumer_group_id_tagref_log: ${KAFKA_CONSUMER_GROUP_ID_TAGREF_LOG:-tagref_log_consumer_group}
   kafka_consumer_group_id_execute_tags: ${KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS:-execute_tags_consumer_group}

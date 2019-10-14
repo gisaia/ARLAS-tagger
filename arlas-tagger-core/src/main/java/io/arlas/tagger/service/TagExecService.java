@@ -47,7 +47,7 @@ public class TagExecService extends KafkaConsumerRunner {
 
 
     public TagExecService(ArlasTaggerConfiguration configuration, String topic, String consumerGroupId, UpdateServices updateServices) {
-        super(configuration, topic, consumerGroupId);
+        super(configuration, topic, consumerGroupId, configuration.kafkaConfiguration.batchSizeTagExec);
         this.updateServices = updateServices;
         this.taggingStatus = TaggingStatus.getInstance();
         this.statusTimeout = configuration.statusTimeout;
@@ -55,9 +55,6 @@ public class TagExecService extends KafkaConsumerRunner {
 
     @Override
     public void processRecords(ConsumerRecords<String, String> records) {
-        if (records.count() > 0) {
-            LOGGER.debug("Kafka polling returned " + records.count());
-        }
         for (ConsumerRecord<String, String> record : records) {
 
             try {

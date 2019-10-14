@@ -54,7 +54,7 @@ public class TagRefService extends KafkaConsumerRunner {
 
     public TagRefService(ArlasTaggerConfiguration configuration, String topic, String consumerGroupId,
                          TagKafkaProducer tagKafkaProducer, UpdateServices updateServices) {
-        super(configuration, topic, consumerGroupId);
+        super(configuration, topic, consumerGroupId, configuration.kafkaConfiguration.batchSizeTagRef);
         this.tagKafkaProducer = tagKafkaProducer;
         this.updateServices = updateServices;
         this.taggingStatus = TaggingStatus.getInstance();
@@ -63,10 +63,6 @@ public class TagRefService extends KafkaConsumerRunner {
 
     @Override
     public void processRecords(ConsumerRecords<String, String> records) {
-        if (records.count() > 0) {
-            LOGGER.debug("Kafka polling returned " + records.count());
-        }
-
         for (ConsumerRecord<String, String> record : records) {
 
             try {

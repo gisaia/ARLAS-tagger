@@ -22,6 +22,7 @@ package io.arlas.tagger.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.arlas.tagger.app.ArlasTaggerConfiguration;
 import io.arlas.tagger.kafka.TagKafkaConsumer;
+import org.apache.kafka.clients.consumer.CommitFailedException;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
@@ -32,19 +33,21 @@ import java.time.Duration;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class KafkaConsumerRunner implements Runnable {
-    Logger LOGGER = LoggerFactory.getLogger(TagRefService.class);
+    Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerRunner.class);
 
     private final ArlasTaggerConfiguration configuration;
     private final String topic;
     private final String consumerGroupId;
+    private final Integer batchSize;
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private KafkaConsumer consumer;
     protected static ObjectMapper MAPPER = new ObjectMapper();
 
-    public KafkaConsumerRunner(ArlasTaggerConfiguration configuration, String topic, String consumerGroupId) {
+    public KafkaConsumerRunner(ArlasTaggerConfiguration configuration, String topic, String consumerGroupId, Integer batchSize) {
         this.configuration = configuration;
         this.topic = topic;
         this.consumerGroupId = consumerGroupId;
+        this.batchSize = batchSize;
     }
 
     public abstract void processRecords(ConsumerRecords<String, String> records);
@@ -52,20 +55,39 @@ public abstract class KafkaConsumerRunner implements Runnable {
     @Override
     public void run() {
         try {
-            LOGGER.info("Starting consumer of topic " + topic);
-            consumer = TagKafkaConsumer.build(configuration, topic, consumerGroupId);
-            while (true) {
+            LOGGER.info("["+topic+"] Starting consumer");
+            consumer = TagKafkaConsumer.build(configuration, topic, consumerGroupId, batchSize);
+            long start = System.currentTimeMillis();
+            long duration = System.currentTimeMillis();
+            int nbFailure = 0;
 
-                ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(configuration.kafkaConfiguration.consumerPollTimeout));
-                processRecords(records);
-                consumer.commitSync();
+            while (true) {
+                try {
+                    ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(configuration.kafkaConfiguration.consumerPollTimeout));
+                    if (records.count() > 0) {
+                        LOGGER.debug("["+topic+"] Nb records polled=" + records.count());
+                        start = System.currentTimeMillis();
+                        processRecords(records);
+                        consumer.commitSync();
+                        nbFailure = 0;
+                    }
+                } catch (CommitFailedException e) {
+                    nbFailure++;
+                    duration = System.currentTimeMillis() - start;
+                    LOGGER.warn("["+topic+"] Commit failed (attempt nb " + nbFailure + "): process time=" + duration + "ms (compare to max.poll.interval.ms value) / exception=" + e.getMessage());
+                    if (nbFailure > configuration.kafkaConfiguration.commitMaxRetries) {
+                        LOGGER.error("["+topic+"] Too many attempts, exiting.");
+                        try { consumer.close(); } catch (RuntimeException r) {}
+                        System.exit(1);
+                    }
+                }
             }
         } catch (WakeupException e) {
             // Ignore exception if closing
             if (!closed.get()) throw e;
         } finally {
-            LOGGER.info("Closing consumer of topic " + topic);
-            consumer.close();
+            LOGGER.info("["+topic+"] Closing consumer");
+            try { consumer.close(); } catch (RuntimeException r) {}
         }
     }
 
