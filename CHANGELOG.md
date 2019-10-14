@@ -1,6 +1,16 @@
 # Change Log
 
-## [v11.6.2](https://github.com/gisaia/ARLAS-tagger/tree/v11.6.2) (2019-10-02)
+## [v11.6.3](https://github.com/gisaia/ARLAS-tagger/tree/v11.6.3) (2019-10-14)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v11.6.2...v11.6.3)
+
+**New stuff:**
+
+- \[Tagger\] Add tracing for process time [\#35](https://github.com/gisaia/ARLAS-tagger/issues/35)
+- \[Tagger\] Improve Kafka reliability [\#30](https://github.com/gisaia/ARLAS-tagger/issues/30) [[conf](https://github.com/gisaia/ARLAS-tagger/labels/conf)]
+- Improve Kafka reliability  [\#31](https://github.com/gisaia/ARLAS-tagger/pull/31) [[conf](https://github.com/gisaia/ARLAS-tagger/labels/conf)] ([alainbodiguel](https://github.com/alainbodiguel))
+
+## [v11.6.2](https://github.com/gisaia/ARLAS-tagger/tree/v11.6.2) (2019-10-03)
 
 [Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v11.6.1...v11.6.2)
 
