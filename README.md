@@ -19,6 +19,7 @@ ARLAS-tagger is compliant with the following versions:
 | ElasticSearch Version |
 |  ---  |
 | 7.0.1 |
+| 7.1.1 |
 
 > Note : data collections tagged by ARLAS-tagger should be referenced in Elasticsearch by ARLAS-server
 
