@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-export ELASTIC_VERSION="7.1.1"
+export ELASTIC_VERSION="7.2.1"
 export ARLAS_VERSION="11.7.0"
 
 function clean_exit {
