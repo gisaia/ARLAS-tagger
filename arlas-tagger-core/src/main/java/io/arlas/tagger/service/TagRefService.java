@@ -54,7 +54,7 @@ public class TagRefService extends KafkaConsumerRunner {
 
     public TagRefService(ArlasTaggerConfiguration configuration, String topic, String consumerGroupId,
                          TagKafkaProducer tagKafkaProducer, UpdateServices updateServices) {
-        super(configuration, topic, consumerGroupId, configuration.kafkaConfiguration.batchSizeTagRef);
+        super(1, configuration, topic, consumerGroupId, configuration.kafkaConfiguration.batchSizeTagRef);
         this.tagKafkaProducer = tagKafkaProducer;
         this.updateServices = updateServices;
         this.taggingStatus = TaggingStatus.getInstance();
@@ -74,8 +74,8 @@ public class TagRefService extends KafkaConsumerRunner {
                 updateResponse.label = tagRequest.label;
                 if (tagRequest.propagation == null) {
                     LOGGER.debug("No propagation requested: {}", record.value());
-                    tagRequest.progress = 100f; // only one request
-                    tagKafkaProducer.sendToExecuteTags(tagRequest);
+                    tagRequest.nbResult = 1; // only one request
+                    tagKafkaProducer.sendToExecuteTags(null, tagRequest);
                     taggingStatus.updateStatus(tagRequest.id, updateResponse, statusTimeout);
                     LOGGER.trace("Sent to Kafka with processtime={}ms", (System.currentTimeMillis() - start));
                 } else {
@@ -106,9 +106,9 @@ public class TagRefService extends KafkaConsumerRunner {
 
                         Search search = new Search();
                         search.filter = filter;
-                        tagKafkaProducer.sendToExecuteTags(TagRefRequest.fromTagRefRequest(tagRequest, search, (int)(i+1)*100/nbResult));
+                        tagKafkaProducer.sendToExecuteTags(a.key.toString(), TagRefRequest.fromTagRefRequest(tagRequest, search, nbResult));
                         taggingStatus.updateStatus(tagRequest.id, updateResponse, statusTimeout);
-                        LOGGER.trace("Sent to Kafka {}/{} with processtime={}ms", i, nbResult, (System.currentTimeMillis() - t0));
+                        LOGGER.trace("Sent to Kafka {}/{} with processtime={}ms and key={}", i+1, nbResult, (System.currentTimeMillis() - t0), a.key.toString());
                     }
                 }
             } catch (IOException e) {

@@ -30,7 +30,7 @@ public class TagRefRequest extends TagRequest {
     public String collection;
     public String partitionFilter;
     public String id; // id used to follow up the request, automatically generated
-    public float progress; // value between 0 and 100 giving an indication of the request progress
+    public long nbResult;
 
     public static TagRefRequest fromTagRequest(TagRequest t, String collection, String partitionFilter, Action action) {
         TagRefRequest tagRefRequest = new TagRefRequest();
@@ -44,8 +44,8 @@ public class TagRefRequest extends TagRequest {
         tagRefRequest.action = action;
         return tagRefRequest;
     }
-    // TODO : replace object with Arlas server Search object
-    public static TagRefRequest fromTagRefRequest(TagRefRequest t, Search search, float progress) {
+
+    public static TagRefRequest fromTagRefRequest(TagRefRequest t, Search search, long nbResult) {
         TagRefRequest tagRefRequest = new TagRefRequest();
         tagRefRequest.id = t.id;
         tagRefRequest.label = t.label;
@@ -53,7 +53,7 @@ public class TagRefRequest extends TagRequest {
         tagRefRequest.tag = t.tag;
         tagRefRequest.collection = t.collection;
         tagRefRequest.action = t.action;
-        tagRefRequest.progress = progress;
+        tagRefRequest.nbResult = nbResult;
         return tagRefRequest;
     }
 
@@ -65,7 +65,7 @@ public class TagRefRequest extends TagRequest {
                 ", partitionFilter='" + partitionFilter + '\'' +
                 ", id=" + id +
                 ", label=" + label +
-                ", progress=" + progress +
+                ", nbResult=" + nbResult +
                 '}';
     }
 }

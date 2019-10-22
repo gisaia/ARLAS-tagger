@@ -21,9 +21,11 @@ package io.arlas.tagger.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cyclops.control.Try;
 import io.arlas.tagger.app.ArlasTaggerConfiguration;
-import org.apache.kafka.clients.producer.*;
+import io.arlas.tagger.model.request.TagRefRequest;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,27 +47,30 @@ public class TagKafkaProducer extends KafkaProducer<String, String> {
         this.executeTagsTopic = executeTagsTopic;
     }
 
-    public Try<Void, Exception> sendToTagRefLog(Object object) {
-        return send(tagRefLogTopic, object);
+    public void sendToTagRefLog(TagRefRequest tagRequest) {
+        send(tagRefLogTopic, tagRequest);
     }
 
-    public Try<Void, Exception> sendToExecuteTags(Object object) {
-        return send(executeTagsTopic, object);
+    public void sendToExecuteTags(String id, TagRefRequest tagRequest) {
+        send(executeTagsTopic, id, tagRequest);
     }
 
-    private Try<Void, Exception> send(String topic, Object object) {
+    private void send(String topic, TagRefRequest tagRequest) {
+        send(topic, null, tagRequest);
+    }
 
-        LOGGER.debug("Sending to Kafka on topic " + topic);
-        return Try.runWithCatch(() -> {
+    private void send(String topic, String id, TagRefRequest tagRequest) {
 
-            this.send(new ProducerRecord<>(topic, jacksonMapper.writeValueAsString(object)),
-                    (metadata, exception) -> {
-                        if (metadata == null) {
-                            throw new RuntimeException(exception);
-                        }
-                    });
-
-        }, JsonProcessingException.class);
+        try {
+            LOGGER.debug("Sending to Kafka on topic " + topic);
+            ProducerRecord<String, String> producerRecord =
+                    id == null ?
+                            new ProducerRecord<>(topic, jacksonMapper.writeValueAsString(tagRequest)) :
+                            new ProducerRecord<>(topic, id, jacksonMapper.writeValueAsString(tagRequest));
+            this.send(producerRecord);
+        } catch (JsonProcessingException e) {
+            LOGGER.warn("Failed to send to producer: " + e.getMessage());
+        }
     }
 
     public static TagKafkaProducer build(ArlasTaggerConfiguration configuration) {

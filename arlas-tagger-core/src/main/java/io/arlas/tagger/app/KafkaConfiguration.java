@@ -34,6 +34,9 @@ public class KafkaConfiguration {
     @JsonProperty("kafka_batch_size_tagexec")
     public Integer batchSizeTagExec;
 
+    @JsonProperty("kafka_number_tagexec")
+    public Integer nbTagExec;
+
     @JsonProperty("kafka_bootstrap_servers")
     public String bootstrapServers;
 

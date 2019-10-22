@@ -28,5 +28,5 @@ public class TagRequest {
     public Search search;
     public Tag tag;
     public Propagation propagation;
-    public String label; // human readable name for identifying the tag order
+    public String label; // human readable name for identifying the tag request
 }

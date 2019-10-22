@@ -39,15 +39,17 @@ public abstract class KafkaConsumerRunner implements Runnable {
     private final String topic;
     private final String consumerGroupId;
     private final Integer batchSize;
+    private final int nbThread;
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private KafkaConsumer consumer;
     protected static ObjectMapper MAPPER = new ObjectMapper();
 
-    public KafkaConsumerRunner(ArlasTaggerConfiguration configuration, String topic, String consumerGroupId, Integer batchSize) {
+    public KafkaConsumerRunner(int nbThread, ArlasTaggerConfiguration configuration, String topic, String consumerGroupId, Integer batchSize) {
         this.configuration = configuration;
         this.topic = topic;
         this.consumerGroupId = consumerGroupId;
         this.batchSize = batchSize;
+        this.nbThread = nbThread;
     }
 
     public abstract void processRecords(ConsumerRecords<String, String> records);
@@ -55,7 +57,7 @@ public abstract class KafkaConsumerRunner implements Runnable {
     @Override
     public void run() {
         try {
-            LOGGER.info("["+topic+"] Starting consumer");
+            LOGGER.info("[{}-{}] Starting consumer", topic, nbThread);
             consumer = TagKafkaConsumer.build(configuration, topic, consumerGroupId, batchSize);
             long start = System.currentTimeMillis();
             long duration = System.currentTimeMillis();
@@ -65,7 +67,7 @@ public abstract class KafkaConsumerRunner implements Runnable {
                 try {
                     ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(configuration.kafkaConfiguration.consumerPollTimeout));
                     if (records.count() > 0) {
-                        LOGGER.debug("["+topic+"] Nb records polled=" + records.count());
+                        LOGGER.debug("[{}-{}] Nb records polled={}", topic, nbThread, records.count());
                         start = System.currentTimeMillis();
                         processRecords(records);
                         consumer.commitSync();
@@ -74,9 +76,9 @@ public abstract class KafkaConsumerRunner implements Runnable {
                 } catch (CommitFailedException e) {
                     nbFailure++;
                     duration = System.currentTimeMillis() - start;
-                    LOGGER.warn("["+topic+"] Commit failed (attempt nb " + nbFailure + "): process time=" + duration + "ms (compare to max.poll.interval.ms value) / exception=" + e.getMessage());
+                    LOGGER.warn("[{}-{}] Commit failed (attempt nb {}): process time={}ms (compare to max.poll.interval.ms value) / exception={}", topic, nbThread, nbFailure, duration, e.getMessage());
                     if (nbFailure > configuration.kafkaConfiguration.commitMaxRetries) {
-                        LOGGER.error("["+topic+"] Too many attempts, exiting.");
+                        LOGGER.error("[{}-{}] Too many attempts, exiting.", topic, nbThread);
                         try { consumer.close(); } catch (RuntimeException r) {}
                         System.exit(1);
                     }
@@ -86,7 +88,7 @@ public abstract class KafkaConsumerRunner implements Runnable {
             // Ignore exception if closing
             if (!closed.get()) throw e;
         } finally {
-            LOGGER.info("["+topic+"] Closing consumer");
+            LOGGER.info("[{}-{}] Closing consumer", topic, nbThread);
             try { consumer.close(); } catch (RuntimeException r) {}
         }
     }

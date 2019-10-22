@@ -44,10 +44,11 @@ public class TagExecService extends KafkaConsumerRunner {
     private UpdateServices updateServices;
     private TaggingStatus taggingStatus;
     private Long statusTimeout;
+    private int nbThread;
 
 
-    public TagExecService(ArlasTaggerConfiguration configuration, String topic, String consumerGroupId, UpdateServices updateServices) {
-        super(configuration, topic, consumerGroupId, configuration.kafkaConfiguration.batchSizeTagExec);
+    public TagExecService(int nbThread, ArlasTaggerConfiguration configuration, String topic, String consumerGroupId, UpdateServices updateServices) {
+        super(nbThread, configuration, topic, consumerGroupId, configuration.kafkaConfiguration.batchSizeTagExec);
         this.updateServices = updateServices;
         this.taggingStatus = TaggingStatus.getInstance();
         this.statusTimeout = configuration.statusTimeout;
@@ -71,35 +72,24 @@ public class TagExecService extends KafkaConsumerRunner {
                 MixedRequest request = new MixedRequest();
                 request.basicRequest = tagRequest.search;
                 request.headerRequest = searchHeader;
-                UpdateResponse updateResponse = taggingStatus.getStatus(tagRequest.id).orElse(new UpdateResponse());
-                updateResponse.id = tagRequest.id;
-                updateResponse.progress = tagRequest.progress;
-                updateResponse.action = tagRequest.action;
-                long updated = 0l;
-                UpdateResponse updResp;
+                UpdateResponse updResp = null;
                 switch (tagRequest.action) {
                     case ADD:
                         updResp = updateServices.tag(collectionReference, request, tagRequest.tag, Integer.MAX_VALUE);
-                        updated = updResp.updated;
-                        updateResponse.add(updResp);
+                        updatedTotal += updateStatus(tagRequest, updResp, t0);
                         break;
                     case REMOVE:
                         updResp = updateServices.unTag(collectionReference, request, tagRequest.tag, Integer.MAX_VALUE);
-                        updated = updResp.updated;
-                        updateResponse.add(updResp);
-                        break;
+                        updatedTotal += updateStatus(tagRequest, updResp, t0);
+                       break;
                     case REMOVEALL:
                         updResp = updateServices.removeAll(collectionReference, request, tagRequest.tag, Integer.MAX_VALUE);
-                        updated = updResp.updated;
-                        updateResponse.add(updResp);
+                        updatedTotal += updateStatus(tagRequest, updResp, t0);
                         break;
                     default:
                         LOGGER.warn("Unknown action received in tag request: " + tagRequest.action);
                         break;
                 }
-                taggingStatus.updateStatus(tagRequest.id, updateResponse, statusTimeout);
-                updatedTotal += updated;
-                LOGGER.trace("Tagged {}/{} documents (failed={}) with processtime={}ms", updated, updateResponse.updated, updateResponse.failed, (System.currentTimeMillis() - t0));
             } catch (IOException e) {
                 LOGGER.warn("Could not parse record " + record.value());
             } catch (NotFoundException e) {
@@ -113,5 +103,16 @@ public class TagExecService extends KafkaConsumerRunner {
             }
         }
         LOGGER.debug("Finished processing {} tagexec records ({} docs) with processtime={}ms", records.count(), updatedTotal, (System.currentTimeMillis() - start));
+    }
+
+    private long updateStatus(TagRefRequest tagRequest, UpdateResponse updResp, long t0) {
+        UpdateResponse updateResponse = taggingStatus.getStatus(tagRequest.id).orElse(new UpdateResponse());
+        updateResponse.id = tagRequest.id;
+        updateResponse.nbResult = tagRequest.nbResult;
+        updateResponse.action = tagRequest.action;
+        updateResponse.add(updResp);
+        taggingStatus.updateStatus(tagRequest.id, updateResponse, statusTimeout);
+        LOGGER.trace("Tagged {} documents [total={} / {}%] (failed={}) with processtime={}ms", updResp.updated, updateResponse.updated, updateResponse.progress, updateResponse.failed, (System.currentTimeMillis() - t0));
+        return updResp.updated;
     }
 }
