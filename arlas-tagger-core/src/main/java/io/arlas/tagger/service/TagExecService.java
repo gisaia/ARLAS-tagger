@@ -56,6 +56,7 @@ public class TagExecService extends KafkaConsumerRunner {
     @Override
     public void processRecords(ConsumerRecords<String, String> records) {
         long start = System.currentTimeMillis();
+        long updatedTotal = 0l;
         for (ConsumerRecord<String, String> record : records) {
 
             try {
@@ -74,22 +75,31 @@ public class TagExecService extends KafkaConsumerRunner {
                 updateResponse.id = tagRequest.id;
                 updateResponse.progress = tagRequest.progress;
                 updateResponse.action = tagRequest.action;
+                long updated = 0l;
+                UpdateResponse updResp;
                 switch (tagRequest.action) {
                     case ADD:
-                        updateResponse.add(updateServices.tag(collectionReference, request, tagRequest.tag, Integer.MAX_VALUE));
+                        updResp = updateServices.tag(collectionReference, request, tagRequest.tag, Integer.MAX_VALUE);
+                        updated = updResp.updated;
+                        updateResponse.add(updResp);
                         break;
                     case REMOVE:
-                        updateResponse.add(updateServices.unTag(collectionReference, request, tagRequest.tag, Integer.MAX_VALUE));
+                        updResp = updateServices.unTag(collectionReference, request, tagRequest.tag, Integer.MAX_VALUE);
+                        updated = updResp.updated;
+                        updateResponse.add(updResp);
                         break;
                     case REMOVEALL:
-                        updateResponse.add(updateServices.removeAll(collectionReference, request, tagRequest.tag, Integer.MAX_VALUE));
+                        updResp = updateServices.removeAll(collectionReference, request, tagRequest.tag, Integer.MAX_VALUE);
+                        updated = updResp.updated;
+                        updateResponse.add(updResp);
                         break;
                     default:
                         LOGGER.warn("Unknown action received in tag request: " + tagRequest.action);
                         break;
                 }
                 taggingStatus.updateStatus(tagRequest.id, updateResponse, statusTimeout);
-                LOGGER.trace("Tagged {} documents (failed={}) with processtime={}ms", updateResponse.updated, updateResponse.failed, (System.currentTimeMillis() - t0));
+                updatedTotal += updated;
+                LOGGER.trace("Tagged {}/{} documents (failed={}) with processtime={}ms", updated, updateResponse.updated, updateResponse.failed, (System.currentTimeMillis() - t0));
             } catch (IOException e) {
                 LOGGER.warn("Could not parse record " + record.value());
             } catch (NotFoundException e) {
@@ -102,6 +112,6 @@ public class TagExecService extends KafkaConsumerRunner {
                 LOGGER.warn("Arlas exception for " + record.value(), e);
             }
         }
-        LOGGER.debug("Finished processing {} tagexec records with processtime={}ms", records.count(), (System.currentTimeMillis() - start));
+        LOGGER.debug("Finished processing {} tagexec records ({} docs) with processtime={}ms", records.count(), updatedTotal, (System.currentTimeMillis() - start));
     }
 }

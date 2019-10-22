@@ -57,6 +57,9 @@ elastic_configuration:
   elastic_nodes: ${ARLAS_ELASTIC_NODES:-localhost:9300}
   elastic_sniffing: ${ARLAS_ELASTIC_SNIFFING:-false}
   elastic_cluster: ${ARLAS_ELASTIC_CLUSTER:-elasticsearch}
+  elastic-enable-ssl: ${ARLAS_ELASTIC_ENABLE_SSL:-false}
+  elastic-credentials: ${ARLAS_ELASTIC_CREDENTIALS:-}
+  elastic-compress: ${ARLAS_ELASTIC_COMPRESS:-true}
 
 arlas_collections_configuration:
   arlas_index:  ${ARLAS_COLLECTION_INDEX:-.arlas}

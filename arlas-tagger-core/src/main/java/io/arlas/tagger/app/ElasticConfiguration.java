@@ -38,6 +38,16 @@ public class ElasticConfiguration {
     @JsonProperty("elastic_cluster")
     public String elasticcluster;
 
+
+    @JsonProperty("elastic-enable-ssl")
+    public Boolean elasticEnableSsl;
+
+    @JsonProperty("elastic-credentials")
+    public String elasticCredentials;
+
+    @JsonProperty("elastic-compress")
+    public Boolean elasticCompress;
+
     public static List<Pair<String,Integer>> getElasticNodes(String esNodes) {
         List<Pair<String,Integer>> elasticNodes = new ArrayList<>();
         if(!StringUtil.isNullOrEmpty(esNodes)) {

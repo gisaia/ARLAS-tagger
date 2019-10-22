@@ -29,11 +29,11 @@ COPY --from=build /opt/build/arlas-tagger.jar /opt/app/
 COPY --from=build /opt/build/conf/configuration.yaml /opt/app/
 COPY --from=build /opt/build/docker/docker-resources/wait-for-elasticsearch.sh /opt/app/
 COPY --from=build /opt/build/docker/docker-resources/wait-for-tagger-deps.sh /opt/app/
-COPY --from=build /opt/build/docker/docker-resources/start-tagger.sh /opt/app/
+COPY --from=build /opt/build/docker/docker-resources/start.sh /opt/app/
 EXPOSE 9998
 
 HEALTHCHECK --interval=5m --timeout=3s \
   CMD curl http://localhost:9998/admin/healthcheck | grep -v "\"healthy\":false" || exit 1
 
 ENTRYPOINT ["bash", "-c"]
-CMD ["/opt/app/start-tagger.sh"]
+CMD ["/opt/app/start.sh"]
