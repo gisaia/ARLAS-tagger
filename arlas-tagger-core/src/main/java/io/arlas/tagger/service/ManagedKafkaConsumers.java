@@ -23,10 +23,14 @@ import io.arlas.tagger.app.ArlasTaggerConfiguration;
 import io.arlas.tagger.kafka.TagKafkaProducer;
 import io.dropwizard.lifecycle.Managed;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ManagedKafkaConsumers implements Managed {
     private ArlasTaggerConfiguration configuration;
     private TagRefService tagRefService;
-    private TagExecService tagExecService;
+    private List<TagExecService> tagExecServices;
+    private UpdateServices updateServices;
 
     public ManagedKafkaConsumers(ArlasTaggerConfiguration configuration, TagKafkaProducer tagKafkaProducer, UpdateServices updateServices) {
         this.configuration = configuration;
@@ -34,22 +38,29 @@ public class ManagedKafkaConsumers implements Managed {
                 configuration.kafkaConfiguration.tagRefLogTopic,
                 configuration.kafkaConfiguration.tagRefLogConsumerGroupId,
                 tagKafkaProducer, updateServices);
-        this.tagExecService = new TagExecService(configuration,
-                configuration.kafkaConfiguration.executeTagsTopic,
-                configuration.kafkaConfiguration.executeTagsConsumerGroupId,
-                updateServices);
+
+        this.tagExecServices = new ArrayList<>();
+        this.updateServices = updateServices;
     }
 
     @Override
     public void start() throws Exception {
         new Thread(tagRefService).start();
-        new Thread(tagExecService).start();
-
+        for (int i=0; i < configuration.kafkaConfiguration.nbTagExec; i++){
+            TagExecService t = new TagExecService(i, configuration,
+                    configuration.kafkaConfiguration.executeTagsTopic,
+                    configuration.kafkaConfiguration.executeTagsConsumerGroupId,
+                    updateServices);
+            tagExecServices.add(t);
+            new Thread(t).start();
+        }
     }
 
     @Override
     public void stop() throws Exception {
         this.tagRefService.stop();
-        this.tagExecService.stop();
+        for (int i=0; i < tagExecServices.size(); i++) {
+            try { this.tagExecServices.get(i).stop(); } catch (Exception e) {};
+        }
     }
 }

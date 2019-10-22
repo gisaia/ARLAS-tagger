@@ -89,6 +89,7 @@ docker run -ti -d \
 | KAFKA_CONSUMER_POLL_TIMEOUT | kafka_configuration.kafka_consumer_poll_timeout | 100 | Kafka consumer poll timeout |
 | KAFKA_BATCH_SIZE_TAGREF | kafka_configuration.kafka_batch_size_tagref | 1 | Kafka consumer batch size for tagref_log consumer |
 | KAFKA_BATCH_SIZE_TAGEXEC | kafka_configuration.kafka_batch_size_tagexec | 10 | Kafka consumer batch size for execute_tags consumer |
+| KAFKA_NUMBER_TAGEXEC | kafka_configuration.kafka_number_tagexec | 1 | Number of execute_tags consumers |
 | KAFKA_BROKERS | kafka_configuration.kafka_bootstrap_servers | kafka:9092 | Kafka brokers|
 | KAFKA_CONSUMER_GROUP_ID_TAGREF_LOG | kafka_configuration.kafka_consumer_group_id_tagref_log | tagref_log_consumer_group | Kafka consumer group for `tagref_log` topic |
 | KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS | kafka_configuration.kafka_consumer_group_id_execute_tags | execute_tags_consumer_group | Kafka consumer group for `execute_tags` topic |
