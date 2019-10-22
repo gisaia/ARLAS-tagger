@@ -3,7 +3,7 @@ set -e
 
 SCRIPT_DIRECTORY="$(cd "$(dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd)"
 PROJECT_ROOT_DIRECTORY="$(dirname "$SCRIPT_DIRECTORY")"
-DOCKER_COMPOSE_TAGGER="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compose-tagger.yml"
+DOCKER_COMPOSE_TAGGER="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compose.yml"
 DOCKER_COMPOSE_ES="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compose-elasticsearch.yml"
 DOCKER_COMPOSE_ARLAS_SERVER="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compose-arlas-server.yml"
 

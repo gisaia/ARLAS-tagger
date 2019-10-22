@@ -69,11 +69,14 @@ docker run -ti -d \
 
 ### Elasticsearch
 
-| Environment variable   | ARLAS Tagger configuration variable | Default | Description |
+| Environment variable      | ARLAS Tagger configuration variable | Default | Description |
 | --- | --- | --- | ---  |
-| ARLAS_ELASTIC_NODES    | elastic_configuration.elastic_nodes    | localhost:9300 | comma separated list of elasticsearch nodes as host:port values |
-| ARLAS_ELASTIC_SNIFFING | elastic_configuration.elastic_sniffing | false          | allow elasticsearch to dynamically add new hosts and remove old ones (*)|
-| ARLAS_ELASTIC_CLUSTER  | elastic_configuration.elastic_cluster  | elasticsearch  | clustername of the elasticsearch cluster that is used for storing ARLAS configuration |
+| ARLAS_ELASTIC_NODES       | elastic_configuration.elastic_nodes    | localhost:9300 | comma separated list of elasticsearch nodes as host:port values |
+| ARLAS_ELASTIC_SNIFFING    | elastic_configuration.elastic_sniffing | false          | allow elasticsearch to dynamically add new hosts and remove old ones (*)|
+| ARLAS_ELASTIC_CLUSTER     | elastic_configuration.elastic_cluster  | elasticsearch  | clustername of the elasticsearch cluster that is used for storing ARLAS configuration |
+| ARLAS_ELASTIC_ENABLE_SSL  | elastic-enable-ssl  | false          | use SSL to connect to elasticsearch |
+| ARLAS_ELASTIC_CREDENTIALS | elastic-credentials | user:password  | credentials to connect to elasticsearch |
+| ARLAS_ELASTIC_COMPRESS    | elastic-compress    | true           | transport.compress parameter of the elasticsearch connection |
 
 !!! note 
     (*) Note that the IP addresses the sniffer connects to are the ones declared as the publish address in those node’s Elasticsearch config.

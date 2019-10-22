@@ -20,6 +20,7 @@
 package io.arlas.tagger.app;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.arlas.server.exceptions.ArlasConfigurationException;
 import io.dropwizard.Configuration;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 
@@ -43,4 +44,16 @@ public class ArlasTaggerConfiguration extends Configuration {
 
     @JsonProperty("tagging_status_timeout")
     public Long statusTimeout;
+
+    public void check() throws ArlasConfigurationException {
+        if (elasticConfiguration.getElasticNodes().isEmpty()) {
+            throw new ArlasConfigurationException("Elastic search configuration missing in config file.");
+        }
+        if (elasticConfiguration.elasticEnableSsl == null) {
+            elasticConfiguration.elasticEnableSsl = false;
+        }
+        if (elasticConfiguration.elasticCompress == null) {
+            elasticConfiguration.elasticCompress = true;
+        }
+    }
 }
