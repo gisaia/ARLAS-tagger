@@ -100,12 +100,7 @@ public class TagRESTService {
 
         if (tagRequest.tag != null && tagRequest.tag.path != null && tagRequest.tag.value != null) {
             TagRefRequest tagRefRequest = TagRefRequest.fromTagRequest(tagRequest, collection, partitionFilter, Action.ADD);
-            tagKafkaProducer.sendToTagRefLog(tagRefRequest);
-            UpdateResponse updateResponse = new UpdateResponse();
-            updateResponse.id = tagRefRequest.id;
-            updateResponse.label = tagRefRequest.label;
-            TaggingStatus.getInstance().updateStatus(tagRefRequest.id, updateResponse, statusTimeout);
-            return Response.ok(updateResponse).build();
+            return doAction(tagRefRequest);
         } else {
             throw new BadRequestException("Tag element is missing required data.");
         }
@@ -155,14 +150,21 @@ public class TagRESTService {
         if (tagRequest.tag != null && tagRequest.tag.path != null) {
             TagRefRequest tagRefRequest = TagRefRequest.fromTagRequest(tagRequest, collection, partitionFilter,
                     tagRequest.tag.value != null ? Action.REMOVE : Action.REMOVEALL);
-            UpdateResponse updateResponse = new UpdateResponse();
-            updateResponse.id = tagRefRequest.id;
-            updateResponse.label = tagRefRequest.label;
-            tagKafkaProducer.sendToTagRefLog(tagRefRequest);
-
-            return Response.ok(updateResponse).build();
+            return doAction(tagRefRequest);
         } else {
             throw new BadRequestException("Tag element is missing required data.");
         }
+    }
+
+    private Response doAction(TagRefRequest tagRefRequest) {
+        tagKafkaProducer.sendToTagRefLog(tagRefRequest);
+
+        UpdateResponse updateResponse = new UpdateResponse();
+        updateResponse.id = tagRefRequest.id;
+        updateResponse.label = tagRefRequest.label;
+        updateResponse.action = tagRefRequest.action;
+        TaggingStatus.getInstance().initStatus(tagRefRequest.id, updateResponse, statusTimeout);
+
+        return Response.ok(updateResponse).build();
     }
 }

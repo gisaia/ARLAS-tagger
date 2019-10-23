@@ -42,14 +42,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Optional;
 
 
 public class TagRefService extends KafkaConsumerRunner {
     private Logger LOGGER = LoggerFactory.getLogger(TagRefService.class);
     private final TagKafkaProducer tagKafkaProducer;
     private final UpdateServices updateServices;
-    private TaggingStatus taggingStatus;
     private Long statusTimeout;
 
     public TagRefService(ArlasTaggerConfiguration configuration, String topic, String consumerGroupId,
@@ -57,7 +59,6 @@ public class TagRefService extends KafkaConsumerRunner {
         super(1, configuration, topic, consumerGroupId, configuration.kafkaConfiguration.batchSizeTagRef);
         this.tagKafkaProducer = tagKafkaProducer;
         this.updateServices = updateServices;
-        this.taggingStatus = TaggingStatus.getInstance();
         this.statusTimeout = configuration.statusTimeout;
     }
 
@@ -68,29 +69,21 @@ public class TagRefService extends KafkaConsumerRunner {
 
             try {
                 final TagRefRequest tagRequest = MAPPER.readValue(record.value(), TagRefRequest.class);
-                UpdateResponse updateResponse = taggingStatus.getStatus(tagRequest.id).orElse(new UpdateResponse());
-                updateResponse.id = tagRequest.id;
-                updateResponse.action = tagRequest.action;
-                updateResponse.label = tagRequest.label;
                 if (tagRequest.propagation == null) {
                     LOGGER.debug("No propagation requested: {}", record.value());
-                    tagRequest.nbResult = 1; // only one request
+
+                    tagRequest.propagated = 1; // only one request
                     tagKafkaProducer.sendToExecuteTags(null, tagRequest);
-                    taggingStatus.updateStatus(tagRequest.id, updateResponse, statusTimeout);
-                    LOGGER.trace("Sent to Kafka with processtime={}ms", (System.currentTimeMillis() - start));
+                    LOGGER.trace("Sent to Kafka with processtime={}ms and no key", (System.currentTimeMillis() - start));
                 } else {
                     LOGGER.debug("Propagation requested: " + record.value());
 
                     long t0 = System.currentTimeMillis();
                     AggregationResponse aggregationResponse = getArlasAggregation(tagRequest);
-                    int nbResult = aggregationResponse.elements.size();
-                    LOGGER.trace("Arlas aggregation request returned {} hits with processtime={}ms", nbResult, (System.currentTimeMillis() - t0));
-                    updateResponse.propagated = nbResult;
-                    if (nbResult == 0 ) {
-                        updateResponse.progress = 100f;
-                        taggingStatus.updateStatus(tagRequest.id, updateResponse, statusTimeout);
-                    }
-                    for (int i = 0; i < nbResult; i++) {
+                    int propagated = aggregationResponse.elements.size();
+                    tagRequest.propagated = propagated;
+                    LOGGER.trace("Arlas aggregation request returned {} hits with processtime={}ms", propagated, (System.currentTimeMillis() - t0));
+                    for (int i = 0; i < propagated; i++) {
                         t0 = System.currentTimeMillis();
                         AggregationResponse a = aggregationResponse.elements.get(i);
                         Filter filter = getFilter(tagRequest.propagation.filter);
@@ -106,11 +99,11 @@ public class TagRefService extends KafkaConsumerRunner {
 
                         Search search = new Search();
                         search.filter = filter;
-                        tagKafkaProducer.sendToExecuteTags(a.key.toString(), TagRefRequest.fromTagRefRequest(tagRequest, search, nbResult));
-                        taggingStatus.updateStatus(tagRequest.id, updateResponse, statusTimeout);
-                        LOGGER.trace("Sent to Kafka {}/{} with processtime={}ms and key={}", i+1, nbResult, (System.currentTimeMillis() - t0), a.key.toString());
+                        tagKafkaProducer.sendToExecuteTags(a.key.toString(), TagRefRequest.fromTagRefRequest(tagRequest, search, propagated));
+                        LOGGER.trace("Sent to Kafka {}/{} with processtime={}ms and key={}", i+1, propagated, (System.currentTimeMillis() - t0), a.key.toString());
                     }
                 }
+                updateStatus(tagRequest);
             } catch (IOException e) {
                 LOGGER.warn("Could not parse record " + record.value());
             } catch (NotFoundException e) {
@@ -124,6 +117,15 @@ public class TagRefService extends KafkaConsumerRunner {
             }
         }
         LOGGER.debug("Finished processing {} tagref records with processtime={}ms", records.count(), (System.currentTimeMillis() - start));
+    }
+
+    private void updateStatus(TagRefRequest tagRequest) {
+        UpdateResponse updateResponse = new UpdateResponse();
+        updateResponse.id = tagRequest.id;
+        updateResponse.action = tagRequest.action;
+        updateResponse.label = tagRequest.label;
+        updateResponse.propagated = tagRequest.propagated;
+        TaggingStatus.getInstance().updateStatus(tagRequest, updateResponse, false, statusTimeout);
     }
 
     private Filter getFilter(Filter inFilter) {
