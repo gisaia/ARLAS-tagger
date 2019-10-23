@@ -23,48 +23,52 @@ import io.arlas.tagger.model.enumerations.Action;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class UpdateResponse {
-    public List<Failure> failures = new ArrayList<>();
-    public long failed = 0;
-    public long updated = 0;
-    public float progress = 0f;
-    public long nbResult = 0l;
-    public AtomicLong nbRequest = new AtomicLong(0);
     public String id;
+    public String label;
     public Action action;
-    public long propagated = 0;
+    public List<Failure> failures = new ArrayList<>();
+    public long failed = 0l;
+    public long updated = 0l;
+    public float progress = 0f;
+    public long nbRequest = 0l;
+    public long propagated = -1l;
     public long startTime;
     public long endTime;
-    public long processingTimeMs; // ms
-    public String label;
+    public long processingTimeMs = 0l; // ms
 
     public UpdateResponse() {
         this.startTime = System.currentTimeMillis();
         this.endTime = System.currentTimeMillis();
     }
 
-    public static class Failure{
+    public static class Failure {
         public String id;
         public String message;
         public String type;
-        public  Failure(){}
-        public  Failure(String id, String message, String type){
+        public Failure(){}
+        public Failure(String id, String message, String type){
             this.id = id;
             this.message = message;
             this.type = type;
         }
     }
 
-    public void add(UpdateResponse r) {
+    public void add(UpdateResponse r, boolean incrementNbRequest) {
         this.failures.addAll(r.failures);
         this.failed += r.failed;
         this.updated += r.updated;
         this.action = r.action;
         this.endTime = System.currentTimeMillis();
         this.processingTimeMs = endTime - startTime;
-        this.nbRequest.getAndIncrement();
-        this.progress = nbResult != 0 ? (float) nbRequest.get()*100/nbResult : 100f;
+        if (incrementNbRequest) this.nbRequest++;
+        if (propagated == -1l) { // not started yet
+            this.progress = 0f;
+        } else if (propagated == 0l) { // no tag request match
+            this.progress = 100f;
+        } else {
+            this.progress = (float) nbRequest * 100 / propagated;
+        }
     }
 }

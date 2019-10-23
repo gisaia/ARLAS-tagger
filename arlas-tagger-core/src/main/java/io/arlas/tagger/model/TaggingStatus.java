@@ -19,6 +19,7 @@
 
 package io.arlas.tagger.model;
 
+import io.arlas.tagger.model.request.TagRefRequest;
 import io.arlas.tagger.model.response.UpdateResponse;
 import io.arlas.tagger.util.SelfExpiringHashMap;
 import io.arlas.tagger.util.SelfExpiringMap;
@@ -26,21 +27,34 @@ import io.arlas.tagger.util.SelfExpiringMap;
 import java.util.Optional;
 
 public class TaggingStatus {
+    private static TaggingStatus INSTANCE = new TaggingStatus();
+
     private SelfExpiringMap<String, UpdateResponse> statusMap;
+
     private TaggingStatus() {
         statusMap = new SelfExpiringHashMap<>();
-    }
-
-    public void updateStatus(String id, UpdateResponse status, long timeout) {
-        statusMap.put(id, status, timeout);
     }
 
     public Optional<UpdateResponse> getStatus(String id) {
         return Optional.ofNullable(statusMap.get(id));
     }
-    private static TaggingStatus INSTANCE = new TaggingStatus();
 
     public static TaggingStatus getInstance() {
         return INSTANCE;
+    }
+
+    public void initStatus(String id, UpdateResponse status, long timeout) {
+        statusMap.put(id, status, timeout);
+    }
+
+    public synchronized UpdateResponse updateStatus(TagRefRequest tagRequest, UpdateResponse updResp, boolean incrNbRequest, long statusTimeout) {
+        UpdateResponse updateResponse = getStatus(tagRequest.id).orElse(new UpdateResponse());
+        updateResponse.id = tagRequest.id;
+        updateResponse.label = tagRequest.label;
+        updateResponse.action = tagRequest.action;
+        updateResponse.propagated = tagRequest.propagated;
+        updateResponse.add(updResp, incrNbRequest);
+        statusMap.put(tagRequest.id, updateResponse, statusTimeout);
+        return updateResponse;
     }
 }

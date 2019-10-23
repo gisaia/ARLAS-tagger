@@ -26,46 +26,48 @@ import io.arlas.tagger.model.enumerations.Action;
 import java.util.UUID;
 
 public class TagRefRequest extends TagRequest {
+    public String id; // id used to follow up the request, automatically generated
     public Action action;
     public String collection;
     public String partitionFilter;
-    public String id; // id used to follow up the request, automatically generated
-    public long nbResult;
+    public long propagated = -1l; // initial value indicates the propagation has not been evaluated yet
 
     public static TagRefRequest fromTagRequest(TagRequest t, String collection, String partitionFilter, Action action) {
         TagRefRequest tagRefRequest = new TagRefRequest();
         tagRefRequest.id = UUID.randomUUID().toString();
         tagRefRequest.label = t.label;
+        tagRefRequest.action = action;
         tagRefRequest.search = t.search;
         tagRefRequest.tag = t.tag;
-        tagRefRequest.propagation = t.propagation;
         tagRefRequest.collection = collection;
+
+        tagRefRequest.propagation = t.propagation;
         tagRefRequest.partitionFilter = partitionFilter;
-        tagRefRequest.action = action;
         return tagRefRequest;
     }
 
-    public static TagRefRequest fromTagRefRequest(TagRefRequest t, Search search, long nbResult) {
+    public static TagRefRequest fromTagRefRequest(TagRefRequest t, Search search, long propagated) {
         TagRefRequest tagRefRequest = new TagRefRequest();
         tagRefRequest.id = t.id;
         tagRefRequest.label = t.label;
+        tagRefRequest.action = t.action;
         tagRefRequest.search = search;
         tagRefRequest.tag = t.tag;
         tagRefRequest.collection = t.collection;
-        tagRefRequest.action = t.action;
-        tagRefRequest.nbResult = nbResult;
+
+        tagRefRequest.propagated = propagated;
         return tagRefRequest;
     }
 
     @Override
     public String toString() {
         return "TagRefRequest{" +
-                "action=" + action +
+                "id=" + id +
+                ", label=" + label +
+                ", action=" + action +
                 ", collection='" + collection + '\'' +
                 ", partitionFilter='" + partitionFilter + '\'' +
-                ", id=" + id +
-                ", label=" + label +
-                ", nbResult=" + nbResult +
+                ", propagated=" + propagated +
                 '}';
     }
 }
