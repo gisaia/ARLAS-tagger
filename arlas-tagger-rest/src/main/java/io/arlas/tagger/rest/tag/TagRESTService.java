@@ -43,7 +43,7 @@ import javax.ws.rs.core.Response;
                 title = "ARLAS Tagger API",
                 description = "(Un)Tag fields of ARLAS collections",
                 license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0.html"),
-                version = "11.0.4"),
+                version = "API_VERSION"),
         schemes = { SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS })
 
 public class TagRESTService {
