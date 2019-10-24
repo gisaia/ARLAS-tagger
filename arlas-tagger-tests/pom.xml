@@ -5,7 +5,7 @@
     <parent>
         <artifactId>arlas-tagger-parent</artifactId>
         <groupId>io.arlas</groupId>
-        <version>11.6.4-SNAPSHOT</version>
+        <version>11.6.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>io.arlas</groupId>
             <artifactId>arlas-tagger</artifactId>
-            <version>11.6.4-SNAPSHOT</version>
+            <version>11.6.4</version>
         </dependency>
         <!-- ____________________________________________________ -->
         <!-- Tests -->

@@ -1,5 +1,25 @@
 # Change Log
 
+## [v11.6.4](https://github.com/gisaia/ARLAS-tagger/tree/v11.6.4) (2019-10-24)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v11.6.3...v11.6.4)
+
+**New stuff:**
+
+- \[Tagger\] Add support for ES x-pack [\#32](https://github.com/gisaia/ARLAS-tagger/issues/32)
+- Support multiple execute consumers [\#42](https://github.com/gisaia/ARLAS-tagger/pull/42) ([alainbodiguel](https://github.com/alainbodiguel))
+- Feature/x pack [\#37](https://github.com/gisaia/ARLAS-tagger/pull/37) ([alainbodiguel](https://github.com/alainbodiguel))
+- Refactor TaggingStatus  [\#43](https://github.com/gisaia/ARLAS-tagger/pull/43) ([alainbodiguel](https://github.com/alainbodiguel))
+
+**Fixed bugs:**
+
+- Remove DefaultHealthCheck as dropwizard provides, by default, a deadlock healthcheck  [\#15](https://github.com/gisaia/ARLAS-tagger/issues/15)
+
+**Miscellaneous:**
+
+- Aggregate the different docker-compose files into one [\#9](https://github.com/gisaia/ARLAS-tagger/issues/9)
+- Add configuration by environment variable [\#28](https://github.com/gisaia/ARLAS-tagger/issues/28)
+
 ## [v11.6.3](https://github.com/gisaia/ARLAS-tagger/tree/v11.6.3) (2019-10-14)
 
 [Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v11.6.2...v11.6.3)
@@ -8,6 +28,7 @@
 
 - \[Tagger\] Add tracing for process time [\#35](https://github.com/gisaia/ARLAS-tagger/issues/35)
 - \[Tagger\] Improve Kafka reliability [\#30](https://github.com/gisaia/ARLAS-tagger/issues/30) [[conf](https://github.com/gisaia/ARLAS-tagger/labels/conf)]
+- Add tracing \(process time\) [\#36](https://github.com/gisaia/ARLAS-tagger/pull/36) ([alainbodiguel](https://github.com/alainbodiguel))
 - Improve Kafka reliability  [\#31](https://github.com/gisaia/ARLAS-tagger/pull/31) [[conf](https://github.com/gisaia/ARLAS-tagger/labels/conf)] ([alainbodiguel](https://github.com/alainbodiguel))
 
 ## [v11.6.2](https://github.com/gisaia/ARLAS-tagger/tree/v11.6.2) (2019-10-03)
