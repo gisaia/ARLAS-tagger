@@ -158,7 +158,7 @@ mvn versions:set -DnewVersion=${ARLAS_TAGGER_VERSION}
 sed -i.bak 's/\"API_VERSION\"/\"'${FULL_API_VERSION}'\"/' arlas-tagger-rest/src/main/java/io/arlas/tagger/rest/tag/TagRESTService.java
 
 if [ "$RELEASE" == "YES" ]; then
-    export DOCKERFILE="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/Dockerfile-tagger"
+    export DOCKERFILE="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/Dockerfile"
 else
     echo "=> Build arlas-tagger"
     docker run \
