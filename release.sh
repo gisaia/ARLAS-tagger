@@ -10,7 +10,7 @@ PROJECT_ROOT_DIRECTORY="$SCRIPT_DIRECTORY"
 TEST="YES"
 RELEASE="NO"
 BASEDIR=$PWD
-DOCKER_COMPOSE_TAGGER="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compose-tagger.yml"
+DOCKER_COMPOSE_TAGGER="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compose.yml"
 DOCKER_COMPOSE_ES="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compose-elasticsearch.yml"
 
 #########################################
