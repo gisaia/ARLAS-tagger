@@ -7,6 +7,7 @@ By tagging, we mean here adding a value to a field that is of type `Array`.
 The field to tag must be declared in the [ARLAS collection](arlas-collection-model#model).
 
 There are two ways to select `hits` to be tagged:
+
 - if no `propagation` parameter is specified, the value is added to the field of all the hits of a collection matching 
 the `Search` part of the TagRequest. If no `Search` is provided, then the whole collection is tagged.
 - if a `propagation` parameter is specified, then a first selection is made from the `Search` part in order to list all 
