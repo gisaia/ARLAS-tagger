@@ -33,6 +33,10 @@ function clean_exit {
     else
         echo "=> Skip discard changes";
         git checkout -- pom.xml
+        git checkout -- arlas-tagger/pom.xml
+        git checkout -- arlas-tagger-core/pom.xml
+        git checkout -- arlas-tagger-rest/pom.xml
+        git checkout -- arlas-tagger-tests/pom.xml
         sed -i.bak 's/\"'${FULL_API_VERSION}'\"/\"API_VERSION\"/' arlas-tagger-rest/src/main/java/io/arlas/tagger/rest/tag/TagRESTService.java
     fi
     exit $ARG
@@ -44,7 +48,7 @@ trap clean_exit EXIT
 #########################################
 usage(){
 	echo "Usage: ./release.sh -api-major=X -api-minor=Y -api-patch=Z -dev=Z+1 -es=Y [--no-tests]"
-    echo " -es |--elastic-range           elasticsearch versions supported"
+  echo " -es |--elastic-range           elasticsearch versions supported"
 	echo " -api-major|--api-version       release arlas-tagger API major version"
 	echo " -api-minor|--api-minor-version release arlas-tagger API minor version"
 	echo " -api-patch|--api-patch-version release arlas-tagger API patch version"
@@ -193,6 +197,9 @@ i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/swagger.yaml -o tar
 echo "=> Stop arlas-tagger stack"
 docker-compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} --project-name arlas down -v
 
+echo "=> Generate API documentation"
+mvn "-Dswagger.output=docs/api" swagger2markup:convertSwagger2markup
+
 itests() {
 	echo "=> Run integration tests"
     ./scripts/test-integration.sh
@@ -297,6 +304,7 @@ if [ "$RELEASE" == "YES" ]; then
     git tag -d v${ARLAS_TAGGER_VERSION}
     git push origin :v${ARLAS_TAGGER_VERSION}
     echo "=> Commit release version"
+    git add docs/api
     git commit -a -m "release version ${ARLAS_TAGGER_VERSION}"
     git tag v${ARLAS_TAGGER_VERSION}
     git push origin v${ARLAS_TAGGER_VERSION}
