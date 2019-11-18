@@ -5,10 +5,49 @@
 <a name="status_resource"></a>
 ### Status
 
+<a name="taggingget"></a>
+#### TagStatus
+```
+GET /status/{collection}/_tag
+```
+
+
+##### Description
+Get the status of the (un)tagging operation, given the id of a previously requested operation
+
+
+##### Parameters
+
+|Type|Name|Description|Schema|Default|
+|---|---|---|---|---|
+|**Path**|**collection**  <br>*required*|collection|string||
+|**Query**|**id**  <br>*required*|The id of a previously requested (un)tag operation.|string||
+|**Query**|**pretty**  <br>*optional*|Pretty print|boolean|`"false"`|
+
+
+##### Responses
+
+|HTTP Code|Description|Schema|
+|---|---|---|
+|**200**|Successful operation|[UpdateResponse](#updateresponse)|
+|**400**|Bad request.|[Error](#error)|
+|**500**|Arlas Server Error.|[Error](#error)|
+
+
+##### Consumes
+
+* `application/json;charset=utf-8`
+
+
+##### Produces
+
+* `application/json;charset=utf-8`
+
+
 <a name="tagginggetlist"></a>
 #### TagList
 ```
-GET /status/{collection}/_tag
+GET /status/{collection}/_taglist
 ```
 
 
@@ -29,45 +68,6 @@ Get the list of previously submitted tag requests
 |HTTP Code|Description|Schema|
 |---|---|---|
 |**200**|Successful operation|[TagRefRequest](#tagrefrequest)|
-|**400**|Bad request.|[Error](#error)|
-|**500**|Arlas Server Error.|[Error](#error)|
-
-
-##### Consumes
-
-* `application/json;charset=utf-8`
-
-
-##### Produces
-
-* `application/json;charset=utf-8`
-
-
-<a name="taggingget"></a>
-#### TagStatus
-```
-GET /status/{collection}/_tag/{id}
-```
-
-
-##### Description
-Get the status of the (un)tagging operation, given the id of a previously requested operation
-
-
-##### Parameters
-
-|Type|Name|Description|Schema|Default|
-|---|---|---|---|---|
-|**Path**|**collection**  <br>*required*|collection|string||
-|**Path**|**id**  <br>*required*|The id of a previously requested (un)tag operation.|string||
-|**Query**|**pretty**  <br>*optional*|Pretty print|boolean|`"false"`|
-
-
-##### Responses
-
-|HTTP Code|Description|Schema|
-|---|---|---|
-|**200**|Successful operation|[UpdateResponse](#updateresponse)|
 |**400**|Bad request.|[Error](#error)|
 |**500**|Arlas Server Error.|[Error](#error)|
 

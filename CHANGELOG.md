@@ -1,5 +1,14 @@
 # Change Log
 
+## [v11.6.6](https://github.com/gisaia/ARLAS-tagger/tree/v11.6.6) (2019-11-18)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v11.6.5...v11.6.6)
+
+**Fixed bugs:**
+
+- \[Tagger\] Rollback breaking change on status endpoint [\#52](https://github.com/gisaia/ARLAS-tagger/issues/52)
+- Rollback breaking change on status endpoint \(fix \#52\) [\#53](https://github.com/gisaia/ARLAS-tagger/pull/53) ([alainbodiguel](https://github.com/alainbodiguel))
+
 ## [v11.6.5](https://github.com/gisaia/ARLAS-tagger/tree/v11.6.5) (2019-11-18)
 
 [Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v11.6.4...v11.6.5)
@@ -7,7 +16,9 @@
 **New stuff:**
 
 - \[Tagger\] Use slicing for Untag operation [\#50](https://github.com/gisaia/ARLAS-tagger/issues/50)
+- \[Tagger\] Endpoint for list of tagging jobs [\#33](https://github.com/gisaia/ARLAS-tagger/issues/33)
 - Use slicing for Untag operation \(fix \#50\) [\#51](https://github.com/gisaia/ARLAS-tagger/pull/51) ([alainbodiguel](https://github.com/alainbodiguel))
+- Endpoint for list of tagging jobs \(fix \#33\) [\#49](https://github.com/gisaia/ARLAS-tagger/pull/49) [[API](https://github.com/gisaia/ARLAS-tagger/labels/API)] ([alainbodiguel](https://github.com/alainbodiguel))
 - Fix minor documentation issue [\#48](https://github.com/gisaia/ARLAS-tagger/pull/48) [[documentation](https://github.com/gisaia/ARLAS-tagger/labels/documentation)] ([elouanKeryell-Even](https://github.com/elouanKeryell-Even))
 
 **Miscellaneous:**

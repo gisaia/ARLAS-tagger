@@ -7,7 +7,7 @@
 
 
 ### Version information
-*Version* : 11.0.5
+*Version* : 11.0.6
 
 
 ### Contact information
