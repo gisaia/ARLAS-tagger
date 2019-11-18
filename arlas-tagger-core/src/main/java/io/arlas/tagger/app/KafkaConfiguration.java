@@ -49,6 +49,9 @@ public class KafkaConfiguration {
     @JsonProperty("kafka_consumer_group_id_execute_tags")
     public String executeTagsConsumerGroupId;
 
+    @JsonProperty("kafka_consumer_group_id_explore_tags")
+    public String exploreTagsConsumerGroupId;
+
     @JsonProperty("kafka_topic_tagref_log")
     public String tagRefLogTopic;
 
