@@ -24,6 +24,7 @@ public class Documentation  {
     public static final String TAG_OPERATION = "Search and tag the elements found in the collection, given the filters";
     public static final String UNTAG_OPERATION = "Search and untag the elements found in the collection, given the filters";
     public static final String TAGSTATUS_OPERATION = "Get the status of the (un)tagging operation, given the id of a previously requested operation";
+    public static final String TAGLIST_OPERATION = "Get the list of previously submitted tag requests";
     public static final String TAGSTATUS_PARAM_ID = "The id of a previously requested (un)tag operation.";
     public static final String FORM_PRETTY = "Pretty print";
 

@@ -31,9 +31,11 @@ public class TagRefRequest extends TagRequest {
     public String collection;
     public String partitionFilter;
     public long propagated = -1l; // initial value indicates the propagation has not been evaluated yet
+    public long creationTime;
 
     public static TagRefRequest fromTagRequest(TagRequest t, String collection, String partitionFilter, Action action) {
         TagRefRequest tagRefRequest = new TagRefRequest();
+        tagRefRequest.creationTime = System.currentTimeMillis();
         tagRefRequest.id = UUID.randomUUID().toString();
         tagRefRequest.label = t.label;
         tagRefRequest.action = action;
@@ -48,6 +50,7 @@ public class TagRefRequest extends TagRequest {
 
     public static TagRefRequest fromTagRefRequest(TagRefRequest t, Search search, long propagated) {
         TagRefRequest tagRefRequest = new TagRefRequest();
+        tagRefRequest.creationTime = t.creationTime;
         tagRefRequest.id = t.id;
         tagRefRequest.label = t.label;
         tagRefRequest.action = t.action;
@@ -63,6 +66,7 @@ public class TagRefRequest extends TagRequest {
     public String toString() {
         return "TagRefRequest{" +
                 "id=" + id +
+                ", creationTime=" + creationTime +
                 ", label=" + label +
                 ", action=" + action +
                 ", collection='" + collection + '\'' +

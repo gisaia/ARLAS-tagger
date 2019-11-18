@@ -91,7 +91,8 @@ docker run -ti -d \
 | KAFKA_BATCH_SIZE_TAGEXEC | kafka_configuration.kafka_batch_size_tagexec | 10 | Kafka consumer batch size for execute_tags consumer |
 | KAFKA_NUMBER_TAGEXEC | kafka_configuration.kafka_number_tagexec | 1 | Number of execute_tags consumers |
 | KAFKA_BROKERS | kafka_configuration.kafka_bootstrap_servers | kafka:9092 | Kafka brokers|
-| KAFKA_CONSUMER_GROUP_ID_TAGREF_LOG | kafka_configuration.kafka_consumer_group_id_tagref_log | tagref_log_consumer_group | Kafka consumer group for `tagref_log` topic |
+| KAFKA_CONSUMER_GROUP_ID_TAGREF_LOG | kafka_configuration.kafka_consumer_group_id_tagref_log | tagref_log_consumer_group | Kafka consumer group for `tagref_log` topic execution |
+| KAFKA_CONSUMER_GROUP_ID_EXPLORE_TAGS | kafka_configuration.kafka_consumer_group_id_explore_tags | explore_tags_consumer_group | Kafka consumer group for `tagref_log` topic exploration (replay, list) |
 | KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS | kafka_configuration.kafka_consumer_group_id_execute_tags | execute_tags_consumer_group | Kafka consumer group for `execute_tags` topic |
 | KAFKA_TOPIC_TAGREF_LOG | kafka_configuration.kafka_topic_tagref_log | tagref_log | Kafka topic for tag requests queue (tag log, retained) |
 | KAFKA_TOPIC_EXECUTE_TAGS | kafka_configuration.kafka_topic_execute_tags | execute_tags | Kafka topic for actual tag requests (actually executed, not retained) |

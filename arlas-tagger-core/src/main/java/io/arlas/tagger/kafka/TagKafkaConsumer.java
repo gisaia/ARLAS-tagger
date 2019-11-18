@@ -35,6 +35,10 @@ public class TagKafkaConsumer extends KafkaConsumer<String, String> {
     }
 
     public static TagKafkaConsumer build(ArlasTaggerConfiguration configuration, String topic, String consumerGroupId, Integer batchSize) {
+        return build(configuration, topic, consumerGroupId, batchSize, false);
+    }
+
+    public static TagKafkaConsumer build(ArlasTaggerConfiguration configuration, String topic, String consumerGroupId, Integer batchSize, boolean setAutoOffsetValue) {
         final Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, configuration.kafkaConfiguration.bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId);
@@ -43,6 +47,9 @@ public class TagKafkaConsumer extends KafkaConsumer<String, String> {
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, batchSize);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        if (setAutoOffsetValue) {
+            props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        }
         props.putAll(configuration.kafkaConfiguration.getExtraPropertiesAsMap());
 
         TagKafkaConsumer consumer = new TagKafkaConsumer(props);

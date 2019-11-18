@@ -50,6 +50,7 @@ kafka_configuration:
   kafka_bootstrap_servers: ${KAFKA_BROKERS:-localhost:9092}
   kafka_consumer_group_id_tagref_log: ${KAFKA_CONSUMER_GROUP_ID_TAGREF_LOG:-tagref_log_consumer_group}
   kafka_consumer_group_id_execute_tags: ${KAFKA_CONSUMER_GROUP_ID_EXECUTE_TAGS:-execute_tags_consumer_group}
+  kafka_consumer_group_id_explore_tags: ${KAFKA_CONSUMER_GROUP_ID_EXPLORE_TAGS:-explore_tags_consumer_group}
   kafka_topic_tagref_log: ${KAFKA_TOPIC_TAGREF_LOG:-tagref_log}
   kafka_topic_execute_tags: ${KAFKA_TOPIC_EXECUTE_TAGS:-execute_tags}
   kafka_extra_properties: ${KAFKA_EXTRA_PROPS:-}

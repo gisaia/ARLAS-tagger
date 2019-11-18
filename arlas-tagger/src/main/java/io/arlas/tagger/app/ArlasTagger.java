@@ -29,6 +29,7 @@ import io.arlas.tagger.kafka.TagKafkaProducer;
 import io.arlas.tagger.rest.tag.TagRESTService;
 import io.arlas.tagger.rest.tag.TagStatusRESTService;
 import io.arlas.tagger.service.ManagedKafkaConsumers;
+import io.arlas.tagger.service.TagExploreService;
 import io.arlas.tagger.service.UpdateServices;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
@@ -89,6 +90,10 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
         TagKafkaProducer tagKafkaProducer = TagKafkaProducer.build(configuration);
         ManagedKafkaConsumers consumersManager = new ManagedKafkaConsumers(configuration, tagKafkaProducer, updateServices);
         environment.lifecycle().manage(consumersManager);
+        TagExploreService tagExploreService = new TagExploreService(configuration,
+                configuration.kafkaConfiguration.tagRefLogTopic,
+                configuration.kafkaConfiguration.exploreTagsConsumerGroupId,
+                configuration.kafkaConfiguration.batchSizeTagRef);
 
         environment.getObjectMapper().setSerializationInclusion(Include.NON_NULL);
         environment.getObjectMapper().configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
@@ -99,7 +104,7 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
         environment.jersey().register(new ConstraintViolationExceptionMapper());
         environment.jersey().register(new ElasticsearchExceptionMapper());
         environment.jersey().register(new TagRESTService(tagKafkaProducer, configuration.statusTimeout));
-        environment.jersey().register(new TagStatusRESTService());
+        environment.jersey().register(new TagStatusRESTService(tagExploreService));
 
         //filters
         environment.jersey().register(PrettyPrintFilter.class);
