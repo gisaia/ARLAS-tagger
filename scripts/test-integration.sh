@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-export ELASTIC_VERSION="6.8.1"
-export ARLAS_VERSION="11.6.3"
+export ELASTIC_VERSION="7.3.2"
+export ARLAS_VERSION="11.7.2"
 
 function clean_exit {
     ARG=$?
