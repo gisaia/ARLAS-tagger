@@ -1,5 +1,19 @@
 # Change Log
 
+## [v11.6.5](https://github.com/gisaia/ARLAS-tagger/tree/v11.6.5) (2019-11-18)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v11.6.4...v11.6.5)
+
+**New stuff:**
+
+- \[Tagger\] Use slicing for Untag operation [\#50](https://github.com/gisaia/ARLAS-tagger/issues/50)
+- Use slicing for Untag operation \(fix \#50\) [\#51](https://github.com/gisaia/ARLAS-tagger/pull/51) ([alainbodiguel](https://github.com/alainbodiguel))
+- Fix minor documentation issue [\#48](https://github.com/gisaia/ARLAS-tagger/pull/48) [[documentation](https://github.com/gisaia/ARLAS-tagger/labels/documentation)] ([elouanKeryell-Even](https://github.com/elouanKeryell-Even))
+
+**Miscellaneous:**
+
+- \[Tagger\] Generate API documentation [\#46](https://github.com/gisaia/ARLAS-tagger/issues/46) [[documentation](https://github.com/gisaia/ARLAS-tagger/labels/documentation)]
+
 ## [v11.6.4](https://github.com/gisaia/ARLAS-tagger/tree/v11.6.4) (2019-10-24)
 
 [Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v11.6.3...v11.6.4)
