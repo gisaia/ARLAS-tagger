@@ -47,6 +47,10 @@ public class FilteredUpdater extends FluidSearch {
     }
 
     public UpdateResponse doAction(Action action, CollectionReference collectionReference, Tag tag, int max_updates) throws IOException, ArlasException {
+        return doAction(action, collectionReference, tag, max_updates, 1);
+    }
+
+    public UpdateResponse doAction(Action action, CollectionReference collectionReference, Tag tag, int max_updates, int slices) throws IOException, ArlasException {
         if(Strings.isNullOrEmpty(tag.path)){
             throw new io.arlas.server.exceptions.BadRequestException("The tag path must be provided and must not be empty");
         }
@@ -60,6 +64,7 @@ public class FilteredUpdater extends FluidSearch {
                 .source(collectionReference.params.indexName)
                 .filter(this.getBoolQueryBuilder())
                 .size(Math.min(collectionReference.params.update_max_hits,max_updates))
+                .setSlices(slices)
                 .script(this.getTagScript(tag, action));
         BulkByScrollResponse response = updateByQuery.get();
         UpdateResponse updateResponse = new UpdateResponse();

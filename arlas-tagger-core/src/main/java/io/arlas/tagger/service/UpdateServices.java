@@ -47,7 +47,7 @@ public class UpdateServices extends ExploreServices {
     }
 
     public UpdateResponse unTag(CollectionReference collectionReference, MixedRequest request, Tag tag, int max_updates) throws IOException, ArlasException {
-        return this.getFilteredTagger(collectionReference, request).doAction(Action.REMOVE,collectionReference, tag, max_updates);
+        return this.getFilteredTagger(collectionReference, request).doAction(Action.REMOVE,collectionReference, tag, max_updates, 0);
     }
 
     public UpdateResponse removeAll(CollectionReference collectionReference, MixedRequest request, Tag tag, int max_updates) throws IOException, ArlasException {
