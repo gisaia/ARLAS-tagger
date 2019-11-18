@@ -83,7 +83,7 @@ public class TagStatusRESTService {
     }
 
     @Timed
-    @Path("/{collection}/_tag")
+    @Path("/{collection}/_taglist")
     @GET
     @Produces(UTF8JSON)
     @Consumes(UTF8JSON)
