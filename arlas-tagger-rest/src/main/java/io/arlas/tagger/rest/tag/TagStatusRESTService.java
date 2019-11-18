@@ -48,7 +48,7 @@ public class TagStatusRESTService {
     }
 
     @Timed
-    @Path("/{collection}/_tag/{id}")
+    @Path("/{collection}/_tag")
     @GET
     @Produces(UTF8JSON)
     @Consumes(UTF8JSON)
@@ -69,8 +69,7 @@ public class TagStatusRESTService {
             @ApiParam(name = "id", value = Documentation.TAGSTATUS_PARAM_ID,
                     allowMultiple = false,
                     required = true)
-            @PathParam(value = "id") String id,
-
+            @QueryParam(value = "id") String id,
             // --------------------------------------------------------
             // ----------------------- FORM     -----------------------
             // --------------------------------------------------------
