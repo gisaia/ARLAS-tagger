@@ -1,5 +1,17 @@
 # Change Log
 
+## [v11.7.0](https://github.com/gisaia/ARLAS-tagger/tree/v11.7.0) (2019-11-19)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v11.6.6...v11.7.0)
+
+**New stuff:**
+
+- Bump Elasticsearch client to 7.x.x [\#38](https://github.com/gisaia/ARLAS-tagger/issues/38)
+
+**Fixed bugs:**
+
+- Fix -es parameter value [\#56](https://github.com/gisaia/ARLAS-tagger/pull/56) ([alainbodiguel](https://github.com/alainbodiguel))
+
 ## [v11.6.6](https://github.com/gisaia/ARLAS-tagger/tree/v11.6.6) (2019-11-18)
 
 [Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v11.6.5...v11.6.6)
@@ -7,6 +19,7 @@
 **Fixed bugs:**
 
 - \[Tagger\] Rollback breaking change on status endpoint [\#52](https://github.com/gisaia/ARLAS-tagger/issues/52)
+- Renamed tag list endpoint [\#54](https://github.com/gisaia/ARLAS-tagger/pull/54) ([alainbodiguel](https://github.com/alainbodiguel))
 - Rollback breaking change on status endpoint \(fix \#52\) [\#53](https://github.com/gisaia/ARLAS-tagger/pull/53) ([alainbodiguel](https://github.com/alainbodiguel))
 
 ## [v11.6.5](https://github.com/gisaia/ARLAS-tagger/tree/v11.6.5) (2019-11-18)
