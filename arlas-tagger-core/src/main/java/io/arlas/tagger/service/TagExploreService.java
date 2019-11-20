@@ -37,28 +37,34 @@ import java.util.List;
 public class TagExploreService {
     private Logger LOGGER = LoggerFactory.getLogger(TagExploreService.class);
     private final ArlasTaggerConfiguration configuration;
-    private KafkaConsumer consumer;
+    private final String topic;
+    private final String consumerGroupId;
+    private final Integer batchSize;
     protected static ObjectMapper MAPPER = new ObjectMapper();
 
     public TagExploreService(ArlasTaggerConfiguration configuration, String topic, String consumerGroupId, Integer batchSize) {
         this.configuration = configuration;
-        this.consumer = TagKafkaConsumer.build(configuration, topic, consumerGroupId, batchSize, true);
+        this.topic = topic;
+        this.consumerGroupId =  consumerGroupId;
+        this.batchSize = batchSize;
     }
 
     public List<TagRefRequest> getTagRefList() {
         List<TagRefRequest> results = new ArrayList<>();
+        long threadId = Thread.currentThread().getId();
+        try (KafkaConsumer consumer = TagKafkaConsumer.build(configuration, topic, consumerGroupId+"-"+threadId, batchSize, true)) {
+            consumer.seekToBeginning(consumer.assignment());
+            ConsumerRecords<String, String> records;
+            while (!(records = consumer.poll(Duration.ofMillis(configuration.kafkaConfiguration.consumerPollTimeout))).isEmpty()) {
+                for (ConsumerRecord<String, String> record : records) {
 
-        consumer.seekToBeginning(consumer.assignment());
-        ConsumerRecords<String, String> records;
-        while (!(records= consumer.poll(Duration.ofMillis(configuration.kafkaConfiguration.consumerPollTimeout))).isEmpty()) {
-            for (ConsumerRecord<String, String> record : records) {
+                    try {
+                        results.add(MAPPER.readValue(record.value(), TagRefRequest.class));
+                    } catch (IOException e) {
+                        LOGGER.warn("Could not parse record (ignored) " + record.value());
+                    }
 
-                try {
-                    results.add(MAPPER.readValue(record.value(), TagRefRequest.class));
-                } catch (IOException e) {
-                    LOGGER.warn("Could not parse record (ignored) " + record.value());
                 }
-
             }
         }
         return results;
