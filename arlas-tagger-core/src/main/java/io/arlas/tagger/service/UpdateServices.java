@@ -19,6 +19,7 @@
 
 package io.arlas.tagger.service;
 
+import io.arlas.server.core.ElasticAdmin;
 import io.arlas.server.dao.ElasticCollectionReferenceDaoImpl;
 import io.arlas.server.exceptions.ArlasException;
 import io.arlas.server.model.CollectionReference;
@@ -39,6 +40,7 @@ public class UpdateServices extends ExploreServices {
     public UpdateServices(Client client, ArlasCollectionsConfiguration configuration) {
         super();
         this.client = client;
+        this.elasticAdmin = new ElasticAdmin(client);
         this.daoCollectionReference = new ElasticCollectionReferenceDaoImpl(client, configuration.arlasindex, configuration.arlascachesize, configuration.arlascachetimeout);
     }
 

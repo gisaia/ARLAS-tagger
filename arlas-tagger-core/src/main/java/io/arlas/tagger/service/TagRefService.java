@@ -136,12 +136,6 @@ public class TagRefService extends KafkaConsumerRunner {
                 Collections.copy(inFilter.f, outFilter.f);
             }
             outFilter.q = inFilter.q;
-            outFilter.pwithin = inFilter.pwithin;
-            outFilter.gwithin = inFilter.gwithin;
-            outFilter.gintersect = inFilter.gintersect;
-            outFilter.notpwithin = inFilter.notpwithin;
-            outFilter.notgwithin = inFilter.notgwithin;
-            outFilter.notgintersect = inFilter.notgintersect;
             outFilter.dateformat = inFilter.dateformat;
         }
         return outFilter;
