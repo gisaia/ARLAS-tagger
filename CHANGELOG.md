@@ -1,5 +1,20 @@
 # Change Log
 
+## [v12.7.0](https://github.com/gisaia/ARLAS-tagger/tree/v12.7.0) (2019-11-21)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v11.7.0...v12.7.0)
+
+**New stuff:**
+
+- \[Tagger\] Support new multigeometry syntax [\#34](https://github.com/gisaia/ARLAS-tagger/issues/34)
+- Add Authentication [\#61](https://github.com/gisaia/ARLAS-tagger/pull/61) ([alainbodiguel](https://github.com/alainbodiguel))
+- Support new multigeometry syntax [\#60](https://github.com/gisaia/ARLAS-tagger/pull/60) ([alainbodiguel](https://github.com/alainbodiguel))
+
+**Fixed bugs:**
+
+- \[Tagger\] Tag job list Kafka consumer problem [\#58](https://github.com/gisaia/ARLAS-tagger/issues/58)
+- Tag job list Kafka consumer problem [\#59](https://github.com/gisaia/ARLAS-tagger/pull/59) ([alainbodiguel](https://github.com/alainbodiguel))
+
 ## [v11.7.0](https://github.com/gisaia/ARLAS-tagger/tree/v11.7.0) (2019-11-19)
 
 [Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v11.6.6...v11.7.0)
@@ -7,6 +22,7 @@
 **New stuff:**
 
 - Bump Elasticsearch client to 7.x.x [\#38](https://github.com/gisaia/ARLAS-tagger/issues/38)
+- Added -rel parameter and SKIP\_API option [\#57](https://github.com/gisaia/ARLAS-tagger/pull/57) ([alainbodiguel](https://github.com/alainbodiguel))
 
 **Fixed bugs:**
 

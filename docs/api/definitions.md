@@ -18,7 +18,7 @@
 |Name|Schema|
 |---|---|
 |**field**  <br>*optional*|string|
-|**op**  <br>*optional*|enum (eq, gte, gt, lte, lt, like, ne, range)|
+|**op**  <br>*optional*|enum (eq, gte, gt, lte, lt, like, ne, range, within, notwithin, intersects, notintersects)|
 |**value**  <br>*optional*|string|
 
 
@@ -39,12 +39,6 @@
 |---|---|
 |**dateformat**  <br>*optional*|string|
 |**f**  <br>*optional*|< < [Expression](#expression) > array > array|
-|**gintersect**  <br>*optional*|< < string > array > array|
-|**gwithin**  <br>*optional*|< < string > array > array|
-|**notgintersect**  <br>*optional*|< < string > array > array|
-|**notgwithin**  <br>*optional*|< < string > array > array|
-|**notpwithin**  <br>*optional*|< < string > array > array|
-|**pwithin**  <br>*optional*|< < string > array > array|
 |**q**  <br>*optional*|< < string > array > array|
 
 
@@ -96,6 +90,7 @@
 |**form**  <br>*optional*|[Form](#form)|
 |**page**  <br>*optional*|[Page](#page)|
 |**projection**  <br>*optional*|[Projection](#projection)|
+|**returned_geometries**  <br>*optional*|string|
 
 
 <a name="tag"></a>
