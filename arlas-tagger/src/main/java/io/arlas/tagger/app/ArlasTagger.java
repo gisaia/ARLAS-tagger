@@ -21,6 +21,8 @@ package io.arlas.tagger.app;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import io.arlas.server.auth.AuthenticationFilter;
+import io.arlas.server.auth.AuthorizationFilter;
 import io.arlas.server.exceptions.*;
 import io.arlas.server.managers.CollectionReferenceManager;
 import io.arlas.server.utils.ElasticNodesInfo;
@@ -112,6 +114,12 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
         //filters
         environment.jersey().register(PrettyPrintFilter.class);
         environment.jersey().register(InsensitiveCaseFilter.class);
+
+        // Auth
+        if (configuration.arlasAuthConfiguration.enabled) {
+            environment.jersey().register(new AuthenticationFilter(configuration.arlasAuthConfiguration));
+            environment.jersey().register(new AuthorizationFilter(configuration.arlasAuthConfiguration));
+        }
 
         //cors
         if (configuration.arlascorsenabled) {

@@ -12,7 +12,7 @@ function clean_exit {
 trap clean_exit EXIT
 
 usage(){
-	echo "Usage: ./test-integration.sh [--es=X.Y.Z]"
+	echo "Usage: ./tests-integration.sh [--es=X.Y.Z]"
 	echo " --es=X.Y.Z   elasticsearch version to test"
 	exit 1
 }
@@ -40,3 +40,4 @@ cd ${SCRIPT_PATH}/..
 
 # TESTS SUITE
 ./scripts/tests-integration-stage.sh --stage=TAG
+./scripts/tests-integration-stage.sh --stage=AUTH

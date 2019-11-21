@@ -41,7 +41,7 @@ You will need to fork the main ARLAS-tagger repository and clone it to your loca
 When your code is ready, you will have to :
 
 - rebase your repository.
-- run ./scripts/test-integration.sh which should exit with a `0` status.
+- run ./scripts/tests-integration.sh which should exit with a `0` status.
 - update documentation in `docs/` and tests in `src/test` if relevant
 - [submit a pull request](https://help.github.com/articles/using-pull-requests) with a proper title and a mention to
 the corresponding issue (eg "fix #1234").
