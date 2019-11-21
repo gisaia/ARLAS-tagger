@@ -216,7 +216,7 @@ mvn "-Dswagger.output=docs/api" swagger2markup:convertSwagger2markup
 
 itests() {
 	echo "=> Run integration tests"
-    ./scripts/test-integration.sh
+    ./scripts/tests-integration.sh
 }
 if [ "$TESTS" == "YES" ]; then itests; else echo "=> Skip integration tests"; fi
 

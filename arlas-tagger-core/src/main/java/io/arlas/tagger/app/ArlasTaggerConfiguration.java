@@ -20,6 +20,7 @@
 package io.arlas.tagger.app;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.arlas.server.app.ArlasAuthConfiguration;
 import io.arlas.server.exceptions.ArlasConfigurationException;
 import io.dropwizard.Configuration;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
@@ -35,6 +36,9 @@ public class ArlasTaggerConfiguration extends Configuration {
 
     @JsonProperty("kafka_configuration")
     public KafkaConfiguration kafkaConfiguration;
+
+    @JsonProperty("arlas_auth")
+    public ArlasAuthConfiguration arlasAuthConfiguration;
 
     @JsonProperty("arlas_collections_configuration")
     public ArlasCollectionsConfiguration arlasCollectionsConfiguration;
@@ -54,6 +58,10 @@ public class ArlasTaggerConfiguration extends Configuration {
         }
         if (elasticConfiguration.elasticCompress == null) {
             elasticConfiguration.elasticCompress = true;
+        }
+        if (arlasAuthConfiguration == null) {
+            arlasAuthConfiguration = new ArlasAuthConfiguration();
+            arlasAuthConfiguration.enabled = false;
         }
     }
 }

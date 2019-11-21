@@ -21,7 +21,7 @@ function clean_exit {
 trap clean_exit EXIT
 
 usage(){
-	echo "Usage: ./test-integration-stage.sh --stage=TAG"
+	echo "Usage: ./tests-integration-stage.sh --stage=TAG|AUTH"
 	exit 1
 }
 
@@ -61,6 +61,7 @@ function start_stack() {
 function test_tagger() {
     export ARLAS_PREFIX="/arlastest"
     export ARLAS_APP_PATH="/pathtest"
+    export ARLAS_AUTH_ENABLED=false
     export ARLAS_SERVICE_EXPLORE_ENABLE=true
     export ARLAS_TAGGER_PREFIX="/arlastaggertest"
     export ARLAS_TAGGER_APP_PATH="/pathtaggertest"
@@ -86,10 +87,41 @@ function test_tagger() {
         mvn -Dit.test=TagIT verify -DskipTests=false -DfailIfNoTests=false
 }
 
+function test_tagger_with_auth() {
+    export ARLAS_PREFIX="/arlastest"
+    export ARLAS_APP_PATH="/pathtest"
+    export ARLAS_AUTH_ENABLED=true
+    export ARLAS_SERVICE_EXPLORE_ENABLE=true
+    export ARLAS_TAGGER_PREFIX="/arlastaggertest"
+    export ARLAS_TAGGER_APP_PATH="/pathtaggertest"
+    export ARLAS_SERVER_NODE="arlas-server:9999"
+    export ARLAS_AUTH_LOCAL_CERT_FILE="/opt/app/arlas-test.pem"
+    start_stack
+    docker run --rm \
+        -w /opt/maven \
+        -v $PWD:/opt/maven \
+        -v $HOME/.m2:/root/.m2 \
+        -e ARLAS_HOST="arlas-server" \
+        -e ARLAS_PORT="9999" \
+        -e ARLAS_PREFIX=${ARLAS_PREFIX} \
+        -e ARLAS_APP_PATH=${ARLAS_APP_PATH} \
+        -e ARLAS_TAGGER_HOST="arlas-tagger" \
+        -e ARLAS_TAGGER_PORT="9998" \
+        -e ARLAS_TAGGER_PREFIX=${ARLAS_TAGGER_PREFIX} \
+        -e ARLAS_TAGGER_APP_PATH=${ARLAS_TAGGER_APP_PATH} \
+        -e ARLAS_ELASTIC_NODES="elasticsearch:9300" \
+        -e ARLAS_SERVER_NODE=${ARLAS_SERVER_NODE} \
+        -e ALIASED_COLLECTION=${ALIASED_COLLECTION} \
+        --net arlas_default \
+        maven:3.5.0-jdk-8 \
+        mvn -Dit.test=TagAuthIT verify -DskipTests=false -DfailIfNoTests=false
+}
+
 function test_doc() {
     ./mkDocs.sh
 }
 
 if [ "$STAGE" == "TAG" ]; then test_tagger; fi
 if [ "$STAGE" == "DOC" ]; then test_doc; fi
+if [ "$STAGE" == "AUTH" ]; then test_tagger_with_auth; fi
 

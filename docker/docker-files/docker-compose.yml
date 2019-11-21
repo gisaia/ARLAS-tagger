@@ -41,10 +41,13 @@ services:
       - ARLAS_LOGGING_CONSOLE_LEVEL=${ARLAS_LOGGING_CONSOLE_LEVEL:-INFO}
       - ARLAS_LOGGING_FILE=${ARLAS_LOGGING_FILE:-arlas.log}
       - ARLAS_LOGGING_FILE_LEVEL=${ARLAS_LOGGING_FILE_LEVEL:-INFO}
+      - ARLAS_AUTH_ENABLED="${ARLAS_AUTH_ENABLED:-false}"
     depends_on:
       - kafka
     ports:
       - 19998:9998
+    volumes:
+      - ${ARLAS_AUTH_LOCAL_CERT_FILE:-/tmp}:${ARLAS_AUTH_CERT_FILE:-/opt/app/arlas.pem}:ro
     command: ["/opt/app/wait-for-tagger-deps.sh $$KAFKA_BROKERS $$ARLAS_ELASTIC_NODES $$ARLAS_SERVER_NODE"]
   zookeeper:
     image: wurstmeister/zookeeper

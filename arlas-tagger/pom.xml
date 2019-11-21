@@ -19,6 +19,11 @@
     <dependencies>
         <dependency>
             <groupId>io.arlas</groupId>
+            <artifactId>arlas-admin</artifactId>
+            <version>${arlas-server.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.arlas</groupId>
             <artifactId>arlas-tagger-rest</artifactId>
             <version>11.7.1-SNAPSHOT</version>
         </dependency>
