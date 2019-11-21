@@ -22,6 +22,7 @@ package io.arlas.tagger.app;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import io.arlas.server.exceptions.*;
+import io.arlas.server.managers.CollectionReferenceManager;
 import io.arlas.server.utils.ElasticNodesInfo;
 import io.arlas.server.utils.InsensitiveCaseFilter;
 import io.arlas.server.utils.PrettyPrintFilter;
@@ -85,6 +86,8 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
 
         TransportClient transportClient = getTransportClient(configuration);
         Client client = transportClient;
+
+        CollectionReferenceManager.getInstance().init(client);
 
         UpdateServices updateServices = new UpdateServices(client, configuration.arlasCollectionsConfiguration);
         TagKafkaProducer tagKafkaProducer = TagKafkaProducer.build(configuration);
