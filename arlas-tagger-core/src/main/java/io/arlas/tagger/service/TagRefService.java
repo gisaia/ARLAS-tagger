@@ -47,7 +47,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 
-
+/**
+ * /!\ With the current implementation, the topic read by TagRefService *MUST* have only 1 partition.
+ */
 public class TagRefService extends KafkaConsumerRunner {
     private Logger LOGGER = LoggerFactory.getLogger(TagRefService.class);
     private final TagKafkaProducer tagKafkaProducer;
@@ -60,6 +62,11 @@ public class TagRefService extends KafkaConsumerRunner {
         this.tagKafkaProducer = tagKafkaProducer;
         this.updateServices = updateServices;
         this.statusTimeout = configuration.statusTimeout;
+    }
+
+    @Override
+    public void setReplayFromOffset(long replayFromOffset) {
+        this.replayFromOffset = replayFromOffset;
     }
 
     @Override

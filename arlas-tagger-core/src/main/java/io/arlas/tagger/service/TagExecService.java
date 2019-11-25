@@ -52,6 +52,11 @@ public class TagExecService extends KafkaConsumerRunner {
     }
 
     @Override
+    public void setReplayFromOffset(long replayFromOffset) {
+        throw new UnsupportedOperationException("Replay is not available on topic '" + topic + "' ");
+    }
+
+    @Override
     public void processRecords(ConsumerRecords<String, String> records) {
         long start = System.currentTimeMillis();
         long updatedTotal = 0l;

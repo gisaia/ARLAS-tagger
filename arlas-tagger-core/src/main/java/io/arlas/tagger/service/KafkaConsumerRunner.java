@@ -22,27 +22,31 @@ package io.arlas.tagger.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.arlas.tagger.app.ArlasTaggerConfiguration;
 import io.arlas.tagger.kafka.TagKafkaConsumer;
+import io.arlas.tagger.model.TaggingStatus;
 import org.apache.kafka.clients.consumer.CommitFailedException;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.WakeupException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class KafkaConsumerRunner implements Runnable {
     Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerRunner.class);
 
     private final ArlasTaggerConfiguration configuration;
-    private final String topic;
+    protected final String topic;
     private final String consumerGroupId;
     private final Integer batchSize;
     private final int nbThread;
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private KafkaConsumer consumer;
     protected static ObjectMapper MAPPER = new ObjectMapper();
+    volatile protected long replayFromOffset = -1l;
 
     public KafkaConsumerRunner(int nbThread, ArlasTaggerConfiguration configuration, String topic, String consumerGroupId, Integer batchSize) {
         this.configuration = configuration;
@@ -54,17 +58,31 @@ public abstract class KafkaConsumerRunner implements Runnable {
 
     public abstract void processRecords(ConsumerRecords<String, String> records);
 
+    public abstract void setReplayFromOffset(long replayFromOffset);
+
     @Override
     public void run() {
         try {
             LOGGER.info("[{}-{}] Starting consumer", topic, nbThread);
             consumer = TagKafkaConsumer.build(configuration, topic, consumerGroupId, batchSize);
             long start = System.currentTimeMillis();
-            long duration = System.currentTimeMillis();
+            long duration;
             int nbFailure = 0;
 
             while (true) {
                 try {
+                    if (replayFromOffset != -1l) {
+                        // replay is only possible when working with 1 partition
+                        Long maxOffset= (Long) consumer.endOffsets(consumer.assignment()).values().toArray()[0];
+                        if (replayFromOffset <= maxOffset) {
+                            consumer.seek((TopicPartition) (consumer.assignment().toArray()[0]), replayFromOffset);
+                            // resetting all past status information else we can't get the new status
+                            TaggingStatus.getInstance().reset();
+                        } else {
+                            LOGGER.warn("Ignoring attempt of replay from offset " + replayFromOffset + " because it is larger than max offset " + maxOffset);
+                        }
+                        replayFromOffset = -1l;
+                    }
                     ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(configuration.kafkaConfiguration.consumerPollTimeout));
                     if (records.count() > 0) {
                         LOGGER.debug("[{}-{}] Nb records polled={}", topic, nbThread, records.count());

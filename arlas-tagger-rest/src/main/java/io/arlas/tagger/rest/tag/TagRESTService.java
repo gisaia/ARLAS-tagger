@@ -28,6 +28,7 @@ import io.arlas.tagger.model.enumerations.Action;
 import io.arlas.tagger.model.request.TagRefRequest;
 import io.arlas.tagger.model.request.TagRequest;
 import io.arlas.tagger.model.response.UpdateResponse;
+import io.arlas.tagger.service.ManagedKafkaConsumers;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,11 +51,11 @@ public class TagRESTService {
     protected static Logger LOGGER = LoggerFactory.getLogger(TagRESTService.class);
     public static final String UTF8JSON = MediaType.APPLICATION_JSON + ";charset=utf-8";
 
-    private TagKafkaProducer tagKafkaProducer;
+    private ManagedKafkaConsumers consumersManager;
     private Long statusTimeout;
 
-    public TagRESTService(TagKafkaProducer tagKafkaProducer, Long statusTimeout) {
-        this.tagKafkaProducer = tagKafkaProducer;
+    public TagRESTService(ManagedKafkaConsumers consumersManager, Long statusTimeout) {
+        this.consumersManager = consumersManager;
         this.statusTimeout = statusTimeout;
     }
 
@@ -106,6 +107,45 @@ public class TagRESTService {
         }
     }
 
+    @Timed
+    @Path("/{collection}/_tagreplay")
+    @POST
+    @Produces(UTF8JSON)
+    @Consumes(UTF8JSON)
+    @ApiOperation(value = "TagReplay", produces = UTF8JSON, notes = Documentation.TAG_REPLAY, consumes = UTF8JSON, response = Long.class)
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful operation", response = Long.class),
+            @ApiResponse(code = 500, message = "Arlas Server Error.", response = Error.class), @ApiResponse(code = 400, message = "Bad request.", response = Error.class) })
+    public Response tagReplay(
+            // --------------------------------------------------------
+            // ----------------------- PATH     -----------------------
+            // --------------------------------------------------------
+            @ApiParam(
+                    name = "collection",
+                    value = "collection",
+                    allowMultiple = false,
+                    required = true)
+            @PathParam(value = "collection") String collection,
+            // --------------------------------------------------------
+            // ----------------------- SEARCH   -----------------------
+            // --------------------------------------------------------
+            @ApiParam(name = "offset", value = Documentation.TAG_REPLAY_PARAM_OFFSET,
+                    allowMultiple = false,
+                    required = true)
+            @QueryParam(value = "offset") Long offset,
+
+            // --------------------------------------------------------
+            // ----------------------- FORM     -----------------------
+            // --------------------------------------------------------
+            @ApiParam(name ="pretty", value=Documentation.FORM_PRETTY,
+                    allowMultiple = false,
+                    defaultValue = "false",
+                    required=false)
+            @QueryParam(value="pretty") Boolean pretty
+    ) {
+
+        consumersManager.replayFrom(offset);
+        return Response.ok(offset).build();
+    }
 
     @Timed
     @Path("/{collection}/_untag")
@@ -157,7 +197,7 @@ public class TagRESTService {
     }
 
     private Response doAction(TagRefRequest tagRefRequest) {
-        tagKafkaProducer.sendToTagRefLog(tagRefRequest);
+        consumersManager.getTagKafkaProducer().sendToTagRefLog(tagRefRequest);
 
         UpdateResponse updateResponse = new UpdateResponse();
         updateResponse.id = tagRefRequest.id;

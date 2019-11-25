@@ -31,6 +31,8 @@ public class TaggingStatus {
 
     private SelfExpiringMap<String, UpdateResponse> statusMap;
 
+    private volatile boolean doReset;
+
     private TaggingStatus() {
         statusMap = new SelfExpiringHashMap<>();
     }
@@ -48,6 +50,10 @@ public class TaggingStatus {
     }
 
     public synchronized UpdateResponse updateStatus(TagRefRequest tagRequest, UpdateResponse updResp, boolean incrNbRequest, long statusTimeout) {
+        if (doReset) {
+            statusMap.clear();
+            doReset = false;
+        }
         UpdateResponse updateResponse = getStatus(tagRequest.id).orElse(new UpdateResponse());
         updateResponse.id = tagRequest.id;
         updateResponse.label = tagRequest.label;
@@ -56,5 +62,9 @@ public class TaggingStatus {
         updateResponse.add(updResp, incrNbRequest);
         statusMap.put(tagRequest.id, updateResponse, statusTimeout);
         return updateResponse;
+    }
+
+    public void reset() {
+        doReset = true;
     }
 }

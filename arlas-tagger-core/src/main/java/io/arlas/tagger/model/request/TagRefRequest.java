@@ -32,6 +32,7 @@ public class TagRefRequest extends TagRequest {
     public String partitionFilter;
     public long propagated = -1l; // initial value indicates the propagation has not been evaluated yet
     public long creationTime;
+    public long offset;
 
     public static TagRefRequest fromTagRequest(TagRequest t, String collection, String partitionFilter, Action action) {
         TagRefRequest tagRefRequest = new TagRefRequest();

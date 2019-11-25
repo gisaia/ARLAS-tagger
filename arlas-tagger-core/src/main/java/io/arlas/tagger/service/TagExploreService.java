@@ -59,7 +59,9 @@ public class TagExploreService {
                 for (ConsumerRecord<String, String> record : records) {
 
                     try {
-                        results.add(MAPPER.readValue(record.value(), TagRefRequest.class));
+                        TagRefRequest tr = MAPPER.readValue(record.value(), TagRefRequest.class);
+                        tr.offset = record.offset();
+                        results.add(tr);
                     } catch (IOException e) {
                         LOGGER.warn("Could not parse record (ignored) " + record.value());
                     }
