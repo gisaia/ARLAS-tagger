@@ -3,7 +3,7 @@
 The ARLAS Tagger offers 3 APIs:
 
 - a `write` API for [tagging](arlas-api-tagging.md), meaning adding (or removing) a value to a field in ARLAS `collections` (`http://.../arlas_tagger/write/`)
-- a `status` API for monitoring the `tagging` operation status (`http://.../arlas_tagger/status/`
+- a `status` API for monitoring the `tagging` operation status (`http://.../arlas_tagger/status/`)
 - an API for monitoring the server health and performances
 - endpoints for testing the write API and the status API with swagger
 

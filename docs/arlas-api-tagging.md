@@ -48,10 +48,16 @@ that can be used to request the status of the tagging process itself.
 ```shell
 curl -X GET  \
     --header 'Accept: application/json;charset=utf-8' \
-    -d '{ "search": {}, "tag": { "path": "plant.color"}}' \
     'http://<arlas-tagger-host>:<arlas-tagger-port>/arlas/status/geodata/_tag?id=...'
 ```
 
+Tagging can be replayed. The Kafka reference log is read again from the given offset and all tagging requests 
+ are executed again in the same order than initially received.
+```shell
+curl -X GET  \
+    --header 'Accept: application/json;charset=utf-8' \
+    'http://<arlas-tagger-host>:<arlas-tagger-port>/arlas/write/geodata/_tagreplay?offset=...'
+```
 
 !!! warning
     Only taggable fields can be tagged. In order to be taggable, a field must have its path provided in the `CollectionReference`, more specifically in `params.taggable_fields`.

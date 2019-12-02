@@ -31,9 +31,11 @@ public class ManagedKafkaConsumers implements Managed {
     private TagRefService tagRefService;
     private List<TagExecService> tagExecServices;
     private UpdateServices updateServices;
-
+    private TagKafkaProducer tagKafkaProducer;
+    
     public ManagedKafkaConsumers(ArlasTaggerConfiguration configuration, TagKafkaProducer tagKafkaProducer, UpdateServices updateServices) {
         this.configuration = configuration;
+        this.tagKafkaProducer = tagKafkaProducer;
         this.tagRefService = new TagRefService(configuration,
                 configuration.kafkaConfiguration.tagRefLogTopic,
                 configuration.kafkaConfiguration.tagRefLogConsumerGroupId,
@@ -41,6 +43,10 @@ public class ManagedKafkaConsumers implements Managed {
 
         this.tagExecServices = new ArrayList<>();
         this.updateServices = updateServices;
+    }
+
+    public TagKafkaProducer getTagKafkaProducer() {
+        return tagKafkaProducer;
     }
 
     @Override
@@ -62,5 +68,9 @@ public class ManagedKafkaConsumers implements Managed {
         for (int i=0; i < tagExecServices.size(); i++) {
             try { this.tagExecServices.get(i).stop(); } catch (Exception e) {};
         }
+    }
+
+    public void replayFrom(long offset) {
+        tagRefService.setReplayFromOffset(offset);
     }
 }
