@@ -22,7 +22,7 @@ package io.arlas.tagger.app;
 public class Documentation  {
 
     public static final String TAG_OPERATION = "Search and tag the elements found in the collection, given the filters";
-    public static final String TAG_REPLAY = "Scan the tagref topic and replay tagging operations from the given ID";
+    public static final String TAG_REPLAY = "Scan the tagref topic and replay tagging operations from the given offset";
     public static final String TAG_REPLAY_PARAM_OFFSET = "The offset from which the replay must be done.";
     public static final String UNTAG_OPERATION = "Search and untag the elements found in the collection, given the filters";
     public static final String TAGSTATUS_OPERATION = "Get the status of the (un)tagging operation, given the id of a previously requested operation";
