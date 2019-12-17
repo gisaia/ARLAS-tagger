@@ -48,7 +48,7 @@ public class TagStatusRESTService {
     }
 
     @Timed
-    @Path("/{collection}/_tag")
+    @Path("/{collection}/_tag/{id}")
     @GET
     @Produces(UTF8JSON)
     @Consumes(UTF8JSON)
@@ -69,7 +69,7 @@ public class TagStatusRESTService {
             @ApiParam(name = "id", value = Documentation.TAGSTATUS_PARAM_ID,
                     allowMultiple = false,
                     required = true)
-            @QueryParam(value = "id") String id,
+            @PathParam(value = "id") String id,
             // --------------------------------------------------------
             // ----------------------- FORM     -----------------------
             // --------------------------------------------------------
@@ -88,7 +88,7 @@ public class TagStatusRESTService {
     @Produces(UTF8JSON)
     @Consumes(UTF8JSON)
     @ApiOperation(value = "TagList", produces = UTF8JSON, notes = Documentation.TAGLIST_OPERATION, consumes = UTF8JSON, response = TagRefRequest.class, responseContainer = "List")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful operation", response = TagRefRequest.class),
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful operation", response = TagRefRequest.class, responseContainer = "List"),
             @ApiResponse(code = 500, message = "Arlas Server Error.", response = Error.class), @ApiResponse(code = 400, message = "Bad request.", response = Error.class) })
     public Response taggingGetList(
             // --------------------------------------------------------
