@@ -112,6 +112,7 @@
 |**creationTime**  <br>*optional*|integer (int64)|
 |**id**  <br>*optional*|string|
 |**label**  <br>*optional*|string|
+|**offset**  <br>*optional*|integer (int64)|
 |**partitionFilter**  <br>*optional*|string|
 |**propagated**  <br>*optional*|integer (int64)|
 |**propagation**  <br>*optional*|[Propagation](#propagation)|

@@ -1,5 +1,13 @@
 # Change Log
 
+## [v12.7.1](https://github.com/gisaia/ARLAS-tagger/tree/v12.7.1) (2019-12-17)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v12.7.0...v12.7.1)
+
+**New stuff:**
+
+- \[Tagger\] Replay previous tagging request [\#62](https://github.com/gisaia/ARLAS-tagger/issues/62)
+
 ## [v12.7.0](https://github.com/gisaia/ARLAS-tagger/tree/v12.7.0) (2019-11-21)
 
 [Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v11.7.0...v12.7.0)
