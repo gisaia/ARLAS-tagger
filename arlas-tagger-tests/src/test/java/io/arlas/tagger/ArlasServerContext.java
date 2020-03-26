@@ -18,13 +18,13 @@ package io.arlas.tagger;
  * under the License.
  */
 
+import io.arlas.server.exceptions.ArlasException;
 import io.restassured.RestAssured;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.Optional;
 
 public abstract class ArlasServerContext {
@@ -64,7 +64,7 @@ public abstract class ArlasServerContext {
     }
 
     @AfterClass
-    public static void afterClass() throws IOException {
+    public static void afterClass() throws ArlasException {
         new CollectionTool().delete();
     }
 

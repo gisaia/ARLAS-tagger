@@ -24,14 +24,14 @@ import io.arlas.server.exceptions.ArlasException;
 import io.arlas.server.exceptions.BadRequestException;
 import io.arlas.server.exceptions.NotImplementedException;
 import io.arlas.server.model.CollectionReference;
+import io.arlas.server.utils.ElasticClient;
 import io.arlas.tagger.model.Tag;
 import io.arlas.tagger.model.enumerations.Action;
 import io.arlas.tagger.model.response.UpdateResponse;
-import org.elasticsearch.client.Client;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.index.reindex.UpdateByQueryAction;
-import org.elasticsearch.index.reindex.UpdateByQueryRequestBuilder;
+import org.elasticsearch.index.reindex.UpdateByQueryRequest;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.script.ScriptType;
 
@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 
 public class FilteredUpdater extends FluidSearch {
 
-    public FilteredUpdater(Client client) {
+    public FilteredUpdater(ElasticClient client) {
         super(client);
     }
 
@@ -59,14 +59,14 @@ public class FilteredUpdater extends FluidSearch {
             throw new io.arlas.server.exceptions.NotAllowedException("The path "+tag.path+" is not part of the fields that can be tagged.");
         }
 
-        UpdateByQueryRequestBuilder updateByQuery = new UpdateByQueryRequestBuilder(this.getClient(),UpdateByQueryAction.INSTANCE);
-        updateByQuery
-                .source(collectionReference.params.indexName)
-                .filter(this.getBoolQueryBuilder())
-                .size(Math.min(collectionReference.params.update_max_hits,max_updates))
-                .setSlices(slices)
-                .script(this.getTagScript(tag, action));
-        BulkByScrollResponse response = updateByQuery.get();
+        UpdateByQueryRequest request = new UpdateByQueryRequest(collectionReference.params.indexName)
+                .setQuery(this.getBoolQueryBuilder())
+                .setMaxDocs(Math.min(collectionReference.params.update_max_hits,max_updates))
+                // waiting for ES bug to be fixed: [slices] must be a positive integer or the string "auto", but was [0]
+                // https://github.com/elastic/elasticsearch/issues/54098
+                //.setSlices(slices)
+                .setScript(this.getTagScript(tag, action));
+        BulkByScrollResponse response = this.getClient().getClient().updateByQuery(request, RequestOptions.DEFAULT);
         UpdateResponse updateResponse = new UpdateResponse();
         updateResponse.failures.addAll(response.getSearchFailures()
                 .stream().map(f->new UpdateResponse.Failure(f.getIndex(),f.getReason().getMessage(),"SearchFailure")).collect(Collectors.toList()));

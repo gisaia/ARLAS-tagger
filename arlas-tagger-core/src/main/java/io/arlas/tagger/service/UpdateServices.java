@@ -19,28 +19,26 @@
 
 package io.arlas.tagger.service;
 
-import io.arlas.server.core.ElasticAdmin;
 import io.arlas.server.dao.ElasticCollectionReferenceDaoImpl;
 import io.arlas.server.exceptions.ArlasException;
 import io.arlas.server.model.CollectionReference;
 import io.arlas.server.model.request.MixedRequest;
 import io.arlas.server.model.request.Search;
 import io.arlas.server.services.ExploreServices;
+import io.arlas.server.utils.ElasticClient;
 import io.arlas.tagger.app.ArlasCollectionsConfiguration;
 import io.arlas.tagger.core.FilteredUpdater;
 import io.arlas.tagger.model.Tag;
 import io.arlas.tagger.model.enumerations.Action;
 import io.arlas.tagger.model.response.UpdateResponse;
-import org.elasticsearch.client.Client;
 
 import java.io.IOException;
 
 public class UpdateServices extends ExploreServices {
 
-    public UpdateServices(Client client, ArlasCollectionsConfiguration configuration) {
+    public UpdateServices(ElasticClient client, ArlasCollectionsConfiguration configuration) {
         super();
         this.client = client;
-        this.elasticAdmin = new ElasticAdmin(client);
         this.daoCollectionReference = new ElasticCollectionReferenceDaoImpl(client, configuration.arlasindex, configuration.arlascachesize, configuration.arlascachetimeout);
     }
 
@@ -64,7 +62,7 @@ public class UpdateServices extends ExploreServices {
             applyFilter(request.basicRequest.filter,updater);
             setPageSizeAndFrom(((Search)request.basicRequest).page,updater);
             sortPage(((Search) request.basicRequest).page, updater);
-            applyProjection(((Search) request.basicRequest).projection, updater);
+            applyProjection(((Search) request.basicRequest).projection, updater, request.columnFilter, collectionReference);
         }
         return updater;
     }

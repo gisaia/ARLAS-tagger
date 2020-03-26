@@ -20,6 +20,7 @@
 package io.arlas.tagger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.arlas.server.exceptions.ArlasException;
 import io.arlas.server.model.CollectionReferenceParameters;
 import io.arlas.server.model.DublinCoreElementName;
 import io.arlas.server.model.enumerations.OperatorEnum;
@@ -30,7 +31,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.UnknownHostException;
 import java.util.Arrays;
 
 import static io.restassured.RestAssured.given;
@@ -41,7 +41,7 @@ public class CollectionTool extends ArlasServerContext {
         public static String COLLECTION_NAME = "geodata";
         public static String COLLECTION_NAME_ACTOR = "geodata_actor";
 
-        public static void main(String[] args) throws IOException {
+        public static void main(String[] args) throws ArlasException {
             switch (args[0]) {
                 case "load":
                     new CollectionTool().load();
@@ -62,9 +62,7 @@ public class CollectionTool extends ArlasServerContext {
 
             try {
                 DataSetTool.loadDataSet();
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (IOException | ArlasException e) {
                 e.printStackTrace();
             }
 
@@ -99,9 +97,7 @@ public class CollectionTool extends ArlasServerContext {
         public  void loadCsw(long sleepAfter) throws IOException {
             try {
                 DataSetTool.loadDataSet();
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (IOException | ArlasException e) {
                 e.printStackTrace();
             }
 
@@ -130,7 +126,7 @@ public class CollectionTool extends ArlasServerContext {
             }
         }
 
-        public  void delete() throws IOException {
+        public  void delete() throws ArlasException {
             DataSetTool.clearDataSet();
             //DELETE collection
             when().delete(getUrlPath()).then().statusCode(200);

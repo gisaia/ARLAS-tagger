@@ -2,8 +2,8 @@
 set -e
 
 function clean_docker {
-    ./scripts/docker-clean.sh
-    echo "===> clean maven repository"
+  ./scripts/docker-clean.sh
+  echo "===> clean maven repository"
 	docker run --rm \
 		-w /opt/maven \
 		-v $PWD:/opt/maven \
@@ -13,10 +13,10 @@ function clean_docker {
 }
 
 function clean_exit {
-    ARG=$?
+  ARG=$?
 	echo "===> Exit stage ${STAGE} = ${ARG}"
-    clean_docker
-    exit $ARG
+  clean_docker
+  exit $ARG
 }
 trap clean_exit EXIT
 
@@ -79,12 +79,12 @@ function test_tagger() {
         -e ARLAS_TAGGER_PORT="9998" \
         -e ARLAS_TAGGER_PREFIX=${ARLAS_TAGGER_PREFIX} \
         -e ARLAS_TAGGER_APP_PATH=${ARLAS_TAGGER_APP_PATH} \
-        -e ARLAS_ELASTIC_NODES="elasticsearch:9300" \
+        -e ARLAS_ELASTIC_NODES="elasticsearch:9200" \
         -e ARLAS_SERVER_NODE=${ARLAS_SERVER_NODE} \
         -e ALIASED_COLLECTION=${ALIASED_COLLECTION} \
         --net arlas_default \
         maven:3.5.0-jdk-8 \
-        mvn -Dit.test=TagIT verify -DskipTests=false -DfailIfNoTests=false
+        mvn -Dit.test=TagIT verify -DskipTests=false -DfailIfNoTests=false -B
 }
 
 function test_tagger_with_auth() {
@@ -109,12 +109,12 @@ function test_tagger_with_auth() {
         -e ARLAS_TAGGER_PORT="9998" \
         -e ARLAS_TAGGER_PREFIX=${ARLAS_TAGGER_PREFIX} \
         -e ARLAS_TAGGER_APP_PATH=${ARLAS_TAGGER_APP_PATH} \
-        -e ARLAS_ELASTIC_NODES="elasticsearch:9300" \
+        -e ARLAS_ELASTIC_NODES="elasticsearch:9200" \
         -e ARLAS_SERVER_NODE=${ARLAS_SERVER_NODE} \
         -e ALIASED_COLLECTION=${ALIASED_COLLECTION} \
         --net arlas_default \
         maven:3.5.0-jdk-8 \
-        mvn -Dit.test=TagAuthIT verify -DskipTests=false -DfailIfNoTests=false
+        mvn -Dit.test=TagAuthIT verify -DskipTests=false -DfailIfNoTests=false -B
 }
 
 function test_doc() {

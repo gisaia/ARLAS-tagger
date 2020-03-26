@@ -19,6 +19,7 @@
 
 package io.arlas.tagger.rest.tag;
 
+import io.arlas.server.exceptions.ArlasException;
 import io.arlas.tagger.AbstractTaggerTestContext;
 import io.arlas.tagger.ArlasServerContext;
 import io.arlas.tagger.CollectionTool;
@@ -27,21 +28,17 @@ import io.arlas.tagger.model.request.TagRequest;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.function.Function;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.everyItem;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TagIT extends AbstractTaggerTestContext {
     private static final String TAG_SUFFIX = "/_tag";
     private static final String UNTAG_SUFFIX = "/_untag";
@@ -62,13 +59,13 @@ public class TagIT extends AbstractTaggerTestContext {
     }
 
     @After
-    public void after() throws IOException {
+    public void after() throws ArlasException {
         super.setServerRestAssured();
         ArlasServerContext.afterClass();
     }
 
     @Test
-    public void testAddTag() throws InterruptedException {
+    public void test01AddTag() throws InterruptedException {
         super.setTaggerRestAssured();
         TagRequest tr = new TagRequest();
         tr.tag=new Tag();
@@ -129,7 +126,7 @@ public class TagIT extends AbstractTaggerTestContext {
 
 
     @Test
-    public void testAddTagOnSingleValue() throws InterruptedException {
+    public void test02AddTagOnSingleValue() throws InterruptedException {
         super.setTaggerRestAssured();
         TagRequest tr = new TagRequest();
         tr.tag=new Tag();
@@ -157,7 +154,7 @@ public class TagIT extends AbstractTaggerTestContext {
 
 
     @Test
-    public void testUntag() throws InterruptedException {
+    public void test03Untag() throws InterruptedException {
         super.setTaggerRestAssured();
         TagRequest tr = new TagRequest();
         tr.tag = new Tag();

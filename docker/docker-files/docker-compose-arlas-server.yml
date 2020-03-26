@@ -2,12 +2,12 @@ version: '3'
 
 services:
   arlas-server:
-    image: gisaia/arlas-server:${ARLAS_VERSION:-12.7.1}
+    image: gisaia/arlas-server:${ARLAS_VERSION:-12.7.6}
     container_name: arlas-server
     environment:
       - ARLAS_HOST="arlas-server"
       - ARLAS_ELASTIC_CLUSTER="docker-cluster"
-      - ARLAS_ELASTIC_NODES=elasticsearch:9300
+      - ARLAS_ELASTIC_NODES=elasticsearch:9200
       - ARLAS_PREFIX="${ARLAS_PREFIX:-/arlas}"
       - ARLAS_APP_PATH="${ARLAS_APP_PATH:-/}"
       - ARLAS_BASE_URI="${ARLAS_BASE_URI:-http://arlas-server:9999/arlas/}"

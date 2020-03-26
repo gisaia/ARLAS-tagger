@@ -19,9 +19,12 @@ ARLAS-tagger is compliant with the following versions:
 | ElasticSearch Version |
 |  ---  |
 | 7.0.1 |
-| 7.1.1 |
+| 7.1.0 |
 | 7.2.1 |
 | 7.3.2 |
+| 7.4.2 |
+| 7.5.2 |
+| 7.6.0 |
 
 > Note : data collections tagged by ARLAS-tagger should be referenced in Elasticsearch by ARLAS-server
 
@@ -54,7 +57,7 @@ Then, go to `http://localhost:9998/arlas_tagger/swagger` for testing the API.
 ### Docker
 
 ```sh
-docker run -d -e KAFKA_BROKERS=my-host-1:9092 -e ARLAS_ELASTIC_NODES=my-host-2:9300 -e ARLAS_ELASTIC_CLUSTER=elasticsearch  gisaia/arlas-tagger:latest
+docker run -d -e KAFKA_BROKERS=my-host-1:9092 -e ARLAS_ELASTIC_NODES=my-host-2:9200 -e ARLAS_ELASTIC_CLUSTER=elasticsearch  gisaia/arlas-tagger:latest
 ```
 
 ## Running the tests
@@ -77,7 +80,7 @@ Have a look to the [kafka image documentation](https://hub.docker.com/r/wurstmei
 
 ```sh
 export ARLAS_TAGGER_HOST="localhost"; export ARLAS_TAGGER_PORT="9998"; export ARLAS_TAGGER_PREFIX="/arlas/";
-export ARLAS_ELASTIC_NODES="localhost:9300"; export KAFKA_BROKERS="localhost:9092";
+export ARLAS_ELASTIC_NODES="localhost:9200"; export KAFKA_BROKERS="localhost:9092";
 mvn clean install -DskipTests=false
 ```
 

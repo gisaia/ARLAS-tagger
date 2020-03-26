@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
 
-export ELASTIC_VERSION="7.3.2"
-export ARLAS_VERSION="12.7.1"
+export ELASTIC_VERSION="7.6.0"
+export ARLAS_VERSION="12.7.6"
 
 function clean_exit {
-    ARG=$?
+  ARG=$?
 	echo "===> Exit status = ${ARG}"
-    exit $ARG
+  exit $ARG
 }
 trap clean_exit EXIT
 
