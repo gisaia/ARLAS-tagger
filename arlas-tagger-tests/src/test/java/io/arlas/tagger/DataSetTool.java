@@ -21,23 +21,21 @@ package io.arlas.tagger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.arlas.tagger.app.ElasticConfiguration;
-import org.apache.commons.lang3.tuple.Pair;
+import io.arlas.server.app.ElasticConfiguration;
+import io.arlas.server.exceptions.ArlasException;
+import io.arlas.server.utils.ElasticClient;
+import io.arlas.server.utils.ElasticTool;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.http.HttpHost;
 import org.apache.logging.log4j.core.util.IOUtils;
 import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.client.AdminClient;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.TransportAddress;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.sniff.Sniffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.util.List;
 import java.util.Optional;
 
 public class DataSetTool {
@@ -52,47 +50,36 @@ public class DataSetTool {
     public final static String DATASET_TAGGABLE_FIELDS="params.tags,params.job";
     public static final String[] jobs = {"Actor", "Announcers", "Archeologists", "Architect", "Brain Scientist", "Chemist", "Coach", "Coder", "Cost Estimator", "Dancer", "Drafter"};
 
-    public static AdminClient adminClient;
-    public static Client client;
+    public static ElasticClient client;
 
     static {
-        try {
-            Settings settings = null;
-            List<Pair<String,Integer>> nodes = ElasticConfiguration.getElasticNodes(Optional.ofNullable(System.getenv("ARLAS_ELASTIC_NODES")).orElse("localhost:19300"));
-            if ("localhost".equals(nodes.get(0).getLeft())) {
-                settings = Settings.EMPTY;
-            } else {
-                settings = Settings.builder().put("cluster.name", "docker-cluster").build();
-            }
-            client = new PreBuiltTransportClient(settings)
-                    .addTransportAddress(new TransportAddress(InetAddress.getByName(nodes.get(0).getLeft()), nodes.get(0).getRight()));
-            adminClient = client.admin();
-            LOGGER.info("Load data in " + nodes.get(0).getLeft() + ":" + nodes.get(0).getRight());
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
+        HttpHost[] nodes = ElasticConfiguration.getElasticNodes(Optional.ofNullable(System.getenv("ARLAS_ELASTIC_NODES")).orElse("localhost:9200"), false);
+        ImmutablePair<RestHighLevelClient, Sniffer> pair = ElasticTool.getRestHighLevelClient(nodes,false, null, true, true);
+        client = new ElasticClient(pair.getLeft(), pair.getRight());
+        LOGGER.info("Load data in " + nodes[0].getHostName() + ":" + nodes[0].getPort());
+
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ArlasException {
         DataSetTool.loadDataSet();
     }
 
-    public static void loadDataSet() throws IOException {
+    public static void loadDataSet() throws IOException, ArlasException {
         createIndex(DATASET_INDEX_NAME,"dataset.mapping.json");
         fillIndex(DATASET_INDEX_NAME,-170,170,-80,80);
         LOGGER.info("Index created : " + DATASET_INDEX_NAME);
     }
 
-    private static void createIndex(String indexName, String mappingFileName) throws IOException {
+    private static void createIndex(String indexName, String mappingFileName) throws IOException, ArlasException {
         String mapping = IOUtils.toString(new InputStreamReader(DataSetTool.class.getClassLoader().getResourceAsStream(mappingFileName)));
         try {
-            adminClient.indices().prepareDelete(indexName).get();
+            client.deleteIndex(indexName);
         } catch (Exception e) {
         }
-        adminClient.indices().prepareCreate(indexName).addMapping(DATASET_TYPE_NAME, mapping, XContentType.JSON).get();
+        client.createIndex(indexName, mapping);
     }
 
-    private static void fillIndex(String indexName, int lonMin, int lonMax, int latMin, int latMax) throws JsonProcessingException {
+    private static void fillIndex(String indexName, int lonMin, int lonMax, int latMin, int latMax) throws JsonProcessingException, ArlasException {
         Data data;
         ObjectMapper mapper = new ObjectMapper();
 
@@ -101,15 +88,13 @@ public class DataSetTool {
                 data = new Data();
                 data.id = String.valueOf("ID_" + i + "_" + j + "DI").replace("-", "_");
                 data.params.job = jobs[((Math.abs(i) + Math.abs(j)) / 10) % (jobs.length - 1)];
-                IndexResponse response = client.prepareIndex(indexName, DATASET_TYPE_NAME, "ES_ID_TEST" + data.id)
-                        .setSource(mapper.writer().writeValueAsString(data), XContentType.JSON)
-                        .get();
+                IndexResponse response = client.index(indexName, "ES_ID_TEST" + data.id, mapper.writer().writeValueAsString(data));
             }
         }
     }
 
-    public static void clearDataSet() {
-        adminClient.indices().prepareDelete(DATASET_INDEX_NAME).get();
+    public static void clearDataSet() throws ArlasException {
+        client.deleteIndex(DATASET_INDEX_NAME);
     }
 
     public static void close() {

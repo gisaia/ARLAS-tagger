@@ -56,12 +56,11 @@ kafka_configuration:
   kafka_extra_properties: ${KAFKA_EXTRA_PROPS:-}
 
 elastic_configuration:
-  elastic_nodes: ${ARLAS_ELASTIC_NODES:-localhost:9300}
-  elastic_sniffing: ${ARLAS_ELASTIC_SNIFFING:-false}
-  elastic_cluster: ${ARLAS_ELASTIC_CLUSTER:-elasticsearch}
+  elastic-nodes: ${ARLAS_ELASTIC_NODES:-localhost:9200}
+  elastic-sniffing: ${ARLAS_ELASTIC_SNIFFING:-false}
   elastic-enable-ssl: ${ARLAS_ELASTIC_ENABLE_SSL:-false}
-  elastic-credentials: ${ARLAS_ELASTIC_CREDENTIALS:-}
-  elastic-compress: ${ARLAS_ELASTIC_COMPRESS:-true}
+  elastic-credentials: ${ARLAS_ELASTIC_CREDENTIALS}
+  elastic-skip-master: ${ARLAS_ELASTIC_SKIP_MASTER:-true}
 
 arlas_collections_configuration:
   arlas_index:  ${ARLAS_COLLECTION_INDEX:-.arlas}

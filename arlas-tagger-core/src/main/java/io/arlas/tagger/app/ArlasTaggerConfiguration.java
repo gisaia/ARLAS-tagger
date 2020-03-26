@@ -21,11 +21,10 @@ package io.arlas.tagger.app;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.arlas.server.app.ArlasAuthConfiguration;
+import io.arlas.server.app.ElasticConfiguration;
 import io.arlas.server.exceptions.ArlasConfigurationException;
 import io.dropwizard.Configuration;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
-
-import java.util.Map;
 
 public class ArlasTaggerConfiguration extends Configuration {
     @JsonProperty("swagger")
@@ -50,15 +49,7 @@ public class ArlasTaggerConfiguration extends Configuration {
     public Long statusTimeout;
 
     public void check() throws ArlasConfigurationException {
-        if (elasticConfiguration.getElasticNodes().isEmpty()) {
-            throw new ArlasConfigurationException("Elastic search configuration missing in config file.");
-        }
-        if (elasticConfiguration.elasticEnableSsl == null) {
-            elasticConfiguration.elasticEnableSsl = false;
-        }
-        if (elasticConfiguration.elasticCompress == null) {
-            elasticConfiguration.elasticCompress = true;
-        }
+        elasticConfiguration.check();
         if (arlasAuthConfiguration == null) {
             arlasAuthConfiguration = new ArlasAuthConfiguration();
             arlasAuthConfiguration.enabled = false;

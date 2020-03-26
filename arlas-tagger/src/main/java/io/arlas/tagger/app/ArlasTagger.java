@@ -25,7 +25,7 @@ import io.arlas.server.auth.AuthenticationFilter;
 import io.arlas.server.auth.AuthorizationFilter;
 import io.arlas.server.exceptions.*;
 import io.arlas.server.managers.CollectionReferenceManager;
-import io.arlas.server.utils.ElasticNodesInfo;
+import io.arlas.server.utils.ElasticClient;
 import io.arlas.server.utils.InsensitiveCaseFilter;
 import io.arlas.server.utils.PrettyPrintFilter;
 import io.arlas.tagger.kafka.TagKafkaProducer;
@@ -42,27 +42,19 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.federecio.dropwizard.swagger.SwaggerBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
-import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.Strings;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.TransportAddress;
-import org.elasticsearch.transport.client.PreBuiltTransportClient;
-import org.elasticsearch.xpack.client.PreBuiltXPackTransportClient;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.EnumSet;
 
 public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
     Logger LOGGER = LoggerFactory.getLogger(ArlasTagger.class);
+
+    private ElasticClient client;
 
     public static void main(String... args) throws Exception {
         new ArlasTagger().run(args);
@@ -86,8 +78,7 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
     public void run(ArlasTaggerConfiguration configuration, Environment environment) throws Exception {
         configuration.check();
 
-        TransportClient transportClient = getTransportClient(configuration);
-        Client client = transportClient;
+        client = new ElasticClient(configuration.elasticConfiguration);
 
         CollectionReferenceManager.getInstance().init(client);
 
@@ -125,8 +116,6 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
         if (configuration.arlascorsenabled) {
             configureCors(environment);
         }
-
-        ElasticNodesInfo.printNodesInfo(client, transportClient);
     }
 
     private void configureCors(Environment environment) {
@@ -143,46 +132,5 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
 
         // Add URL mapping
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
-    }
-
-    protected TransportClient getTransportClient(ArlasTaggerConfiguration configuration) throws UnknownHostException {
-        TransportClient transportClient;
-        // x-pack transport client
-        if (configuration.elasticConfiguration.elasticEnableSsl) {
-            // disable JVM default policies of caching positive hostname resolutions indefinitely
-            // because the Elastic load balancer can change IP addresses
-            java.security.Security.setProperty("networkaddress.cache.ttl" , "60");
-            // Build the settings for our client.
-            Settings settings = Settings.builder()
-                    .put("cluster.name", configuration.elasticConfiguration.elasticcluster)
-                    .put("request.headers.X-Found-Cluster", "${cluster.name}")
-                    .put("client.transport.sniff", false) // must be false in this context
-                    .put("transport.compress", configuration.elasticConfiguration.elasticCompress) // from ES 6.7
-                    .put("xpack.security.transport.ssl.enabled", configuration.elasticConfiguration.elasticEnableSsl)
-                    .put("xpack.security.user", configuration.elasticConfiguration.elasticCredentials)
-                    .build();
-
-            // Instantiate a TransportClient and add the cluster to the list of addresses to connect to.
-            // Only port 9343 (SSL-encrypted) is currently supported. The use of x-pack security features is required.
-            transportClient = new PreBuiltXPackTransportClient(settings);
-        } else {
-            Settings.Builder settingsBuilder = Settings.builder();
-            if(configuration.elasticConfiguration.elasticsniffing) {
-                settingsBuilder.put("client.transport.sniff", true);
-            }
-            if(!Strings.isNullOrEmpty(configuration.elasticConfiguration.elasticcluster)) {
-                settingsBuilder.put("cluster.name", configuration.elasticConfiguration.elasticcluster);
-            }
-            Settings settings = settingsBuilder.build();
-
-
-            transportClient = new PreBuiltTransportClient(settings);
-        }
-
-        for(Pair<String,Integer> node : configuration.elasticConfiguration.getElasticNodes()) {
-            transportClient.addTransportAddress(new TransportAddress(InetAddress.getByName(node.getLeft()),
-                    node.getRight()));
-        }
-        return transportClient;
     }
 }

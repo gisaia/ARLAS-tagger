@@ -19,6 +19,7 @@
 
 package io.arlas.tagger.rest.tag;
 
+import io.arlas.server.exceptions.ArlasException;
 import io.arlas.tagger.AbstractTaggerTestContext;
 import io.arlas.tagger.ArlasServerContext;
 import io.arlas.tagger.CollectionTool;
@@ -31,10 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.HttpHeaders;
-import java.io.IOException;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
 
 public class TagAuthIT extends AbstractTaggerTestContext {
 
@@ -71,7 +70,7 @@ public class TagAuthIT extends AbstractTaggerTestContext {
     }
 
     @After
-    public void after() throws IOException {
+    public void after() throws ArlasException {
         super.setServerRestAssured();
         ArlasServerContext.afterClass();
     }
