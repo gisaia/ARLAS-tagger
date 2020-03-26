@@ -1,8 +1,17 @@
 # Change Log
 
+## [v12.7.3](https://github.com/gisaia/ARLAS-tagger/tree/v12.7.3) (2020-03-26)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v12.7.1...v12.7.3)
+
 ## [v12.7.1](https://github.com/gisaia/ARLAS-tagger/tree/v12.7.1) (2019-12-17)
 
 [Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v12.7.0...v12.7.1)
+
+**Breaking changes:**
+
+- \[Tagger\] Replace QueryParam with PathParam in get tag status [\#55](https://github.com/gisaia/ARLAS-tagger/issues/55)
+- Replace QueryParam with PathParam in get tag status [\#65](https://github.com/gisaia/ARLAS-tagger/pull/65) [[API](https://github.com/gisaia/ARLAS-tagger/labels/API)] ([alainbodiguel](https://github.com/alainbodiguel))
 
 **New stuff:**
 
