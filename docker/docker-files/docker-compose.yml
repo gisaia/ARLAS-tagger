@@ -49,7 +49,7 @@ services:
       - 19998:9998
     volumes:
       - ${ARLAS_AUTH_LOCAL_CERT_FILE:-/tmp}:${ARLAS_AUTH_CERT_FILE:-/opt/app/arlas.pem}:ro
-    command: ["/opt/app/wait-for-tagger-deps.sh $$KAFKA_BROKERS $$ARLAS_ELASTIC_NODES $$ARLAS_SERVER_NODE"]
+    command: ["bash", "-c", "/opt/app/wait-for-tagger-deps.sh $$KAFKA_BROKERS $$ARLAS_ELASTIC_NODES $$ARLAS_SERVER_NODE"]
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: "zookeeper"
