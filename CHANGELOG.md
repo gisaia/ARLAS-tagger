@@ -1,5 +1,14 @@
 # Change Log
 
+## [v13.7.0](https://github.com/gisaia/ARLAS-tagger/tree/v13.7.0) (2020-06-02)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v12.7.3...v13.7.0)
+
+**New stuff:**
+
+- \[Tagger\] Migrate to ES High Level REST client [\#66](https://github.com/gisaia/ARLAS-tagger/issues/66)
+- \[Tagger\] Fix slice parameter [\#68](https://github.com/gisaia/ARLAS-tagger/issues/68)
+
 ## [v12.7.3](https://github.com/gisaia/ARLAS-tagger/tree/v12.7.3) (2020-03-26)
 
 [Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v12.7.1...v12.7.3)
