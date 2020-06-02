@@ -81,6 +81,16 @@ docker run -ti -d \
 !!! note 
     (*) Note that the IP addresses the sniffer connects to are the ones declared as the publish address in those node’s Elasticsearch config.
     (**) Deprecated
+
+### Authentication
+
+| Environment variable | ARLAS Server configuration variable | Default | Description |
+| --- | --- | --- | --- |
+| ARLAS_AUTH_ENABLED | arlas_auth.enabled | false | Whether to enable auth or not |
+| ARLAS_AUTH_PUBLIC_URIS | arlas_auth.public_uris | swagger.* | Comma-separated list of URIs (as regex) that are to be made publicly available (no auth required to reach them) |
+| ARLAS_AUTH_CERT_FILE | arlas_auth.certificate_file | /opt/app/arlas.pem | Key of the auth service used to validate the JWT token (deprecated) |
+| ARLAS_AUTH_CERT_URL | arlas_auth.certificate_url | - | URL to the key of the auth service used to validate the JWT token |
+
 ### Kafka
 
 | Environment variable | ARLAS Tagger configuration variable | Default | Description |

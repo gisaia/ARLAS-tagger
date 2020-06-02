@@ -19,12 +19,12 @@
 
 package io.arlas.tagger.core;
 
-import io.arlas.server.core.FluidSearch;
 import io.arlas.server.exceptions.ArlasException;
 import io.arlas.server.exceptions.BadRequestException;
 import io.arlas.server.exceptions.NotImplementedException;
+import io.arlas.server.impl.elastic.core.FluidSearch;
+import io.arlas.server.impl.elastic.utils.ElasticClient;
 import io.arlas.server.model.CollectionReference;
-import io.arlas.server.utils.ElasticClient;
 import io.arlas.tagger.model.Tag;
 import io.arlas.tagger.model.enumerations.Action;
 import io.arlas.tagger.model.response.UpdateResponse;
@@ -62,9 +62,7 @@ public class FilteredUpdater extends FluidSearch {
         UpdateByQueryRequest request = new UpdateByQueryRequest(collectionReference.params.indexName)
                 .setQuery(this.getBoolQueryBuilder())
                 .setMaxDocs(Math.min(collectionReference.params.update_max_hits,max_updates))
-                // waiting for ES bug to be fixed: [slices] must be a positive integer or the string "auto", but was [0]
-                // https://github.com/elastic/elasticsearch/issues/54098
-                //.setSlices(slices)
+                .setSlices(slices)
                 .setScript(this.getTagScript(tag, action));
         BulkByScrollResponse response = this.getClient().getClient().updateByQuery(request, RequestOptions.DEFAULT);
         UpdateResponse updateResponse = new UpdateResponse();

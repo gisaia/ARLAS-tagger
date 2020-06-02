@@ -21,7 +21,7 @@ FROM openjdk:8-jre-alpine
 WORKDIR /opt/app
 
 # install script dependencies
-RUN apk add --update bash netcat-openbsd curl && rm -rf /var/cache/apk/*
+RUN apk add --update netcat-openbsd curl && rm -rf /var/cache/apk/*
 
 # application placed into /opt/app
 WORKDIR /opt/app
@@ -35,5 +35,4 @@ EXPOSE 9998
 HEALTHCHECK --interval=5m --timeout=3s \
   CMD curl http://localhost:9998/admin/healthcheck | grep -v "\"healthy\":false" || exit 1
 
-ENTRYPOINT ["bash", "-c"]
-CMD ["/opt/app/start.sh"]
+CMD /opt/app/start.sh

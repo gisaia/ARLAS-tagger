@@ -67,14 +67,18 @@ arlas_collections_configuration:
   arlas_cache_size: ${ARLAS_COLLECTION_CACHE_SIZE:-1000}
   arlas_cache_timeout: ${ARLAS_COLLECTION_CACHE_TIMEOUT:-60}
 
+arlas_rest_cache_timeout: ${ARLAS_REST_CACHE_TIMEOUT:-0}
+
 tagging_status_timeout: ${TAGGING_STATUS_TIMEOUT:-3600000}
 
 arlas_cors_enabled: ${ARLAS_TAGGER_CORS_ENABLED:-true}
 
 arlas_auth:
   enabled: ${ARLAS_AUTH_ENABLED:-false}
-  public_uris: [${ARLAS_AUTH_PUBLIC_URIS:-swagger,swagger.json}]
+  public_uris: [${ARLAS_AUTH_PUBLIC_URIS:-swagger.*}]
   login_url: ${ARLAS_AUTH_LOGIN_URL:-}
+  # deprecated
   certificate_file: ${ARLAS_AUTH_CERT_FILE:-/opt/app/arlas.pem}
+  certificate_url: ${ARLAS_AUTH_CERT_URL:-}
 
-
+arlas_database_factory_class: ${ARLAS_DATABASE_FACTORY_CLASS:-io.arlas.tagger.impl.ElasticDatabaseToolsFactory}

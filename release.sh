@@ -4,6 +4,9 @@ set -o errexit -o pipefail
 SCRIPT_DIRECTORY="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
 PROJECT_ROOT_DIRECTORY="$SCRIPT_DIRECTORY"
 
+npmlogin=`npm whoami`
+if  [ -z "$npmlogin"  ] ; then echo "your are not logged on npm"; exit -1; else  echo "logged as "$npmlogin ; fi
+
 #########################################
 #### Variables intialisation ############
 #########################################
@@ -23,7 +26,7 @@ function clean_docker {
 }
 
 function clean_exit {
-    ARG=$?
+  ARG=$?
 	echo "=> Exit status = $ARG"
 	rm -rf pom.xml.versionsBackup
 	rm -rf target/tmp || echo "target/tmp already removed"
@@ -109,7 +112,7 @@ case $i in
 esac
 done
 
-ELASTIC_VERSIONS_7=("7.0.1","7.1.0","7.2.1","7.3.2","7.4.2","7.5.2","7.6.0")
+ELASTIC_VERSIONS_7=("7.0.1","7.1.0","7.2.1","7.3.2","7.4.2","7.5.2","7.6.0","7.7.0")
 case $ELASTIC_RANGE in
     "7")
         ELASTIC_VERSIONS=( "${ELASTIC_VERSIONS_7[@]}" )
