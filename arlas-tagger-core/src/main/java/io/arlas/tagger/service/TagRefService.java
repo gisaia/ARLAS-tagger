@@ -36,8 +36,6 @@ import io.arlas.tagger.model.request.TagRefRequest;
 import io.arlas.tagger.model.response.UpdateResponse;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -168,12 +166,11 @@ public class TagRefService extends KafkaConsumerRunner {
         request.basicRequest = aggregationsRequest;
         request.headerRequest = aggregationsRequestHeader;
 
-        SearchResponse response = updateServices.aggregate(request, collectionReference, false);
-        MultiBucketsAggregation mbAggregation = (MultiBucketsAggregation) response.getAggregations().asList().get(0);
-
-        AggregationResponse aggregationResponse = new AggregationResponse();
-        aggregationResponse.totalnb = response.getHits().getTotalHits().value;
-        aggregationResponse = updateServices.formatAggregationResult(mbAggregation, aggregationResponse, collectionReference.collectionName);
-        return aggregationResponse;
+        return updateServices.aggregate(request,
+                collectionReference,
+                false,
+                ((AggregationsRequest) request.basicRequest).aggregations,
+                0,
+                System.nanoTime());
     }
 }

@@ -23,9 +23,13 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import io.arlas.server.auth.AuthenticationFilter;
 import io.arlas.server.auth.AuthorizationFilter;
-import io.arlas.server.exceptions.*;
+import io.arlas.server.exceptions.ArlasExceptionMapper;
+import io.arlas.server.exceptions.ConstraintViolationExceptionMapper;
+import io.arlas.server.exceptions.IllegalArgumentExceptionMapper;
+import io.arlas.server.exceptions.JsonProcessingExceptionMapper;
+import io.arlas.server.impl.elastic.exceptions.ElasticsearchExceptionMapper;
+import io.arlas.server.impl.elastic.utils.ElasticClient;
 import io.arlas.server.managers.CollectionReferenceManager;
-import io.arlas.server.utils.ElasticClient;
 import io.arlas.server.utils.InsensitiveCaseFilter;
 import io.arlas.server.utils.PrettyPrintFilter;
 import io.arlas.tagger.kafka.TagKafkaProducer;
@@ -78,11 +82,14 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
     public void run(ArlasTaggerConfiguration configuration, Environment environment) throws Exception {
         configuration.check();
 
-        client = new ElasticClient(configuration.elasticConfiguration);
+        DatabaseToolsFactory dbToolFactory = (DatabaseToolsFactory) Class
+                .forName(configuration.arlasDatabaseFactoryClass)
+                .getConstructor(ArlasTaggerConfiguration.class)
+                .newInstance(configuration);
 
-        CollectionReferenceManager.getInstance().init(client);
+        CollectionReferenceManager.getInstance().init(dbToolFactory.getCollectionReferenceDao());
 
-        UpdateServices updateServices = new UpdateServices(client, configuration.arlasCollectionsConfiguration);
+        UpdateServices updateServices = dbToolFactory.getUpdateServices();
         TagKafkaProducer tagKafkaProducer = TagKafkaProducer.build(configuration);
         ManagedKafkaConsumers consumersManager = new ManagedKafkaConsumers(configuration, tagKafkaProducer, updateServices);
         environment.lifecycle().manage(consumersManager);
@@ -112,8 +119,11 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
             environment.jersey().register(new AuthorizationFilter(configuration.arlasAuthConfiguration));
         }
 
+        //healthchecks
+        dbToolFactory.getHealthChecks().forEach((name, check) -> environment.healthChecks().register(name, check));
+
         //cors
-        if (configuration.arlascorsenabled) {
+        if (configuration.arlasCorsEnabled) {
             configureCors(environment);
         }
     }

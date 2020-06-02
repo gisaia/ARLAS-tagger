@@ -42,6 +42,7 @@ services:
       - ARLAS_LOGGING_FILE=${ARLAS_LOGGING_FILE:-arlas.log}
       - ARLAS_LOGGING_FILE_LEVEL=${ARLAS_LOGGING_FILE_LEVEL:-INFO}
       - ARLAS_AUTH_ENABLED="${ARLAS_AUTH_ENABLED:-false}"
+      - ARLAS_AUTH_CERT_URL="${ARLAS_AUTH_CERT_URL}"
     depends_on:
       - kafka
     ports:

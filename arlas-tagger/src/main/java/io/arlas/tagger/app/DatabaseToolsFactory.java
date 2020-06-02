@@ -19,16 +19,22 @@
 
 package io.arlas.tagger.app;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.codahale.metrics.health.HealthCheck;
+import io.arlas.server.dao.CollectionReferenceDao;
+import io.arlas.tagger.service.UpdateServices;
 
-public class ArlasCollectionsConfiguration {
-    @JsonProperty("arlas_cache_size")
-    public int arlasCacheSize;
+import java.util.Map;
 
-    @JsonProperty("arlas_cache_timeout")
-    public int arlasCacheTimeout;
+public abstract class DatabaseToolsFactory {
+    protected ArlasTaggerConfiguration configuration;
 
-    @JsonProperty("arlas_index")
-    public String arlasIndex;
+    public DatabaseToolsFactory(ArlasTaggerConfiguration configuration) {
+        this.configuration = configuration;
+    }
 
+    public abstract UpdateServices getUpdateServices();
+
+    public abstract CollectionReferenceDao getCollectionReferenceDao();
+
+    public abstract Map<String, HealthCheck> getHealthChecks();
 }

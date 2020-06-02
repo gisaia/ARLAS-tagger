@@ -43,16 +43,26 @@ public class ArlasTaggerConfiguration extends Configuration {
     public ArlasCollectionsConfiguration arlasCollectionsConfiguration;
 
     @JsonProperty("arlas_cors_enabled")
-    public Boolean arlascorsenabled;
+    public Boolean arlasCorsEnabled;
+
+    @JsonProperty("arlas_rest_cache_timeout")
+    public int arlasRestCacheTimeout;
 
     @JsonProperty("tagging_status_timeout")
     public Long statusTimeout;
+
+    @JsonProperty("arlas_database_factory_class")
+    public String arlasDatabaseFactoryClass;
 
     public void check() throws ArlasConfigurationException {
         elasticConfiguration.check();
         if (arlasAuthConfiguration == null) {
             arlasAuthConfiguration = new ArlasAuthConfiguration();
             arlasAuthConfiguration.enabled = false;
+        }
+
+        if (arlasDatabaseFactoryClass == null) {
+            throw new ArlasConfigurationException("arlas_database_factory_class is missing");
         }
     }
 }

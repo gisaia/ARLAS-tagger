@@ -19,14 +19,13 @@
 
 package io.arlas.tagger.service;
 
-import io.arlas.server.dao.ElasticCollectionReferenceDaoImpl;
+import io.arlas.server.dao.CollectionReferenceDao;
 import io.arlas.server.exceptions.ArlasException;
+import io.arlas.server.impl.elastic.services.ElasticExploreService;
+import io.arlas.server.impl.elastic.utils.ElasticClient;
 import io.arlas.server.model.CollectionReference;
 import io.arlas.server.model.request.MixedRequest;
 import io.arlas.server.model.request.Search;
-import io.arlas.server.services.ExploreServices;
-import io.arlas.server.utils.ElasticClient;
-import io.arlas.tagger.app.ArlasCollectionsConfiguration;
 import io.arlas.tagger.core.FilteredUpdater;
 import io.arlas.tagger.model.Tag;
 import io.arlas.tagger.model.enumerations.Action;
@@ -34,12 +33,10 @@ import io.arlas.tagger.model.response.UpdateResponse;
 
 import java.io.IOException;
 
-public class UpdateServices extends ExploreServices {
+public class UpdateServices extends ElasticExploreService {
 
-    public UpdateServices(ElasticClient client, ArlasCollectionsConfiguration configuration) {
-        super();
-        this.client = client;
-        this.daoCollectionReference = new ElasticCollectionReferenceDaoImpl(client, configuration.arlasindex, configuration.arlascachesize, configuration.arlascachetimeout);
+    public UpdateServices(ElasticClient client, CollectionReferenceDao collectionReferenceDao, int arlasRestCacheTimeout) {
+        super(client, collectionReferenceDao, "", arlasRestCacheTimeout);
     }
 
     public UpdateResponse tag(CollectionReference collectionReference, MixedRequest request, Tag tag, int max_updates) throws IOException, ArlasException {
