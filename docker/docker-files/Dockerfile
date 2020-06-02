@@ -21,7 +21,7 @@ FROM openjdk:8-jre-alpine
 WORKDIR /opt/app
 
 # install script dependencies
-RUN apk add --update netcat-openbsd curl && rm -rf /var/cache/apk/*
+RUN apk add --update bash netcat-openbsd curl && rm -rf /var/cache/apk/*
 
 # application placed into /opt/app
 WORKDIR /opt/app
