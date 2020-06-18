@@ -32,6 +32,7 @@ import io.arlas.tagger.model.enumerations.Action;
 import io.arlas.tagger.model.response.UpdateResponse;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class UpdateServices extends ElasticExploreService {
 
@@ -59,7 +60,10 @@ public class UpdateServices extends ElasticExploreService {
             applyFilter(request.basicRequest.filter,updater);
             setPageSizeAndFrom(((Search)request.basicRequest).page,updater);
             sortPage(((Search) request.basicRequest).page, updater);
-            applyProjection(((Search) request.basicRequest).projection, updater, request.columnFilter, collectionReference);
+            applyProjection(((Search) request.basicRequest).projection,
+                    updater,
+                    request.columnFilter == null ? Optional.empty() : request.columnFilter,
+                    collectionReference);
         }
         return updater;
     }
