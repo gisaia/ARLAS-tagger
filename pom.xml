@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skipTests>true</skipTests>
         <surefire.version>2.20.1</surefire.version>
-        <log4j.version>2.9.1</log4j.version>
+        <log4j.version>2.13.2</log4j.version>
 
         <arlas-server.version>13.7.1</arlas-server.version>
         <!-- KAFKA-->
