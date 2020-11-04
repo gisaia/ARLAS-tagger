@@ -17,27 +17,23 @@
  * under the License.
  */
 
-package io.arlas.tagger.app;
+package io.arlas.tagger.impl;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.arlas.server.app.ArlasBaseConfiguration;
-import io.arlas.server.exceptions.ArlasConfigurationException;
+import io.arlas.tagger.app.ArlasTaggerConfiguration;
+import io.arlas.tagger.app.CacheFactory;
+import io.arlas.server.impl.cache.HazelcastCacheManager;
+import io.arlas.server.managers.CacheManager;
 
-public class ArlasTaggerConfiguration extends ArlasBaseConfiguration {
+public class HazelcastCacheFactory extends CacheFactory {
+    private final CacheManager cacheManager;
 
-    @JsonProperty("kafka_configuration")
-    public KafkaConfiguration kafkaConfiguration;
+    public HazelcastCacheFactory(ArlasTaggerConfiguration configuration) {
+        super(configuration);
+        this.cacheManager = new HazelcastCacheManager(configuration.arlasCollectionsConfiguration.arlasCacheTimeout);
+    }
 
-    @JsonProperty("arlas_collections_configuration")
-    public ArlasCollectionsConfiguration arlasCollectionsConfiguration;
-
-    @JsonProperty("arlas_rest_cache_timeout")
-    public int arlasRestCacheTimeout;
-
-    @JsonProperty("tagging_status_timeout")
-    public Long statusTimeout;
-
-    public void check() throws ArlasConfigurationException {
-        super.check();
+    @Override
+    public CacheManager getCacheManager() {
+        return this.cacheManager;
     }
 }

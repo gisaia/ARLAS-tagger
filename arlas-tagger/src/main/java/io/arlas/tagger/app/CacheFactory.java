@@ -19,25 +19,14 @@
 
 package io.arlas.tagger.app;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.arlas.server.app.ArlasBaseConfiguration;
-import io.arlas.server.exceptions.ArlasConfigurationException;
+import io.arlas.server.managers.CacheManager;
 
-public class ArlasTaggerConfiguration extends ArlasBaseConfiguration {
+public abstract class CacheFactory {
+    protected ArlasTaggerConfiguration configuration;
 
-    @JsonProperty("kafka_configuration")
-    public KafkaConfiguration kafkaConfiguration;
-
-    @JsonProperty("arlas_collections_configuration")
-    public ArlasCollectionsConfiguration arlasCollectionsConfiguration;
-
-    @JsonProperty("arlas_rest_cache_timeout")
-    public int arlasRestCacheTimeout;
-
-    @JsonProperty("tagging_status_timeout")
-    public Long statusTimeout;
-
-    public void check() throws ArlasConfigurationException {
-        super.check();
+    public CacheFactory(ArlasTaggerConfiguration configuration) {
+        this.configuration = configuration;
     }
+
+    public abstract CacheManager getCacheManager();
 }
