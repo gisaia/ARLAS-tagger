@@ -25,6 +25,12 @@ logging:
   loggers:
     "org.apache.kafka": ${ARLAS_LOGGING_KAFKA_LEVEL:-INFO}
     "javax.management.mbeanserver": ${ARLAS_LOGGING_MBEAN_LEVEL:-INFO}
+    "org.apache.http": ${ARLAS_LOGGING_APACHE_HTTP_LEVEL:-INFO}
+    "org.eclipse.jetty": ${ARLAS_LOGGING_JETTY_LEVEL:-INFO}
+    "org.elasticsearch.client": ${ARLAS_LOGGING_ELASTICSEARCH_LEVEL:-DEBUG}
+    "org.reflections": ${ARLAS_LOGGING_REFLECTIONS_LEVEL:-INFO}
+    "io.dropwizard": ${ARLAS_LOGGING_DROPWIZARD_LEVEL:-INFO}
+    "io.swagger": ${ARLAS_LOGGING_SWAGGER_LEVEL:-INFO}
   appenders:
     - type: console
       threshold:  ${ARLAS_LOGGING_CONSOLE_LEVEL:-INFO}
@@ -34,6 +40,17 @@ logging:
       archive: ${ARLAS_LOGGING_FILE_ARCHIVE:-true}
       archivedLogFilenamePattern: ${ARLAS_LOGGING_FILE_ARCHIVE_FILE_PATTERN:-arlas-%d.log}
       archivedFileCount: ${ARLAS_LOGGING_FILE_ARCHIVE_FILE_COUNT:-5}
+
+########################################################
+############ ZIPKIN                      ###############
+########################################################
+# Zipkin let you analyze the API calls
+zipkin: # The ZIPIN configuration, not active by default
+  enabled: ${ARLAS_ZIPKIN_ENABLED:-false} # Do we want zipkin to collect the API calls? Not by default.
+  serviceHost: ${ARLAS_ZIPKIN_SERVICE_HOST:-127.0.0.1} # Listening IP address of the service
+  servicePort: ${ARLAS_PORT:-9999} # Listening port of the service
+  collector: ${ARLAS_ZIPKIN_COLLECTOR:-http}
+  baseUrl: ${ARLAS_ZIPKIN_BASEURL:-http://localhost:9411} # Where is zipkin running?
 
 ########################################################
 ############ ARLAS TAGGER                ###############
@@ -55,7 +72,7 @@ kafka_configuration:
   kafka_topic_execute_tags: ${KAFKA_TOPIC_EXECUTE_TAGS:-execute_tags}
   kafka_extra_properties: ${KAFKA_EXTRA_PROPS:-}
 
-elastic_configuration:
+elastic:
   elastic-nodes: ${ARLAS_ELASTIC_NODES:-localhost:9200}
   elastic-sniffing: ${ARLAS_ELASTIC_SNIFFING:-false}
   elastic-enable-ssl: ${ARLAS_ELASTIC_ENABLE_SSL:-false}
@@ -71,7 +88,13 @@ arlas_rest_cache_timeout: ${ARLAS_REST_CACHE_TIMEOUT:-0}
 
 tagging_status_timeout: ${TAGGING_STATUS_TIMEOUT:-3600000}
 
-arlas_cors_enabled: ${ARLAS_TAGGER_CORS_ENABLED:-true}
+arlas_cors:
+  enabled: ${ARLAS_TAGGER_CORS_ENABLED:-false}
+  allowed_origins: ${ARLAS_CORS_ALLOWED_ORIGINS:-"*"}
+  allowed_headers: ${ARLAS_CORS_ALLOWED_HEADERS:-"arlas-user,arlas-groups,arlas-organization,X-Requested-With,Content-Type,Accept,Origin,Authorization,X-Forwarded-User"}
+  allowed_methods: ${ARLAS_CORS_ALLOWED_METHODS:-"OPTIONS,GET,PUT,POST,DELETE,HEAD"}
+  allowed_credentials: ${ARLAS_CORS_ALLOWED_CREDENTIALS:-true}
+  exposed_headers: ${ARLAS_CORS_EXPOSED_HEADERS:-"Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,Location,WWW-Authenticate"}
 
 arlas_auth:
   enabled: ${ARLAS_AUTH_ENABLED:-false}
@@ -80,5 +103,10 @@ arlas_auth:
   # deprecated
   certificate_file: ${ARLAS_AUTH_CERT_FILE:-/opt/app/arlas.pem}
   certificate_url: ${ARLAS_AUTH_CERT_URL:-}
+  header_user: ${ARLAS_HEADER_USER:-arlas-user}
+  header_group: ${ARLAS_HEADER_GROUP:-arlas-groups}
+  claim_roles: ${ARLAS_CLAIM_ROLES:-http://arlas.io/roles}
+  claim_permissions: ${ARLAS_CLAIM_PERMISSIONS:-http://arlas.io/permissions}
 
 arlas_database_factory_class: ${ARLAS_DATABASE_FACTORY_CLASS:-io.arlas.tagger.impl.ElasticDatabaseToolsFactory}
+arlas_cache_factory_class: ${ARLAS_CACHE_FACTORY_CLASS:-io.arlas.tagger.impl.HazelcastCacheFactory}

@@ -23,6 +23,7 @@ import io.arlas.server.dao.CollectionReferenceDao;
 import io.arlas.server.health.ElasticsearchHealthCheck;
 import io.arlas.server.impl.elastic.dao.ElasticCollectionReferenceDao;
 import io.arlas.server.impl.elastic.utils.ElasticClient;
+import io.arlas.server.managers.CacheManager;
 import io.arlas.tagger.app.ArlasTaggerConfiguration;
 import io.arlas.tagger.app.DatabaseToolsFactory;
 import io.arlas.tagger.service.UpdateServices;
@@ -36,13 +37,11 @@ public class ElasticDatabaseToolsFactory extends DatabaseToolsFactory {
     private final UpdateServices updateServices;
     private final CollectionReferenceDao collectionReferenceDao;
 
-    public ElasticDatabaseToolsFactory(ArlasTaggerConfiguration configuration) {
+    public ElasticDatabaseToolsFactory(ArlasTaggerConfiguration configuration, CacheManager cacheManager) {
         super(configuration);
         this.elasticClient = new ElasticClient(configuration.elasticConfiguration);
         this.collectionReferenceDao = new ElasticCollectionReferenceDao(elasticClient,
-                configuration.arlasCollectionsConfiguration.arlasIndex,
-                configuration.arlasCollectionsConfiguration.arlasCacheSize,
-                configuration.arlasCollectionsConfiguration.arlasCacheTimeout);
+                configuration.arlasCollectionsConfiguration.arlasIndex, cacheManager);
         this.updateServices = new UpdateServices(elasticClient,
                 collectionReferenceDao,
                 configuration.arlasRestCacheTimeout);
