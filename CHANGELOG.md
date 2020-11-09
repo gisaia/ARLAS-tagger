@@ -1,5 +1,13 @@
 # Change Log
 
+## [v14.7.0](https://github.com/gisaia/ARLAS-tagger/tree/v14.7.0) (2020-11-09)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v13.7.1...v14.7.0)
+
+**New stuff:**
+
+- Upgrade server to 14.7.0 [\#76](https://github.com/gisaia/ARLAS-tagger/pull/76) ([alainbodiguel](https://github.com/alainbodiguel))
+
 ## [v13.7.1](https://github.com/gisaia/ARLAS-tagger/tree/v13.7.1) (2020-06-18)
 
 [Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v13.7.0...v13.7.1)

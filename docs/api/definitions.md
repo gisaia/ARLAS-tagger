@@ -110,6 +110,8 @@
 |**action**  <br>*optional*|enum (ADD, REMOVE, REMOVEALL)|
 |**collection**  <br>*optional*|string|
 |**creationTime**  <br>*optional*|integer (int64)|
+|**filter**  <br>*optional*|[Filter](#filter)|
+|**form**  <br>*optional*|[Form](#form)|
 |**id**  <br>*optional*|string|
 |**label**  <br>*optional*|string|
 |**offset**  <br>*optional*|integer (int64)|
@@ -125,6 +127,8 @@
 
 |Name|Schema|
 |---|---|
+|**filter**  <br>*optional*|[Filter](#filter)|
+|**form**  <br>*optional*|[Form](#form)|
 |**label**  <br>*optional*|string|
 |**propagation**  <br>*optional*|[Propagation](#propagation)|
 |**search**  <br>*optional*|[Search](#search)|
