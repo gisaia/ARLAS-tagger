@@ -19,11 +19,12 @@
 
 package io.arlas.tagger.model.request;
 
+import io.arlas.server.model.request.Request;
 import io.arlas.server.model.request.Search;
 import io.arlas.tagger.model.Propagation;
 import io.arlas.tagger.model.Tag;
 
-public class TagRequest {
+public class TagRequest extends Request {
 
     public Search search;
     public Tag tag;

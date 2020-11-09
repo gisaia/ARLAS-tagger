@@ -2,7 +2,7 @@
 set -e
 
 export ELASTIC_VERSION="7.9.2"
-export ARLAS_VERSION="14.7.0-rc.3"
+export ARLAS_VERSION="14.7.0"
 
 function clean_exit {
   ARG=$?

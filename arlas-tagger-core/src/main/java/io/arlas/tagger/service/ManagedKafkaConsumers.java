@@ -49,6 +49,10 @@ public class ManagedKafkaConsumers implements Managed {
         return tagKafkaProducer;
     }
 
+    public UpdateServices getUpdateServices() {
+        return updateServices;
+    }
+
     @Override
     public void start() throws Exception {
         new Thread(tagRefService).start();

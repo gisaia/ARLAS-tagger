@@ -20,15 +20,18 @@
 package io.arlas.tagger.rest.tag;
 
 import com.codahale.metrics.annotation.Timed;
+import io.arlas.server.exceptions.ArlasException;
+import io.arlas.server.model.CollectionReference;
 import io.arlas.server.model.response.Error;
+import io.arlas.server.utils.ColumnFilterUtil;
 import io.arlas.tagger.app.Documentation;
-import io.arlas.tagger.kafka.TagKafkaProducer;
 import io.arlas.tagger.model.TaggingStatus;
 import io.arlas.tagger.model.enumerations.Action;
 import io.arlas.tagger.model.request.TagRefRequest;
 import io.arlas.tagger.model.request.TagRequest;
 import io.arlas.tagger.model.response.UpdateResponse;
 import io.arlas.tagger.service.ManagedKafkaConsumers;
+import io.arlas.tagger.util.TagRequestFieldsExtractor;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +39,8 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collection;
+import java.util.Optional;
 
 @Path("/write")
 @Api(value = "/write")
@@ -89,6 +94,9 @@ public class TagRESTService {
             @ApiParam(hidden = true)
             @HeaderParam(value="Partition-Filter") String partitionFilter,
 
+            @ApiParam(hidden = true)
+            @HeaderParam(value = "Column-Filter") Optional<String> columnFilter,
+
             // --------------------------------------------------------
             // ----------------------- FORM     -----------------------
             // --------------------------------------------------------
@@ -97,8 +105,8 @@ public class TagRESTService {
                     defaultValue = "false",
                     required=false)
             @QueryParam(value="pretty") Boolean pretty
-    ) {
-
+    ) throws ArlasException {
+        assertColumnFilter(collection, tagRequest, columnFilter);
         if (tagRequest.tag != null && tagRequest.tag.path != null && tagRequest.tag.value != null) {
             TagRefRequest tagRefRequest = TagRefRequest.fromTagRequest(tagRequest, collection, partitionFilter, Action.ADD);
             return doAction(tagRefRequest);
@@ -177,6 +185,9 @@ public class TagRESTService {
             @ApiParam(hidden = true)
             @HeaderParam(value="Partition-Filter") String partitionFilter,
 
+            @ApiParam(hidden = true)
+            @HeaderParam(value = "Column-Filter") Optional<String> columnFilter,
+
             // --------------------------------------------------------
             // ----------------------- FORM     -----------------------
             // --------------------------------------------------------
@@ -185,7 +196,8 @@ public class TagRESTService {
                     defaultValue = "false",
                     required=false)
             @QueryParam(value="pretty") Boolean pretty
-    ) {
+    ) throws ArlasException {
+        assertColumnFilter(collection, tagRequest, columnFilter);
 
         if (tagRequest.tag != null && tagRequest.tag.path != null) {
             TagRefRequest tagRefRequest = TagRefRequest.fromTagRequest(tagRequest, collection, partitionFilter,
@@ -194,6 +206,16 @@ public class TagRESTService {
         } else {
             throw new BadRequestException("Tag element is missing required data.");
         }
+    }
+
+    private void assertColumnFilter(String collection, TagRequest tagRequest, Optional<String> columnFilter) throws ArlasException {
+        CollectionReference collectionReference = consumersManager.getUpdateServices().getDaoCollectionReference()
+                .getCollectionReference(collection);
+        if (collectionReference == null) {
+            throw new NotFoundException(collection);
+        }
+
+        ColumnFilterUtil.assertRequestAllowed(columnFilter, collectionReference, tagRequest, new TagRequestFieldsExtractor());
     }
 
     private Response doAction(TagRefRequest tagRefRequest) {
