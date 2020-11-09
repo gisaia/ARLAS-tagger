@@ -73,6 +73,7 @@ public class TagIT extends AbstractTaggerTestContext {
         tr.tag.value="v1";
 
         given().contentType("application/json")
+                .header("Column-Filter","params.tags")
                 .body(tr)
                 .when()
                 .post(getTaggerUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
@@ -246,6 +247,24 @@ public class TagIT extends AbstractTaggerTestContext {
 //                .statusCode(400)
 //                .body("error",equalTo("io.arlas.server.exceptions.NotAllowedException"))
 //        ;
+    }
+
+    @Test
+    public void test04ColumnFilter() throws InterruptedException {
+        super.setTaggerRestAssured();
+        TagRequest tr = new TagRequest();
+        tr.tag=new Tag();
+        tr.tag.path="params.job";
+        tr.tag.value="Another job";
+
+        given().contentType("application/json")
+                .header("Column-Filter","params.tags")
+                .body(tr)
+                .when()
+                .post(getTaggerUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
+                .then()
+                .statusCode(403);
+
     }
 
     public <R> boolean doUntil(Function<R, Object> function, Matcher matcher, int tries, int waitseconds) throws InterruptedException {
