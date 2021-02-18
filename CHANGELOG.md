@@ -1,11 +1,16 @@
 # Change Log
 
+## [v15.7.0](https://github.com/gisaia/ARLAS-tagger/tree/v15.7.0) (2021-02-18)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v14.7.0...v15.7.0)
+
 ## [v14.7.0](https://github.com/gisaia/ARLAS-tagger/tree/v14.7.0) (2020-11-09)
 
 [Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v13.7.1...v14.7.0)
 
 **New stuff:**
 
+- \[Tagger\] Add column filtering [\#64](https://github.com/gisaia/ARLAS-tagger/issues/64)
 - Upgrade server to 14.7.0 [\#76](https://github.com/gisaia/ARLAS-tagger/pull/76) ([alainbodiguel](https://github.com/alainbodiguel))
 
 ## [v13.7.1](https://github.com/gisaia/ARLAS-tagger/tree/v13.7.1) (2020-06-18)
