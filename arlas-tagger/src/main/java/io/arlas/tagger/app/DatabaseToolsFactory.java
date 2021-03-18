@@ -20,7 +20,7 @@
 package io.arlas.tagger.app;
 
 import com.codahale.metrics.health.HealthCheck;
-import io.arlas.server.dao.CollectionReferenceDao;
+import io.arlas.server.services.CollectionReferenceService;
 import io.arlas.tagger.service.UpdateServices;
 
 import java.util.Map;
@@ -34,7 +34,7 @@ public abstract class DatabaseToolsFactory {
 
     public abstract UpdateServices getUpdateServices();
 
-    public abstract CollectionReferenceDao getCollectionReferenceDao();
+    public abstract CollectionReferenceService getCollectionReferenceService();
 
     public abstract Map<String, HealthCheck> getHealthChecks();
 }

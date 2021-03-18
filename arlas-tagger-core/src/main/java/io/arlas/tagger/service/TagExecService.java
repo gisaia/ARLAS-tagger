@@ -67,7 +67,7 @@ public class TagExecService extends KafkaConsumerRunner {
                 final TagRefRequest tagRequest = MAPPER.readValue(record.value(), TagRefRequest.class);
                 LOGGER.debug("Processing record {}", tagRequest.toString());
                 CollectionReference collectionReference = Optional
-                        .ofNullable(updateServices.getDaoCollectionReference().getCollectionReference(tagRequest.collection))
+                        .ofNullable(updateServices.getCollectionReferenceService().getCollectionReference(tagRequest.collection))
                         .orElseThrow(() -> new NotFoundException(tagRequest.collection));
                 Search searchHeader = new Search();
                 searchHeader.filter = ParamsParser.getFilter(tagRequest.partitionFilter);

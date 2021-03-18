@@ -19,7 +19,7 @@
 
 package io.arlas.tagger.service;
 
-import io.arlas.server.dao.CollectionReferenceDao;
+import io.arlas.server.services.CollectionReferenceService;
 import io.arlas.server.exceptions.ArlasException;
 import io.arlas.server.impl.elastic.services.ElasticExploreService;
 import io.arlas.server.impl.elastic.utils.ElasticClient;
@@ -36,8 +36,8 @@ import java.util.Optional;
 
 public class UpdateServices extends ElasticExploreService {
 
-    public UpdateServices(ElasticClient client, CollectionReferenceDao collectionReferenceDao, int arlasRestCacheTimeout) {
-        super(client, collectionReferenceDao, "", arlasRestCacheTimeout);
+    public UpdateServices(ElasticClient client, CollectionReferenceService collectionReferenceService, int arlasRestCacheTimeout) {
+        super(client, collectionReferenceService, "", arlasRestCacheTimeout);
     }
 
     public UpdateResponse tag(CollectionReference collectionReference, MixedRequest request, Tag tag, int max_updates) throws IOException, ArlasException {

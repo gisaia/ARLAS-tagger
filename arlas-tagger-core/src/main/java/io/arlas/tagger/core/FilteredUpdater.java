@@ -22,7 +22,7 @@ package io.arlas.tagger.core;
 import io.arlas.server.exceptions.ArlasException;
 import io.arlas.server.exceptions.BadRequestException;
 import io.arlas.server.exceptions.NotImplementedException;
-import io.arlas.server.impl.elastic.core.FluidSearch;
+import io.arlas.server.impl.elastic.core.ElasticFluidSearch;
 import io.arlas.server.impl.elastic.utils.ElasticClient;
 import io.arlas.server.model.CollectionReference;
 import io.arlas.tagger.model.Tag;
@@ -40,10 +40,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-public class FilteredUpdater extends FluidSearch {
-
+public class FilteredUpdater extends ElasticFluidSearch {
+    private ElasticClient client;
     public FilteredUpdater(ElasticClient client) {
-        super(client);
+        this.client = client;
+        this.setClient(client);
     }
 
     public UpdateResponse doAction(Action action, CollectionReference collectionReference, Tag tag, int max_updates) throws IOException, ArlasException {
@@ -61,10 +62,10 @@ public class FilteredUpdater extends FluidSearch {
 
         UpdateByQueryRequest request = new UpdateByQueryRequest(collectionReference.params.indexName)
                 .setQuery(this.getBoolQueryBuilder())
-                .setMaxDocs(Math.min(collectionReference.params.update_max_hits,max_updates))
+                .setMaxDocs(Math.min(collectionReference.params.updateMaxHits,max_updates))
                 .setSlices(slices)
                 .setScript(this.getTagScript(tag, action));
-        BulkByScrollResponse response = this.getClient().getClient().updateByQuery(request, RequestOptions.DEFAULT);
+        BulkByScrollResponse response = this.client.getClient().updateByQuery(request, RequestOptions.DEFAULT);
         UpdateResponse updateResponse = new UpdateResponse();
         updateResponse.failures.addAll(response.getSearchFailures()
                 .stream().map(f->new UpdateResponse.Failure(f.getIndex(),f.getReason().getMessage(),"SearchFailure")).collect(Collectors.toList()));
