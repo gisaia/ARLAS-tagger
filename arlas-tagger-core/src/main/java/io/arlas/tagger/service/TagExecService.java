@@ -60,8 +60,8 @@ public class TagExecService extends KafkaConsumerRunner {
     public void processRecords(ConsumerRecords<String, String> records) {
         long start = System.currentTimeMillis();
         long updatedTotal = 0l;
+        int nbErrors = 0;
         for (ConsumerRecord<String, String> record : records) {
-
             try {
                 long t0 = System.currentTimeMillis();
                 final TagRefRequest tagRequest = MAPPER.readValue(record.value(), TagRefRequest.class);
@@ -93,6 +93,15 @@ public class TagExecService extends KafkaConsumerRunner {
                     updatedTotal += opUpdateResponse.updated;
                     UpdateResponse tagUpdateResponse = TaggingStatus.getInstance().updateStatus(tagRequest, opUpdateResponse, true, statusTimeout);
                     LOGGER.trace("Tagged {} documents [total={} / {}%] (failed={}) with processtime={}ms", opUpdateResponse.updated, tagUpdateResponse.updated, tagUpdateResponse.progress, tagUpdateResponse.failed, (System.currentTimeMillis() - t0));
+                    if (tagUpdateResponse.failed > 0) {
+                        LOGGER.error("Tagged {} documents [total={} / {}%] (failed={}) with processtime={}ms", opUpdateResponse.updated, tagUpdateResponse.updated, tagUpdateResponse.progress, tagUpdateResponse.failed, (System.currentTimeMillis() - t0));
+                        int newErrors =  (int)tagUpdateResponse.failed - nbErrors;
+                        for(int i = nbErrors; i < nbErrors + newErrors; i++) {
+                            UpdateResponse.Failure f = tagUpdateResponse.failures.get(i);
+                            LOGGER.error("Failure {}: \n - id : {} \n - type : {} \n - message : {}", i, f.id, f.type, f.message);
+                        }
+                        nbErrors += newErrors;
+                    }
                 }
             } catch (IOException e) {
                 LOGGER.warn("Could not parse record " + record.value());
