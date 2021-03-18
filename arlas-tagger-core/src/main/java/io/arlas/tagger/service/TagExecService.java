@@ -94,6 +94,7 @@ public class TagExecService extends KafkaConsumerRunner {
                     UpdateResponse tagUpdateResponse = TaggingStatus.getInstance().updateStatus(tagRequest, opUpdateResponse, true, statusTimeout);
                     LOGGER.trace("Tagged {} documents [total={} / {}%] (failed={}) with processtime={}ms", opUpdateResponse.updated, tagUpdateResponse.updated, tagUpdateResponse.progress, tagUpdateResponse.failed, (System.currentTimeMillis() - t0));
                     if (tagUpdateResponse.failed > 0) {
+                        LOGGER.error("Tagged {} documents [total={} / {}%] (failed={}) with processtime={}ms", opUpdateResponse.updated, tagUpdateResponse.updated, tagUpdateResponse.progress, tagUpdateResponse.failed, (System.currentTimeMillis() - t0));
                         int newErrors =  (int)tagUpdateResponse.failed - nbErrors;
                         for(int i = nbErrors; i < nbErrors + newErrors; i++) {
                             UpdateResponse.Failure f = tagUpdateResponse.failures.get(i);
