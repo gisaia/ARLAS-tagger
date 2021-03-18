@@ -19,11 +19,11 @@
 package io.arlas.tagger.impl;
 
 import com.codahale.metrics.health.HealthCheck;
-import io.arlas.server.dao.CollectionReferenceDao;
 import io.arlas.server.health.ElasticsearchHealthCheck;
-import io.arlas.server.impl.elastic.dao.ElasticCollectionReferenceDao;
+import io.arlas.server.impl.elastic.services.ElasticCollectionReferenceService;
 import io.arlas.server.impl.elastic.utils.ElasticClient;
 import io.arlas.server.managers.CacheManager;
+import io.arlas.server.services.CollectionReferenceService;
 import io.arlas.tagger.app.ArlasTaggerConfiguration;
 import io.arlas.tagger.app.DatabaseToolsFactory;
 import io.arlas.tagger.service.UpdateServices;
@@ -35,15 +35,15 @@ import java.util.Map;
 public class ElasticDatabaseToolsFactory extends DatabaseToolsFactory {
     private final ElasticClient elasticClient;
     private final UpdateServices updateServices;
-    private final CollectionReferenceDao collectionReferenceDao;
+    private final CollectionReferenceService collectionReferenceService;
 
     public ElasticDatabaseToolsFactory(ArlasTaggerConfiguration configuration, CacheManager cacheManager) {
         super(configuration);
         this.elasticClient = new ElasticClient(configuration.elasticConfiguration);
-        this.collectionReferenceDao = new ElasticCollectionReferenceDao(elasticClient,
+        this.collectionReferenceService = new ElasticCollectionReferenceService(elasticClient,
                 configuration.arlasCollectionsConfiguration.arlasIndex, cacheManager);
         this.updateServices = new UpdateServices(elasticClient,
-                collectionReferenceDao,
+                collectionReferenceService,
                 configuration.arlasRestCacheTimeout);
     }
 
@@ -53,8 +53,8 @@ public class ElasticDatabaseToolsFactory extends DatabaseToolsFactory {
     }
 
     @Override
-    public CollectionReferenceDao getCollectionReferenceDao() {
-        return this.collectionReferenceDao;
+    public CollectionReferenceService getCollectionReferenceService() {
+        return this.collectionReferenceService;
     }
 
     @Override

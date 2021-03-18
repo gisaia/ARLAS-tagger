@@ -209,7 +209,7 @@ public class TagRESTService {
     }
 
     private void assertColumnFilter(String collection, TagRequest tagRequest, Optional<String> columnFilter) throws ArlasException {
-        CollectionReference collectionReference = consumersManager.getUpdateServices().getDaoCollectionReference()
+        CollectionReference collectionReference = consumersManager.getUpdateServices().getCollectionReferenceService()
                 .getCollectionReference(collection);
         if (collectionReference == null) {
             throw new NotFoundException(collection);

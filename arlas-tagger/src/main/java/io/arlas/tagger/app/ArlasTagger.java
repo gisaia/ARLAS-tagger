@@ -22,7 +22,6 @@ package io.arlas.tagger.app;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import io.arlas.server.app.ArlasCorsConfiguration;
-import io.arlas.server.app.ArlasServerConfiguration;
 import io.arlas.server.auth.AuthenticationFilter;
 import io.arlas.server.auth.AuthorizationFilter;
 import io.arlas.server.exceptions.ArlasExceptionMapper;
@@ -96,7 +95,7 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
                 .getConstructor(ArlasTaggerConfiguration.class, CacheManager.class)
                 .newInstance(configuration, cacheFactory.getCacheManager());
 
-        CollectionReferenceManager.getInstance().init(dbToolFactory.getCollectionReferenceDao(),
+        CollectionReferenceManager.getInstance().init(dbToolFactory.getCollectionReferenceService(),
                 cacheFactory.getCacheManager());
 
         UpdateServices updateServices = dbToolFactory.getUpdateServices();

@@ -148,7 +148,7 @@ public class TagRefService extends KafkaConsumerRunner {
 
     private AggregationResponse getArlasAggregation(final TagRefRequest tagRequest) throws ArlasException, IOException {
         CollectionReference collectionReference = Optional
-                .ofNullable(updateServices.getDaoCollectionReference().getCollectionReference(tagRequest.collection))
+                .ofNullable(updateServices.getCollectionReferenceService().getCollectionReference(tagRequest.collection))
                 .orElseThrow(() -> new NotFoundException(tagRequest.collection));
 
         Aggregation aggregation = new Aggregation();
