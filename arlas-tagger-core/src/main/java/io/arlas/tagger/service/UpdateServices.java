@@ -53,8 +53,7 @@ public class UpdateServices extends ElasticExploreService {
     }
 
     protected FilteredUpdater getFilteredTagger(CollectionReference collectionReference, MixedRequest request) throws IOException, ArlasException {
-        FilteredUpdater updater = new FilteredUpdater(this.getClient());
-        updater.setCollectionReference(collectionReference);
+        FilteredUpdater updater = new FilteredUpdater(collectionReference, this.getClient());
         applyFilter(request.headerRequest.filter, updater);
         if(request.basicRequest!=null){
             applyFilter(request.basicRequest.filter,updater);
