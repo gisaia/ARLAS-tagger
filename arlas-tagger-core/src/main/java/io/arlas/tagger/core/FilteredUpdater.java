@@ -22,7 +22,7 @@ package io.arlas.tagger.core;
 import io.arlas.server.exceptions.ArlasException;
 import io.arlas.server.exceptions.BadRequestException;
 import io.arlas.server.exceptions.NotImplementedException;
-import io.arlas.server.impl.elastic.core.ElasticFluidSearch;
+import io.arlas.server.impl.elastic.services.ElasticFluidSearch;
 import io.arlas.server.impl.elastic.utils.ElasticClient;
 import io.arlas.server.model.CollectionReference;
 import io.arlas.tagger.model.Tag;
@@ -42,7 +42,8 @@ import java.util.stream.Collectors;
 
 public class FilteredUpdater extends ElasticFluidSearch {
     private ElasticClient client;
-    public FilteredUpdater(ElasticClient client) {
+    public FilteredUpdater(CollectionReference collectionReference, ElasticClient client) {
+        super(collectionReference);
         this.client = client;
         this.setClient(client);
     }
