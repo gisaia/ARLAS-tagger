@@ -19,7 +19,7 @@
 
 package io.arlas.tagger.app;
 
-import io.arlas.server.managers.CacheManager;
+import io.arlas.server.core.managers.CacheManager;
 
 public abstract class CacheFactory {
     protected ArlasTaggerConfiguration configuration;

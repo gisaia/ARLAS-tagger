@@ -21,8 +21,8 @@ package io.arlas.tagger.impl;
 
 import io.arlas.tagger.app.ArlasTaggerConfiguration;
 import io.arlas.tagger.app.CacheFactory;
-import io.arlas.server.impl.cache.HazelcastCacheManager;
-import io.arlas.server.managers.CacheManager;
+import io.arlas.server.core.impl.cache.HazelcastCacheManager;
+import io.arlas.server.core.managers.CacheManager;
 
 public class HazelcastCacheFactory extends CacheFactory {
     private final CacheManager cacheManager;

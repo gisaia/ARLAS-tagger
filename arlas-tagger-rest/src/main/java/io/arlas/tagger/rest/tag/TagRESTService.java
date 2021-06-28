@@ -20,10 +20,10 @@
 package io.arlas.tagger.rest.tag;
 
 import com.codahale.metrics.annotation.Timed;
-import io.arlas.server.exceptions.ArlasException;
-import io.arlas.server.model.CollectionReference;
-import io.arlas.server.model.response.Error;
-import io.arlas.server.utils.ColumnFilterUtil;
+import io.arlas.server.core.exceptions.ArlasException;
+import io.arlas.server.core.model.CollectionReference;
+import io.arlas.server.core.model.response.Error;
+import io.arlas.server.core.utils.ColumnFilterUtil;
 import io.arlas.tagger.app.Documentation;
 import io.arlas.tagger.model.TaggingStatus;
 import io.arlas.tagger.model.enumerations.Action;

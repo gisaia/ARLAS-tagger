@@ -21,7 +21,7 @@
         <surefire.version>2.20.1</surefire.version>
         <log4j.version>2.13.2</log4j.version>
 
-        <arlas-server.version>17.7.0</arlas-server.version>
+        <arlas-server.version>18.7.0-beta.0</arlas-server.version>
         <!-- KAFKA-->
         <kafka-connect.version>2.1.1</kafka-connect.version>
         <kafka.version>2.1.1</kafka.version>

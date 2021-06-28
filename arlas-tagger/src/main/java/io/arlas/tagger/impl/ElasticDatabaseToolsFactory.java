@@ -19,11 +19,11 @@
 package io.arlas.tagger.impl;
 
 import com.codahale.metrics.health.HealthCheck;
-import io.arlas.server.health.ElasticsearchHealthCheck;
-import io.arlas.server.impl.elastic.services.ElasticCollectionReferenceService;
-import io.arlas.server.impl.elastic.utils.ElasticClient;
-import io.arlas.server.managers.CacheManager;
-import io.arlas.server.services.CollectionReferenceService;
+import io.arlas.server.admin.health.ElasticsearchHealthCheck;
+import io.arlas.server.core.impl.elastic.services.ElasticCollectionReferenceService;
+import io.arlas.server.core.impl.elastic.utils.ElasticClient;
+import io.arlas.server.core.managers.CacheManager;
+import io.arlas.server.core.services.CollectionReferenceService;
 import io.arlas.tagger.app.ArlasTaggerConfiguration;
 import io.arlas.tagger.app.DatabaseToolsFactory;
 import io.arlas.tagger.service.UpdateServices;

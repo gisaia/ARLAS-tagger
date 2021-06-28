@@ -19,13 +19,13 @@
 
 package io.arlas.tagger.service;
 
-import io.arlas.server.exceptions.ArlasException;
-import io.arlas.server.exceptions.InvalidParameterException;
-import io.arlas.server.exceptions.NotAllowedException;
-import io.arlas.server.model.CollectionReference;
-import io.arlas.server.model.request.MixedRequest;
-import io.arlas.server.model.request.Search;
-import io.arlas.server.utils.ParamsParser;
+import io.arlas.server.core.exceptions.ArlasException;
+import io.arlas.server.core.exceptions.InvalidParameterException;
+import io.arlas.server.core.exceptions.NotAllowedException;
+import io.arlas.server.core.model.CollectionReference;
+import io.arlas.server.core.model.request.MixedRequest;
+import io.arlas.server.core.model.request.Search;
+import io.arlas.server.core.utils.ParamsParser;
 import io.arlas.tagger.app.ArlasTaggerConfiguration;
 import io.arlas.tagger.model.TaggingStatus;
 import io.arlas.tagger.model.request.TagRefRequest;

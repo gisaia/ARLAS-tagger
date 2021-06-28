@@ -20,13 +20,13 @@
 package io.arlas.tagger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.arlas.server.exceptions.ArlasException;
-import io.arlas.server.model.CollectionReferenceParameters;
-import io.arlas.server.model.DublinCoreElementName;
-import io.arlas.server.model.enumerations.OperatorEnum;
-import io.arlas.server.model.request.Expression;
-import io.arlas.server.model.request.Filter;
-import io.arlas.server.model.request.MultiValueFilter;
+import io.arlas.server.core.exceptions.ArlasException;
+import io.arlas.server.core.model.CollectionReferenceParameters;
+import io.arlas.server.core.model.DublinCoreElementName;
+import io.arlas.server.core.model.enumerations.OperatorEnum;
+import io.arlas.server.core.model.request.Expression;
+import io.arlas.server.core.model.request.Filter;
+import io.arlas.server.core.model.request.MultiValueFilter;
 import org.junit.Test;
 
 import java.io.IOException;
