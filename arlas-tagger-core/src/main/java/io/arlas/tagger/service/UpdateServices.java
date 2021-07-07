@@ -19,13 +19,13 @@
 
 package io.arlas.tagger.service;
 
-import io.arlas.server.services.CollectionReferenceService;
-import io.arlas.server.exceptions.ArlasException;
-import io.arlas.server.impl.elastic.services.ElasticExploreService;
-import io.arlas.server.impl.elastic.utils.ElasticClient;
-import io.arlas.server.model.CollectionReference;
-import io.arlas.server.model.request.MixedRequest;
-import io.arlas.server.model.request.Search;
+import io.arlas.server.core.services.CollectionReferenceService;
+import io.arlas.server.core.exceptions.ArlasException;
+import io.arlas.server.core.impl.elastic.services.ElasticExploreService;
+import io.arlas.server.core.impl.elastic.utils.ElasticClient;
+import io.arlas.server.core.model.CollectionReference;
+import io.arlas.server.core.model.request.MixedRequest;
+import io.arlas.server.core.model.request.Search;
 import io.arlas.tagger.core.FilteredUpdater;
 import io.arlas.tagger.model.Tag;
 import io.arlas.tagger.model.enumerations.Action;

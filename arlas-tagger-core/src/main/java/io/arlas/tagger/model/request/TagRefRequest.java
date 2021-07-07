@@ -20,7 +20,7 @@
 package io.arlas.tagger.model.request;
 
 
-import io.arlas.server.model.request.Search;
+import io.arlas.server.core.model.request.Search;
 import io.arlas.tagger.model.enumerations.Action;
 
 import java.util.UUID;

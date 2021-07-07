@@ -19,7 +19,7 @@
 
 package io.arlas.tagger.model;
 
-import io.arlas.server.model.request.Filter;
+import io.arlas.server.core.model.request.Filter;
 
 public class Propagation {
     public String field;

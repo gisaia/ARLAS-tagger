@@ -19,16 +19,16 @@
 
 package io.arlas.tagger.service;
 
-import io.arlas.server.exceptions.ArlasException;
-import io.arlas.server.exceptions.InvalidParameterException;
-import io.arlas.server.exceptions.NotAllowedException;
-import io.arlas.server.exceptions.NotFoundException;
-import io.arlas.server.model.CollectionReference;
-import io.arlas.server.model.enumerations.AggregationTypeEnum;
-import io.arlas.server.model.enumerations.OperatorEnum;
-import io.arlas.server.model.request.*;
-import io.arlas.server.model.response.AggregationResponse;
-import io.arlas.server.utils.ParamsParser;
+import io.arlas.server.core.exceptions.ArlasException;
+import io.arlas.server.core.exceptions.InvalidParameterException;
+import io.arlas.server.core.exceptions.NotAllowedException;
+import io.arlas.server.core.exceptions.NotFoundException;
+import io.arlas.server.core.model.CollectionReference;
+import io.arlas.server.core.model.enumerations.AggregationTypeEnum;
+import io.arlas.server.core.model.enumerations.OperatorEnum;
+import io.arlas.server.core.model.request.*;
+import io.arlas.server.core.model.response.AggregationResponse;
+import io.arlas.server.core.utils.ParamsParser;
 import io.arlas.tagger.app.ArlasTaggerConfiguration;
 import io.arlas.tagger.kafka.TagKafkaProducer;
 import io.arlas.tagger.model.TaggingStatus;

@@ -19,7 +19,7 @@
 
 package io.arlas.tagger.util;
 
-import io.arlas.server.utils.RequestFieldsExtractor;
+import io.arlas.server.core.utils.RequestFieldsExtractor;
 import io.arlas.tagger.model.request.TagRequest;
 
 import java.util.Optional;

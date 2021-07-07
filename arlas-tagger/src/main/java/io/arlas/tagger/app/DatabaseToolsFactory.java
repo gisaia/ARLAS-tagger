@@ -20,7 +20,7 @@
 package io.arlas.tagger.app;
 
 import com.codahale.metrics.health.HealthCheck;
-import io.arlas.server.services.CollectionReferenceService;
+import io.arlas.server.core.services.CollectionReferenceService;
 import io.arlas.tagger.service.UpdateServices;
 
 import java.util.Map;
