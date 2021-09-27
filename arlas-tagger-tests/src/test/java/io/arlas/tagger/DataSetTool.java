@@ -48,6 +48,8 @@ public class DataSetTool {
     public final static String DATASET_CENTROID_PATH="geo_params.centroid";
     public final static String DATASET_TIMESTAMP_PATH="params.startdate";
     public final static String DATASET_TAGGABLE_FIELDS="params.tags,params.job";
+    public final static String DATASET_H3_PATH="geo_params.h3";
+
     public static final String[] jobs = {"Actor", "Announcers", "Archeologists", "Architect", "Brain Scientist", "Chemist", "Coach", "Coder", "Cost Estimator", "Dancer", "Drafter"};
 
     public static ElasticClient client;

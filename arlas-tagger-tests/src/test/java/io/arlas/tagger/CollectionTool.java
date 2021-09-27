@@ -73,6 +73,8 @@ public class CollectionTool extends ArlasServerContext {
             params.centroidPath = DataSetTool.DATASET_CENTROID_PATH;
             params.timestampPath = DataSetTool.DATASET_TIMESTAMP_PATH;
             params.taggableFields = DataSetTool.DATASET_TAGGABLE_FIELDS;
+            params.h3Path = DataSetTool.DATASET_H3_PATH;
+
 
             // PUT new collection
             given().contentType("application/json").body(params).when().put(getUrlPath()).then().statusCode(200);
@@ -111,6 +113,7 @@ public class CollectionTool extends ArlasServerContext {
                         params.centroidPath = DataSetTool.DATASET_CENTROID_PATH;
                         params.timestampPath = DataSetTool.DATASET_TIMESTAMP_PATH;
                         params.taggableFields = DataSetTool.DATASET_TAGGABLE_FIELDS;
+                        params.h3Path = DataSetTool.DATASET_H3_PATH;
                         params.dublinCoreElementName=dublinCoreElementName;
                         String url = arlasPath + "collections/" + dublinCoreElementName.title.split(" ")[0].toLowerCase();
                         // PUT new collection
