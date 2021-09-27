@@ -63,7 +63,7 @@ docker run --rm \
     -v $PWD:/opt/maven \
 	-v $HOME/.m2:/root/.m2 \
 	busybox \
-        sh -c '(cp /opt/maven/conf/npm/package-build.json /opt/maven/target/tmp/typescript-fetch/package.json) \
+        sh -c '(cp /opt/maven/conf/npm/package-doc.json /opt/maven/target/tmp/typescript-fetch/package.json) \
         && (cp /opt/maven/conf/npm/tsconfig-build.json /opt/maven/target/tmp/typescript-fetch/tsconfig.json)'
 
 
@@ -78,7 +78,7 @@ docker run --rm \
 BASEDIR=$PWD
 
 cd ${BASEDIR}/target/tmp/typescript-fetch/
-docker run -a STDERR --rm  -i -v `pwd`:/docs gisaia/typedocgen:0.0.5 generatedoc api.ts
+docker run -a STDERR --rm  -i -v `pwd`:/docs gisaia/typedocgen:0.0.5-without-spec generatedoc api.ts
 cd ${BASEDIR}
 
 docker run --rm \
