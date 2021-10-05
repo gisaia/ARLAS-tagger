@@ -130,6 +130,11 @@ function test_doc() {
     ./mkDocs.sh
 }
 
+if [ ! -z ${DOCKER_USERNAME+x} ] && [ ! -z ${DOCKER_PASSWORD+x} ]
+then
+  echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+fi
+
 if [ "$STAGE" == "TAG" ]; then test_tagger; fi
 if [ "$STAGE" == "DOC" ]; then test_doc; fi
 if [ "$STAGE" == "AUTH" ]; then test_tagger_with_auth; fi
