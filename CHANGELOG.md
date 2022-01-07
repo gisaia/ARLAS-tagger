@@ -1,6 +1,14 @@
 # Change Log
 
-## [v19.7.1](https://github.com/gisaia/ARLAS-tagger/tree/v19.7.1) (2021-10-06)
+## [v20.7.0](https://github.com/gisaia/ARLAS-tagger/tree/v20.7.0) (2022-01-07)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v19.7.1...v20.7.0)
+
+**Miscellaneous:**
+
+- Upgrade to java 17 + dependencies update [\#90](https://github.com/gisaia/ARLAS-tagger/issues/90)
+
+## [v19.7.1](https://github.com/gisaia/ARLAS-tagger/tree/v19.7.1) (2021-10-07)
 
 [Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v19.7.0...v19.7.1)
 
