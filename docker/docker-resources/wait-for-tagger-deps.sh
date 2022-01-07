@@ -28,4 +28,4 @@ IFS=',' read -r -a arlas_server_hosts <<< $3
 
 wait_for_hosts ${kafka_hosts[@]} ${es_hosts[@]} ${arlas_server_hosts[@]}
 
-java -jar /opt/app/arlas-tagger.jar server /opt/app/configuration.yaml
+java ${JVM_OPTION} -jar /opt/app/arlas-tagger.jar server /opt/app/configuration.yaml

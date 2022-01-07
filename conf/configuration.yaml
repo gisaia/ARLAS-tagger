@@ -57,6 +57,9 @@ zipkin: # The ZIPIN configuration, not active by default
 ########################################################
 swagger: # Configuration of SWAGGER for generating documentation and APIs
   resourcePackage: io.arlas.tagger.rest # The java package to process for extracting the APIs
+  # temporary patch for bug https://github.com/smoketurner/dropwizard-swagger/issues/206
+  # to be removed when version of dropwizard.swagger.version is upgraded
+  customJavascript: "/arlas/swagger-static/custom-request-interceptor.js"
 
 kafka_configuration:
   kafka_commit_max_retries: ${KAFKA_COMMIT_MAX_RETRIES:-3}

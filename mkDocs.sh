@@ -2,14 +2,14 @@
 set -e
 
 function clean_docker {
-    ./scripts/docker-clean.sh
+  ./scripts/docker-clean.sh
 }
 
 function clean_exit {
-    ARG=$?
+  ARG=$?
 	echo "===> Exit stage ${STAGE} = ${ARG}"
-    clean_docker
-    exit $ARG
+  clean_docker
+  exit $ARG
 }
 trap clean_exit EXIT
 
@@ -55,7 +55,7 @@ echo "=> Generate API"
 docker run --rm \
     --mount dst=/input/api.json,src="$PWD/target/tmp/swagger.json",type=bind,ro \
     --mount dst=/output,src="$PWD/target/tmp/typescript-fetch",type=bind \
-	gisaia/swagger-codegen-2.3.1 \
+	gisaia/swagger-codegen-2.4.14 \
         -l typescript-fetch --additional-properties modelPropertyNaming=snake_case
 
 echo "=> Generate Typescript client documentation"
@@ -72,7 +72,7 @@ docker run --rm \
     --mount dst=/input/api.json,src="$PWD/target/tmp/swagger.json",type=bind,ro \
     --mount dst=/input/config.json,src="$PWD/conf/swagger/python-config.json",type=bind,ro \
     --mount dst=/output,src="$PWD/target/tmp/python-api",type=bind \
-	gisaia/swagger-codegen-2.2.3 \
+	gisaia/swagger-codegen-2.4.14 \
         -l python --type-mappings GeoJsonObject=object
 
 BASEDIR=$PWD
@@ -101,7 +101,7 @@ docker run --rm \
     -w /opt/maven \
 	-v $PWD:/opt/maven \
 	-v $HOME/.m2:/root/.m2 \
-	maven:3.5.0-jdk-8 \
+	maven:3.8.2-openjdk-17 \
     mvn swagger2markup:convertSwagger2markup post-integration-test
 docker run --rm \
     -v $PWD:/opt/maven \
