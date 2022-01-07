@@ -29,7 +29,6 @@ import io.arlas.server.core.exceptions.ConstraintViolationExceptionMapper;
 import io.arlas.server.core.exceptions.IllegalArgumentExceptionMapper;
 import io.arlas.server.core.exceptions.JsonProcessingExceptionMapper;
 import io.arlas.server.core.impl.elastic.exceptions.ElasticsearchExceptionMapper;
-import io.arlas.server.core.impl.elastic.utils.ElasticClient;
 import io.arlas.server.core.managers.CacheManager;
 import io.arlas.server.core.managers.CollectionReferenceManager;
 import io.arlas.server.core.utils.InsensitiveCaseFilter;
@@ -60,8 +59,6 @@ import java.util.EnumSet;
 
 public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
     Logger LOGGER = LoggerFactory.getLogger(ArlasTagger.class);
-
-    private ElasticClient client;
 
     public static void main(String... args) throws Exception {
         new ArlasTagger().run(args);

@@ -2,7 +2,7 @@ version: '3'
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION:-7.14.2}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION:-7.15.2}
     container_name: elasticsearch
     environment:
       - cluster.name=docker-cluster
@@ -18,4 +18,4 @@ services:
 #      - /var/lib/elasticsearch:/usr/share/elasticsearch/data
       - ${ELASTIC_DATADIR}:/usr/share/elasticsearch/data
     ports:
-      - 19200:9200
+      - 9200:9200
