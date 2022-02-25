@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -o errexit -o pipefail
 
 function clean_docker {
   ./scripts/docker-clean.sh
@@ -8,7 +8,7 @@ function clean_docker {
 		-w /opt/maven \
 		-v $PWD:/opt/maven \
 		-v $HOME/.m2:/root/.m2 \
-		maven:3.8.2-openjdk-17 \
+		maven:3.8.4-openjdk-17 \
 		mvn clean
 }
 
@@ -49,7 +49,7 @@ done
 
 # GO TO PROJECT PATH
 SCRIPT_PATH=`cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd`
-cd ${SCRIPT_PATH}/..
+cd ${SCRIPT_PATH}/../..
 
 # CHECK ALV2 DISCLAIMER
 if [ $(find ./*/src -name "*.java" -exec grep -L Licensed {} \; | wc -l) -gt 0 ]; then
@@ -92,7 +92,7 @@ function test_tagger() {
         -e ARLAS_SERVER_NODE=${ARLAS_SERVER_NODE} \
         -e ALIASED_COLLECTION=${ALIASED_COLLECTION} \
         --net arlas_default \
-        maven:3.8.2-openjdk-17 \
+        maven:3.8.4-openjdk-17 \
         mvn -Dit.test=TagIT verify -DskipTests=false -DfailIfNoTests=false -B
 }
 
@@ -122,7 +122,7 @@ function test_tagger_with_auth() {
         -e ARLAS_SERVER_NODE=${ARLAS_SERVER_NODE} \
         -e ALIASED_COLLECTION=${ALIASED_COLLECTION} \
         --net arlas_default \
-        maven:3.8.2-openjdk-17 \
+        maven:3.8.4-openjdk-17 \
         mvn -Dit.test=TagAuthIT verify -DskipTests=false -DfailIfNoTests=false -B
 }
 

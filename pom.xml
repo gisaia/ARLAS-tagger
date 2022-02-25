@@ -23,7 +23,7 @@
 
         <arlas-server.version>20.7.0</arlas-server.version>
         <!-- KAFKA-->
-        <kafka.version>3.0.0</kafka.version>
+        <kafka.version>3.1.0</kafka.version>
 
         <!-- DEV TOOLS -->
         <cyclops.version>10.4.0</cyclops.version>

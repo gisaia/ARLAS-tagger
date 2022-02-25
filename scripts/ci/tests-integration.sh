@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -o errexit -o pipefail
 
 export ELASTIC_VERSION="7.15.2"
 export ARLAS_VERSION="20.7.0"
@@ -36,8 +36,8 @@ export ARLAS_VERSION=${ARLAS_VERSION}
 
 # GO TO PROJECT PATH
 SCRIPT_PATH=`cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd`
-cd ${SCRIPT_PATH}/..
+cd ${SCRIPT_PATH}/../..
 
 # TESTS SUITE
-./scripts/tests-integration-stage.sh --stage=TAG
-./scripts/tests-integration-stage.sh --stage=AUTH
+./scripts/ci/tests-integration-stage.sh --stage=TAG
+./scripts/ci/tests-integration-stage.sh --stage=AUTH
