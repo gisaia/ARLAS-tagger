@@ -12,7 +12,7 @@ ARLAS-tagger is a Dropwizard project. You need JDK 8 and Maven 3 to be installed
 
 ### Running
 
-You need a Java Runtime (JRE) 8, a Kafka node and an ElasticSearch server running.
+You need a Java Runtime (JRE) 17, a Kafka node and an ElasticSearch server running.
 
 ARLAS-tagger is compliant with the following versions:
 
@@ -100,11 +100,11 @@ We use [SemVer](http://semver.org/) for versioning : `x.y.z`.
 
 - `x` : Incremented as soon as an incompatible change is made to `ARLAS-tagger API`.
 - `y` : Incremented as soon as a new feature is implemented.
-- `z` : Incremented as soon as the `ARLAS-web-contributors` implementation receives a fix or an enhancement.
+- `z` : Incremented as soon as tagger receives a fix or an enhancement.
 
 For the versions available, see the [releases](https://github.com/gisaia/ARLAS-tagger/releases) on this repository.
 
-ARLAS-tagger is compliant with ARLAS-server releases that have the same major version.
+ARLAS-tagger is compliant with ARLAS-server releases that have the same major and minor versions.
 
 ## Authors :
 
