@@ -40,6 +40,7 @@
 |**dateformat**  <br>*optional*|string|
 |**f**  <br>*optional*|< < [Expression](#expression) > array > array|
 |**q**  <br>*optional*|< < string > array > array|
+|**righthand**  <br>*optional*|boolean|
 
 
 <a name="form"></a>
