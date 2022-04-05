@@ -70,7 +70,7 @@ public class TagExecService extends KafkaConsumerRunner {
                         .ofNullable(updateServices.getCollectionReferenceService().getCollectionReference(tagRequest.collection))
                         .orElseThrow(() -> new NotFoundException(tagRequest.collection));
                 Search searchHeader = new Search();
-                searchHeader.filter = ParamsParser.getFilter(tagRequest.partitionFilter);
+                searchHeader.filter = ParamsParser.getFilter(collectionReference, tagRequest.partitionFilter);
                 MixedRequest request = new MixedRequest();
                 request.basicRequest = tagRequest.search;
                 request.headerRequest = searchHeader;
