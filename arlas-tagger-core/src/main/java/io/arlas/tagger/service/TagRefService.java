@@ -160,7 +160,7 @@ public class TagRefService extends KafkaConsumerRunner {
         aggregationsRequest.aggregations = new ArrayList<>(Arrays.asList(aggregation));
 
         AggregationsRequest aggregationsRequestHeader = new AggregationsRequest();
-        aggregationsRequestHeader.filter = ParamsParser.getFilter(tagRequest.partitionFilter);
+        aggregationsRequestHeader.filter = ParamsParser.getFilter(collectionReference, tagRequest.partitionFilter);
 
         MixedRequest request = new MixedRequest();
         request.basicRequest = aggregationsRequest;
