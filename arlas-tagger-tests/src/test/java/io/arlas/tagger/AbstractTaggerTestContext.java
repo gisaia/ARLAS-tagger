@@ -32,7 +32,7 @@ public abstract class AbstractTaggerTestContext {
 
     static {
         String arlasTaggerHost = Optional.ofNullable(System.getenv("ARLAS_TAGGER_HOST")).orElse("localhost");
-        int arlasPort = Integer.valueOf(Optional.ofNullable(System.getenv("ARLAS_TAGGER_PORT")).orElse("19998"));
+        int arlasPort = Integer.parseInt(Optional.ofNullable(System.getenv("ARLAS_TAGGER_PORT")).orElse("19998"));
         LOGGER.info(arlasTaggerHost + ":" + arlasPort);
         String arlasTaggerPrefix = Optional.ofNullable(System.getenv("ARLAS_TAGGER_PREFIX")).orElse("/arlas_tagger");
         String arlasTaggerAppPath = Optional.ofNullable(System.getenv("ARLAS_TAGGER_APP_PATH")).orElse("/");
@@ -47,14 +47,14 @@ public abstract class AbstractTaggerTestContext {
 
     protected void setTaggerRestAssured() {
         String arlasTaggerHost = Optional.ofNullable(System.getenv("ARLAS_TAGGER_HOST")).orElse("localhost");
-        int arlasTaggerPort = Integer.valueOf(Optional.ofNullable(System.getenv("ARLAS_TAGGER_PORT")).orElse("19998"));
+        int arlasTaggerPort = Integer.parseInt(Optional.ofNullable(System.getenv("ARLAS_TAGGER_PORT")).orElse("19998"));
         RestAssured.baseURI = "http://" + arlasTaggerHost;
         RestAssured.port = arlasTaggerPort;
         RestAssured.basePath = "";
     }
     protected void setServerRestAssured() {
         String arlasHost = Optional.ofNullable(System.getenv("ARLAS_HOST")).orElse("localhost");
-        int arlasPort = Integer.valueOf(Optional.ofNullable(System.getenv("ARLAS_PORT")).orElse("9999"));
+        int arlasPort = Integer.parseInt(Optional.ofNullable(System.getenv("ARLAS_PORT")).orElse("9999"));
         RestAssured.baseURI = "http://" + arlasHost;
         RestAssured.port = arlasPort;
         RestAssured.basePath = "";

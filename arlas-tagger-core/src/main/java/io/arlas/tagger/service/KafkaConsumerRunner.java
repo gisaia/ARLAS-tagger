@@ -46,7 +46,7 @@ public abstract class KafkaConsumerRunner implements Runnable {
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private KafkaConsumer consumer;
     protected static ObjectMapper MAPPER = new ObjectMapper();
-    volatile protected long replayFromOffset = -1l;
+    volatile protected long replayFromOffset = -1L;
 
     public KafkaConsumerRunner(int nbThread, ArlasTaggerConfiguration configuration, String topic, String consumerGroupId, Integer batchSize) {
         this.configuration = configuration;
@@ -71,7 +71,7 @@ public abstract class KafkaConsumerRunner implements Runnable {
 
             while (true) {
                 try {
-                    if (replayFromOffset != -1l) {
+                    if (replayFromOffset != -1L) {
                         // replay is only possible when working with 1 partition
                         Long maxOffset= (Long) consumer.endOffsets(consumer.assignment()).values().toArray()[0];
                         if (replayFromOffset <= maxOffset) {
@@ -81,7 +81,7 @@ public abstract class KafkaConsumerRunner implements Runnable {
                         } else {
                             LOGGER.warn("Ignoring attempt of replay from offset " + replayFromOffset + " because it is larger than max offset " + maxOffset);
                         }
-                        replayFromOffset = -1l;
+                        replayFromOffset = -1L;
                     }
                     ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(configuration.kafkaConfiguration.consumerPollTimeout));
                     if (records.count() > 0) {
@@ -97,7 +97,7 @@ public abstract class KafkaConsumerRunner implements Runnable {
                     LOGGER.warn("[{}-{}] Commit failed (attempt nb {}): process time={}ms (compare to max.poll.interval.ms value) / exception={}", topic, nbThread, nbFailure, duration, e.getMessage());
                     if (nbFailure > configuration.kafkaConfiguration.commitMaxRetries) {
                         LOGGER.error("[{}-{}] Too many attempts, exiting.", topic, nbThread);
-                        try { consumer.close(); } catch (RuntimeException r) {}
+                        try { consumer.close(); } catch (RuntimeException ignored) {}
                         System.exit(1);
                     }
                 }
@@ -107,7 +107,7 @@ public abstract class KafkaConsumerRunner implements Runnable {
             if (!closed.get()) throw e;
         } finally {
             LOGGER.info("[{}-{}] Closing consumer", topic, nbThread);
-            try { consumer.close(); } catch (RuntimeException r) {}
+            try { consumer.close(); } catch (RuntimeException ignored) {}
         }
     }
 

@@ -20,15 +20,12 @@
 package io.arlas.tagger.rest.tag;
 
 import com.codahale.metrics.annotation.Timed;
-import io.arlas.server.core.model.response.Error;
 import io.arlas.tagger.app.Documentation;
 import io.arlas.tagger.model.TaggingStatus;
 import io.arlas.tagger.model.request.TagRefRequest;
 import io.arlas.tagger.model.response.UpdateResponse;
 import io.arlas.tagger.service.TagExploreService;
 import io.swagger.annotations.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -37,10 +34,9 @@ import javax.ws.rs.core.Response;
 @Path("/status")
 @Api(value = "/status")
 public class TagStatusRESTService {
-    protected static Logger LOGGER = LoggerFactory.getLogger(TagStatusRESTService.class);
     public static final String UTF8JSON = MediaType.APPLICATION_JSON + ";charset=utf-8";
-    private TaggingStatus status;
-    private TagExploreService tagExploreService;
+    private final TaggingStatus status;
+    private final TagExploreService tagExploreService;
 
     public TagStatusRESTService(TagExploreService tagExploreService) {
         this.status = TaggingStatus.getInstance();
@@ -62,21 +58,17 @@ public class TagStatusRESTService {
             @ApiParam(
                     name = "collection",
                     value = "collection",
-                    allowMultiple = false,
                     required = true)
             @PathParam(value = "collection") String collection,
 
             @ApiParam(name = "id", value = Documentation.TAGSTATUS_PARAM_ID,
-                    allowMultiple = false,
                     required = true)
             @PathParam(value = "id") String id,
             // --------------------------------------------------------
             // ----------------------- FORM     -----------------------
             // --------------------------------------------------------
             @ApiParam(name ="pretty", value=Documentation.FORM_PRETTY,
-                    allowMultiple = false,
-                    defaultValue = "false",
-                    required=false)
+                    defaultValue = "false")
             @QueryParam(value="pretty") Boolean pretty
     ) {
         return Response.ok(status.getStatus(id).orElse(new UpdateResponse())).build();
@@ -97,7 +89,6 @@ public class TagStatusRESTService {
             @ApiParam(
                     name = "collection",
                     value = "collection",
-                    allowMultiple = false,
                     required = true)
             @PathParam(value = "collection") String collection,
 
@@ -105,9 +96,7 @@ public class TagStatusRESTService {
             // ----------------------- FORM     -----------------------
             // --------------------------------------------------------
             @ApiParam(name ="pretty", value=Documentation.FORM_PRETTY,
-                    allowMultiple = false,
-                    defaultValue = "false",
-                    required=false)
+                    defaultValue = "false")
             @QueryParam(value="pretty") Boolean pretty
     ) {
 

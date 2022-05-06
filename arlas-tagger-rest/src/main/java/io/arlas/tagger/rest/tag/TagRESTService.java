@@ -20,9 +20,8 @@
 package io.arlas.tagger.rest.tag;
 
 import com.codahale.metrics.annotation.Timed;
-import io.arlas.server.core.exceptions.ArlasException;
+import io.arlas.commons.exceptions.ArlasException;
 import io.arlas.server.core.model.CollectionReference;
-import io.arlas.server.core.model.response.Error;
 import io.arlas.server.core.utils.ColumnFilterUtil;
 import io.arlas.tagger.app.Documentation;
 import io.arlas.tagger.model.TaggingStatus;
@@ -33,13 +32,10 @@ import io.arlas.tagger.model.response.UpdateResponse;
 import io.arlas.tagger.service.ManagedKafkaConsumers;
 import io.arlas.tagger.util.TagRequestFieldsExtractor;
 import io.swagger.annotations.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
 import java.util.Optional;
 
 @Path("/write")
@@ -53,11 +49,10 @@ import java.util.Optional;
         schemes = { SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS })
 
 public class TagRESTService {
-    protected static Logger LOGGER = LoggerFactory.getLogger(TagRESTService.class);
     public static final String UTF8JSON = MediaType.APPLICATION_JSON + ";charset=utf-8";
 
-    private ManagedKafkaConsumers consumersManager;
-    private Long statusTimeout;
+    private final ManagedKafkaConsumers consumersManager;
+    private final Long statusTimeout;
 
     public TagRESTService(ManagedKafkaConsumers consumersManager, Long statusTimeout) {
         this.consumersManager = consumersManager;
@@ -79,7 +74,6 @@ public class TagRESTService {
             @ApiParam(
                     name = "collection",
                     value = "collection",
-                    allowMultiple = false,
                     required = true)
             @PathParam(value = "collection") String collection,
             // --------------------------------------------------------
@@ -101,9 +95,7 @@ public class TagRESTService {
             // ----------------------- FORM     -----------------------
             // --------------------------------------------------------
             @ApiParam(name ="pretty", value=Documentation.FORM_PRETTY,
-                    allowMultiple = false,
-                    defaultValue = "false",
-                    required=false)
+                    defaultValue = "false")
             @QueryParam(value="pretty") Boolean pretty
     ) throws ArlasException {
         assertColumnFilter(collection, tagRequest, columnFilter);
@@ -130,14 +122,12 @@ public class TagRESTService {
             @ApiParam(
                     name = "collection",
                     value = "collection",
-                    allowMultiple = false,
                     required = true)
             @PathParam(value = "collection") String collection,
             // --------------------------------------------------------
             // ----------------------- SEARCH   -----------------------
             // --------------------------------------------------------
             @ApiParam(name = "offset", value = Documentation.TAG_REPLAY_PARAM_OFFSET,
-                    allowMultiple = false,
                     required = true)
             @QueryParam(value = "offset") Long offset,
 
@@ -145,9 +135,7 @@ public class TagRESTService {
             // ----------------------- FORM     -----------------------
             // --------------------------------------------------------
             @ApiParam(name ="pretty", value=Documentation.FORM_PRETTY,
-                    allowMultiple = false,
-                    defaultValue = "false",
-                    required=false)
+                    defaultValue = "false")
             @QueryParam(value="pretty") Boolean pretty
     ) {
 
@@ -170,7 +158,6 @@ public class TagRESTService {
             @ApiParam(
                     name = "collection",
                     value = "collection",
-                    allowMultiple = false,
                     required = true)
             @PathParam(value = "collection") String collection,
             // --------------------------------------------------------
@@ -192,9 +179,7 @@ public class TagRESTService {
             // ----------------------- FORM     -----------------------
             // --------------------------------------------------------
             @ApiParam(name ="pretty", value=Documentation.FORM_PRETTY,
-                    allowMultiple = false,
-                    defaultValue = "false",
-                    required=false)
+                    defaultValue = "false")
             @QueryParam(value="pretty") Boolean pretty
     ) throws ArlasException {
         assertColumnFilter(collection, tagRequest, columnFilter);

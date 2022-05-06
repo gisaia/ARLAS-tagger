@@ -18,7 +18,7 @@ package io.arlas.tagger;
  * under the License.
  */
 
-import io.arlas.server.core.exceptions.ArlasException;
+import io.arlas.commons.exceptions.ArlasException;
 import io.restassured.RestAssured;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

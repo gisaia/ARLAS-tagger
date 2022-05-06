@@ -19,8 +19,8 @@
 
 package io.arlas.tagger.service;
 
+import io.arlas.commons.exceptions.ArlasException;
 import io.arlas.server.core.services.CollectionReferenceService;
-import io.arlas.server.core.exceptions.ArlasException;
 import io.arlas.server.core.impl.elastic.services.ElasticExploreService;
 import io.arlas.server.core.impl.elastic.utils.ElasticClient;
 import io.arlas.server.core.model.CollectionReference;
@@ -52,7 +52,7 @@ public class UpdateServices extends ElasticExploreService {
         return this.getFilteredTagger(collectionReference, request).doAction(Action.REMOVEALL,collectionReference, tag, max_updates, 0);
     }
 
-    protected FilteredUpdater getFilteredTagger(CollectionReference collectionReference, MixedRequest request) throws IOException, ArlasException {
+    protected FilteredUpdater getFilteredTagger(CollectionReference collectionReference, MixedRequest request) throws ArlasException {
         FilteredUpdater updater = new FilteredUpdater(collectionReference, this.getClient());
         applyFilter(request.headerRequest.filter, updater);
         if(request.basicRequest!=null){
@@ -61,7 +61,7 @@ public class UpdateServices extends ElasticExploreService {
             sortPage(((Search) request.basicRequest).page, updater);
             applyProjection(((Search) request.basicRequest).projection,
                     updater,
-                    request.columnFilter == null ? Optional.empty() : request.columnFilter,
+                    !request.columnFilter.isPresent() ? Optional.empty() : request.columnFilter,
                     collectionReference);
         }
         return updater;

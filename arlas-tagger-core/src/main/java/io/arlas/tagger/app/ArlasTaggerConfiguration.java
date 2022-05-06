@@ -20,8 +20,9 @@
 package io.arlas.tagger.app;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.arlas.commons.exceptions.ArlasConfigurationException;
 import io.arlas.server.core.app.ArlasBaseConfiguration;
-import io.arlas.server.core.exceptions.ArlasConfigurationException;
+
 
 public class ArlasTaggerConfiguration extends ArlasBaseConfiguration {
 

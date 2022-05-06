@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TagExploreService {
-    private Logger LOGGER = LoggerFactory.getLogger(TagExploreService.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(TagExploreService.class);
     private final ArlasTaggerConfiguration configuration;
     private final String topic;
     private final String consumerGroupId;
@@ -52,7 +52,7 @@ public class TagExploreService {
     public List<TagRefRequest> getTagRefList() {
         List<TagRefRequest> results = new ArrayList<>();
         long threadId = Thread.currentThread().getId();
-        try (KafkaConsumer consumer = TagKafkaConsumer.build(configuration, topic, consumerGroupId+"-"+threadId, batchSize, true)) {
+        try (KafkaConsumer<String, String> consumer = TagKafkaConsumer.build(configuration, topic, consumerGroupId+"-"+threadId, batchSize, true)) {
             consumer.seekToBeginning(consumer.assignment());
             ConsumerRecords<String, String> records;
             while (!(records = consumer.poll(Duration.ofMillis(configuration.kafkaConfiguration.consumerPollTimeout))).isEmpty()) {
