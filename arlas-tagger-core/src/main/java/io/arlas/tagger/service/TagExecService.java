@@ -19,9 +19,9 @@
 
 package io.arlas.tagger.service;
 
-import io.arlas.server.core.exceptions.ArlasException;
-import io.arlas.server.core.exceptions.InvalidParameterException;
-import io.arlas.server.core.exceptions.NotAllowedException;
+import io.arlas.commons.exceptions.ArlasException;
+import io.arlas.commons.exceptions.InvalidParameterException;
+import io.arlas.commons.exceptions.NotAllowedException;
 import io.arlas.server.core.model.CollectionReference;
 import io.arlas.server.core.model.request.MixedRequest;
 import io.arlas.server.core.model.request.Search;
@@ -40,9 +40,9 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class TagExecService extends KafkaConsumerRunner {
-    private Logger LOGGER = LoggerFactory.getLogger(TagExecService.class);
-    private UpdateServices updateServices;
-    private Long statusTimeout;
+    private final Logger LOGGER = LoggerFactory.getLogger(TagExecService.class);
+    private final UpdateServices updateServices;
+    private final Long statusTimeout;
 
 
     public TagExecService(int nbThread, ArlasTaggerConfiguration configuration, String topic, String consumerGroupId, UpdateServices updateServices) {
@@ -59,7 +59,7 @@ public class TagExecService extends KafkaConsumerRunner {
     @Override
     public void processRecords(ConsumerRecords<String, String> records) {
         long start = System.currentTimeMillis();
-        long updatedTotal = 0l;
+        long updatedTotal = 0L;
         int nbErrors = 0;
         for (ConsumerRecord<String, String> record : records) {
             try {
@@ -76,18 +76,10 @@ public class TagExecService extends KafkaConsumerRunner {
                 request.headerRequest = searchHeader;
                 UpdateResponse opUpdateResponse = null;
                 switch (tagRequest.action) {
-                    case ADD:
-                        opUpdateResponse = updateServices.tag(collectionReference, request, tagRequest.tag, Integer.MAX_VALUE);
-                        break;
-                    case REMOVE:
-                        opUpdateResponse = updateServices.unTag(collectionReference, request, tagRequest.tag, Integer.MAX_VALUE);
-                       break;
-                    case REMOVEALL:
-                        opUpdateResponse = updateServices.removeAll(collectionReference, request, tagRequest.tag, Integer.MAX_VALUE);
-                        break;
-                    default:
-                        LOGGER.warn("Unknown action received in tag request: " + tagRequest.action);
-                        break;
+                    case ADD -> opUpdateResponse = updateServices.tag(collectionReference, request, tagRequest.tag, Integer.MAX_VALUE);
+                    case REMOVE -> opUpdateResponse = updateServices.unTag(collectionReference, request, tagRequest.tag, Integer.MAX_VALUE);
+                    case REMOVEALL -> opUpdateResponse = updateServices.removeAll(collectionReference, request, tagRequest.tag, Integer.MAX_VALUE);
+                    default -> LOGGER.warn("Unknown action received in tag request: " + tagRequest.action);
                 }
                 if (opUpdateResponse != null) {
                     updatedTotal += opUpdateResponse.updated;

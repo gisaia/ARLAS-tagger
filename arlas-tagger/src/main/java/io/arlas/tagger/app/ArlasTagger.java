@@ -21,18 +21,17 @@ package io.arlas.tagger.app;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import io.arlas.server.core.app.ArlasCorsConfiguration;
-import io.arlas.server.admin.auth.AuthenticationFilter;
-import io.arlas.server.admin.auth.AuthorizationFilter;
-import io.arlas.server.core.exceptions.ArlasExceptionMapper;
-import io.arlas.server.core.exceptions.ConstraintViolationExceptionMapper;
-import io.arlas.server.core.exceptions.IllegalArgumentExceptionMapper;
-import io.arlas.server.core.exceptions.JsonProcessingExceptionMapper;
+import io.arlas.commons.config.ArlasCorsConfiguration;
+import io.arlas.commons.exceptions.ArlasExceptionMapper;
+import io.arlas.commons.exceptions.ConstraintViolationExceptionMapper;
+import io.arlas.commons.exceptions.IllegalArgumentExceptionMapper;
+import io.arlas.commons.exceptions.JsonProcessingExceptionMapper;
+import io.arlas.commons.rest.auth.PolicyEnforcer;
+import io.arlas.commons.rest.utils.InsensitiveCaseFilter;
+import io.arlas.commons.rest.utils.PrettyPrintFilter;
 import io.arlas.server.core.impl.elastic.exceptions.ElasticsearchExceptionMapper;
 import io.arlas.server.core.managers.CacheManager;
 import io.arlas.server.core.managers.CollectionReferenceManager;
-import io.arlas.server.core.utils.InsensitiveCaseFilter;
-import io.arlas.server.core.utils.PrettyPrintFilter;
 import io.arlas.tagger.kafka.TagKafkaProducer;
 import io.arlas.tagger.rest.tag.TagRESTService;
 import io.arlas.tagger.rest.tag.TagStatusRESTService;
@@ -69,7 +68,7 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
         bootstrap.registerMetrics();
         bootstrap.setConfigurationSourceProvider(new SubstitutingSourceProvider(
                 bootstrap.getConfigurationSourceProvider(), new EnvironmentVariableSubstitutor(false)));
-        bootstrap.addBundle(new SwaggerBundle<ArlasTaggerConfiguration>() {
+        bootstrap.addBundle(new SwaggerBundle<>() {
             @Override
             protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(ArlasTaggerConfiguration configuration) {
                 return configuration.swaggerBundleConfiguration;
@@ -120,17 +119,17 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
         environment.jersey().register(InsensitiveCaseFilter.class);
 
         // Auth
-        if (configuration.arlasAuthConfiguration.enabled) {
-            environment.jersey().register(new AuthenticationFilter(configuration.arlasAuthConfiguration));
-            environment.jersey().register(new AuthorizationFilter(configuration.arlasAuthConfiguration));
-        }
+        PolicyEnforcer policyEnforcer = PolicyEnforcer.newInstance(configuration.arlasAuthPolicyClass)
+                .setAuthConf(configuration.arlasAuthConfiguration);
+        LOGGER.info("PolicyEnforcer: " + policyEnforcer.getClass().getCanonicalName());
+        environment.jersey().register(policyEnforcer);
 
         //healthchecks
         dbToolFactory.getHealthChecks().forEach((name, check) -> environment.healthChecks().register(name, check));
 
         //cors
-        if (configuration.arlarsCorsConfiguration.enabled) {
-            configureCors(environment, configuration.arlarsCorsConfiguration);
+        if (configuration.arlasCorsConfiguration.enabled) {
+            configureCors(environment, configuration.arlasCorsConfiguration);
         } else {
             CrossOriginFilter filter = new CrossOriginFilter();
             final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CrossOriginFilter", filter);
@@ -149,7 +148,7 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
         cors.setInitParameter(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM, String.valueOf(configuration.allowedCredentials));
         String exposedHeader = configuration.exposedHeaders;
         // Expose always HttpHeaders.WWW_AUTHENTICATE to authentify on client side a non public uri call
-        if (configuration.exposedHeaders.indexOf(HttpHeaders.WWW_AUTHENTICATE)<0) {
+        if (!configuration.exposedHeaders.contains(HttpHeaders.WWW_AUTHENTICATE)) {
             exposedHeader = configuration.exposedHeaders.concat(",").concat(HttpHeaders.WWW_AUTHENTICATE);
         }
         cors.setInitParameter(CrossOriginFilter.EXPOSED_HEADERS_PARAM, exposedHeader);

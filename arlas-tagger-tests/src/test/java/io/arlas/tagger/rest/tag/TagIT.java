@@ -19,7 +19,7 @@
 
 package io.arlas.tagger.rest.tag;
 
-import io.arlas.server.core.exceptions.ArlasException;
+import io.arlas.commons.exceptions.ArlasException;
 import io.arlas.tagger.AbstractTaggerTestContext;
 import io.arlas.tagger.ArlasServerContext;
 import io.arlas.tagger.CollectionTool;

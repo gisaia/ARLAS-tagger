@@ -35,11 +35,11 @@ import java.util.UUID;
 
 public class TagKafkaProducer extends KafkaProducer<String, String> {
 
-    private Logger LOGGER = LoggerFactory.getLogger(TagKafkaProducer.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(TagKafkaProducer.class);
 
-    private static ObjectMapper jacksonMapper = new ObjectMapper();
-    private String tagRefLogTopic;
-    private String executeTagsTopic;
+    private static final ObjectMapper jacksonMapper = new ObjectMapper();
+    private final String tagRefLogTopic;
+    private final String executeTagsTopic;
 
     public TagKafkaProducer(Properties properties, String tagRefLogTopic, String executeTagsTopic) {
         super(properties);

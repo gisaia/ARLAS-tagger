@@ -19,10 +19,10 @@
 
 package io.arlas.tagger.service;
 
-import io.arlas.server.core.exceptions.ArlasException;
-import io.arlas.server.core.exceptions.InvalidParameterException;
-import io.arlas.server.core.exceptions.NotAllowedException;
-import io.arlas.server.core.exceptions.NotFoundException;
+import io.arlas.commons.exceptions.ArlasException;
+import io.arlas.commons.exceptions.InvalidParameterException;
+import io.arlas.commons.exceptions.NotAllowedException;
+import io.arlas.commons.exceptions.NotFoundException;
 import io.arlas.server.core.model.CollectionReference;
 import io.arlas.server.core.model.enumerations.AggregationTypeEnum;
 import io.arlas.server.core.model.enumerations.OperatorEnum;
@@ -40,19 +40,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * /!\ With the current implementation, the topic read by TagRefService *MUST* have only 1 partition.
  */
 public class TagRefService extends KafkaConsumerRunner {
-    private Logger LOGGER = LoggerFactory.getLogger(TagRefService.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(TagRefService.class);
     private final TagKafkaProducer tagKafkaProducer;
     private final UpdateServices updateServices;
-    private Long statusTimeout;
+    private final Long statusTimeout;
 
     public TagRefService(ArlasTaggerConfiguration configuration, String topic, String consumerGroupId,
                          TagKafkaProducer tagKafkaProducer, UpdateServices updateServices) {
@@ -99,7 +96,7 @@ public class TagRefService extends KafkaConsumerRunner {
                         if (filter.f != null) {
                             filter.f.add(expression);
                         } else {
-                            filter.f = Arrays.asList(expression);
+                            filter.f = List.of(expression);
                         }
 
                         Search search = new Search();
@@ -157,7 +154,7 @@ public class TagRefService extends KafkaConsumerRunner {
         aggregation.size = "10000";
         AggregationsRequest aggregationsRequest = new AggregationsRequest();
         aggregationsRequest.filter = tagRequest.search.filter;
-        aggregationsRequest.aggregations = new ArrayList<>(Arrays.asList(aggregation));
+        aggregationsRequest.aggregations = new ArrayList<>(List.of(aggregation));
 
         AggregationsRequest aggregationsRequestHeader = new AggregationsRequest();
         aggregationsRequestHeader.filter = ParamsParser.getFilter(collectionReference, tagRequest.partitionFilter);

@@ -21,8 +21,8 @@ package io.arlas.tagger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.arlas.commons.exceptions.ArlasException;
 import io.arlas.server.core.app.ElasticConfiguration;
-import io.arlas.server.core.exceptions.ArlasException;
 import io.arlas.server.core.impl.elastic.utils.ElasticClient;
 import io.arlas.server.core.impl.elastic.utils.ElasticTool;
 import org.apache.commons.lang3.tuple.ImmutablePair;

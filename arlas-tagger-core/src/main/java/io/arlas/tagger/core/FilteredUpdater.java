@@ -19,9 +19,10 @@
 
 package io.arlas.tagger.core;
 
-import io.arlas.server.core.exceptions.ArlasException;
-import io.arlas.server.core.exceptions.BadRequestException;
-import io.arlas.server.core.exceptions.NotImplementedException;
+import io.arlas.commons.exceptions.ArlasException;
+import io.arlas.commons.exceptions.BadRequestException;
+import io.arlas.commons.exceptions.NotAllowedException;
+import io.arlas.commons.exceptions.NotImplementedException;
 import io.arlas.server.core.impl.elastic.services.ElasticFluidSearch;
 import io.arlas.server.core.impl.elastic.utils.ElasticClient;
 import io.arlas.server.core.model.CollectionReference;
@@ -38,10 +39,9 @@ import org.elasticsearch.script.ScriptType;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 public class FilteredUpdater extends ElasticFluidSearch {
-    private ElasticClient client;
+    private final ElasticClient client;
     public FilteredUpdater(CollectionReference collectionReference, ElasticClient client) {
         super(collectionReference);
         this.client = client;
@@ -54,11 +54,11 @@ public class FilteredUpdater extends ElasticFluidSearch {
 
     public UpdateResponse doAction(Action action, CollectionReference collectionReference, Tag tag, int max_updates, int slices) throws IOException, ArlasException {
         if(Strings.isNullOrEmpty(tag.path)){
-            throw new io.arlas.server.core.exceptions.BadRequestException("The tag path must be provided and must not be empty");
+            throw new BadRequestException("The tag path must be provided and must not be empty");
         }
         // The collection can be tagged on that field only if the path belongs to collectionReference.params.taggableFields
         if(Strings.isNullOrEmpty(collectionReference.params.taggableFields) || Arrays.stream(collectionReference.params.taggableFields.split(",")).noneMatch(f->tag.path.equals(f.trim()))){
-            throw new io.arlas.server.core.exceptions.NotAllowedException("The path "+tag.path+" is not part of the fields that can be tagged.");
+            throw new NotAllowedException("The path "+tag.path+" is not part of the fields that can be tagged.");
         }
 
         UpdateByQueryRequest request = new UpdateByQueryRequest(collectionReference.params.indexName)
@@ -69,9 +69,9 @@ public class FilteredUpdater extends ElasticFluidSearch {
         BulkByScrollResponse response = this.client.getClient().updateByQuery(request, RequestOptions.DEFAULT);
         UpdateResponse updateResponse = new UpdateResponse();
         updateResponse.failures.addAll(response.getSearchFailures()
-                .stream().map(f->new UpdateResponse.Failure(f.getIndex(),f.getReason().getMessage(),"SearchFailure")).collect(Collectors.toList()));
+                .stream().map(f -> new UpdateResponse.Failure(f.getIndex(), f.getReason().getMessage(), "SearchFailure")).toList());
         updateResponse.failures.addAll(response.getBulkFailures()
-                .stream().map(f->new UpdateResponse.Failure(f.getId(),f.getMessage(),"BulkFailure")).collect(Collectors.toList()));
+                .stream().map(f -> new UpdateResponse.Failure(f.getId(), f.getMessage(), "BulkFailure")).toList());
         updateResponse.failed = updateResponse.failures.size();
         updateResponse.updated=response.getUpdated();
         updateResponse.action=action;
@@ -90,8 +90,8 @@ public class FilteredUpdater extends ElasticFluidSearch {
                     "\tctx._source."+tag.path+" = new ArrayList(); \n" +
                     "\tctx._source."+tag.path+".add(o)\n"+
                     "}\n";
-            if(tag.value==null && Strings.isNullOrEmpty(tag.value.toString())){
-                throw new io.arlas.server.core.exceptions.BadRequestException("The tag value must be provided and must not be empty");
+            if(tag.value == null || Strings.isNullOrEmpty(tag.value.toString())){
+                throw new BadRequestException("The tag value must be provided and must not be empty");
             }
             if(tag.value instanceof Number){
                 script+="if (!(ctx._source."+tag.path+".contains("+tag.value+"))) {\n";
@@ -105,16 +105,16 @@ public class FilteredUpdater extends ElasticFluidSearch {
         }
         if(action.equals(Action.REMOVE)){
             if(tag.value==null){
-                throw new io.arlas.server.core.exceptions.BadRequestException("The tag value must be provided and must not be empty");
+                throw new BadRequestException("The tag value must be provided and must not be empty");
             }
             script+="if (ctx._source."+tag.path+" != null) {\n";
 
             if(tag.value instanceof Number){
-                throw new io.arlas.server.core.exceptions.NotImplementedException("Removal of a number tag is not yet supported");
+                throw new NotImplementedException("Removal of a number tag is not yet supported");
                 //script+="\tctx._source."+tag.path+".remove("+tag.value+")\n";
             }else{
                 if(Strings.isNullOrEmpty(tag.value.toString())){
-                    throw new io.arlas.server.core.exceptions.BadRequestException("The tag value must be provided and must not be empty");
+                    throw new BadRequestException("The tag value must be provided and must not be empty");
                 }
                 script+="ctx._source."+tag.path+".removeAll(Collections.singleton(\""+tag.value.toString()+"\"))\n";
             }

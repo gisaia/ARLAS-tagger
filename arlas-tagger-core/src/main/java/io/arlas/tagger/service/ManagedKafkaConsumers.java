@@ -27,11 +27,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ManagedKafkaConsumers implements Managed {
-    private ArlasTaggerConfiguration configuration;
-    private TagRefService tagRefService;
-    private List<TagExecService> tagExecServices;
-    private UpdateServices updateServices;
-    private TagKafkaProducer tagKafkaProducer;
+    private final ArlasTaggerConfiguration configuration;
+    private final TagRefService tagRefService;
+    private final List<TagExecService> tagExecServices;
+    private final UpdateServices updateServices;
+    private final TagKafkaProducer tagKafkaProducer;
     
     public ManagedKafkaConsumers(ArlasTaggerConfiguration configuration, TagKafkaProducer tagKafkaProducer, UpdateServices updateServices) {
         this.configuration = configuration;
@@ -54,7 +54,7 @@ public class ManagedKafkaConsumers implements Managed {
     }
 
     @Override
-    public void start() throws Exception {
+    public void start() {
         new Thread(tagRefService).start();
         for (int i=0; i < configuration.kafkaConfiguration.nbTagExec; i++){
             TagExecService t = new TagExecService(i, configuration,
@@ -67,10 +67,12 @@ public class ManagedKafkaConsumers implements Managed {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         this.tagRefService.stop();
-        for (int i=0; i < tagExecServices.size(); i++) {
-            try { this.tagExecServices.get(i).stop(); } catch (Exception e) {};
+        for (TagExecService tagExecService : tagExecServices) {
+            try {
+                tagExecService.stop();
+            } catch (Exception ignored) {}
         }
     }
 
