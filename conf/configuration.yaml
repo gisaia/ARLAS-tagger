@@ -85,7 +85,7 @@ elastic:
 arlas_collections_configuration:
   arlas_index:  ${ARLAS_COLLECTION_INDEX:-.arlas}
   arlas_cache_size: ${ARLAS_COLLECTION_CACHE_SIZE:-1000}
-  arlas_cache_timeout: ${ARLAS_COLLECTION_CACHE_TIMEOUT:-60}
+  arlas_cache_timeout: ${ARLAS_CACHE_TIMEOUT:-60}
 
 arlas_rest_cache_timeout: ${ARLAS_REST_CACHE_TIMEOUT:-0}
 
@@ -102,30 +102,8 @@ arlas_cors:
 arlas_database_factory_class: ${ARLAS_DATABASE_FACTORY_CLASS:-io.arlas.tagger.impl.ElasticDatabaseToolsFactory}
 arlas_cache_factory_class: ${ARLAS_CACHE_FACTORY_CLASS:-io.arlas.tagger.impl.HazelcastCacheFactory}
 
-database:
-  driverClass: do.not.set
-  user: ${ARLAS_JDBC_USER:-postgres}
-  password: ${ARLAS_JDBC_PASSWORD:-postgres}
-  url: ${ARLAS_JDBC_URL:-localhost:5432/arlas}
-  # any properties specific to your JDBC driver:
-  properties:
-    charSet: UTF-8
-  # the maximum amount of time to wait on an empty pool before throwing an exception
-  maxWaitForConnection: 1s
-  # the SQL query to run when validating a connection's liveness
-  validationQuery: "/* MyApplication Health Check */ SELECT 1"
-  # the minimum number of connections to keep open
-  minSize: 8
-  # the maximum number of connections to keep open
-  maxSize: 32
-  # whether or not idle connections should be validated
-  checkConnectionWhileIdle: false
-  # the amount of time to sleep between runs of the idle connection validation, abandoned cleaner and idle pool resizing
-  evictionInterval: 10s
-  # the minimum amount of time a connection must sit idle in the pool before it is eligible for eviction
-  minIdleTime: 1 minute
-
 ########################################################
 ############ AUTHENTICATION              ###############
 ########################################################
 arlas_auth_policy_class: ${ARLAS_AUTH_POLICY_CLASS:-io.arlas.commons.rest.auth.NoPolicyEnforcer}
+arlas_auth_column_filter_required: ${ARLAS_AUTH_COLUMN_FILTER_REQUIRED:-false}
