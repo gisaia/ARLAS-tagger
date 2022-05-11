@@ -41,8 +41,12 @@ services:
       - ARLAS_LOGGING_CONSOLE_LEVEL=${ARLAS_LOGGING_CONSOLE_LEVEL:-INFO}
       - ARLAS_LOGGING_FILE=${ARLAS_LOGGING_FILE:-arlas.log}
       - ARLAS_LOGGING_FILE_LEVEL=${ARLAS_LOGGING_FILE_LEVEL:-INFO}
-      - ARLAS_AUTH_ENABLED="${ARLAS_AUTH_ENABLED:-false}"
+      - ARLAS_AUTH_POLICY_CLASS="${ARLAS_AUTH_POLICY_CLASS:-io.arlas.commons.rest.auth.NoPolicyEnforcer}"
+      - ARLAS_AUTH_PERMISSION_URL="${ARLAS_AUTH_PERMISSION_URL:-http://arlas-iam-server:9990/arlas_iam_server/permissions}"
       - ARLAS_AUTH_CERT_URL="${ARLAS_AUTH_CERT_URL}"
+      - ARLAS_AUTH_COLUMN_FILTER_REQUIRED="${ARLAS_AUTH_COLUMN_FILTER_REQUIRED:-false}"
+      - ARLAS_CACHE_FACTORY_CLASS="${ARLAS_CACHE_FACTORY_CLASS:-io.arlas.tagger.impl.HazelcastCacheFactory}"
+      - ARLAS_CACHE_TIMEOUT="${ARLAS_CACHE_TIMEOUT:-5}"
     depends_on:
       - kafka
     ports:

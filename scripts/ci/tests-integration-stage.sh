@@ -8,7 +8,7 @@ function clean_docker {
 		-w /opt/maven \
 		-v $PWD:/opt/maven \
 		-v $HOME/.m2:/root/.m2 \
-		maven:3.8.4-openjdk-17 \
+		maven:3.8.5-openjdk-17 \
 		mvn clean
 }
 
@@ -92,7 +92,7 @@ function test_tagger() {
         -e ARLAS_SERVER_NODE=${ARLAS_SERVER_NODE} \
         -e ALIASED_COLLECTION=${ALIASED_COLLECTION} \
         --net arlas_default \
-        maven:3.8.4-openjdk-17 \
+        maven:3.8.5-openjdk-17 \
         mvn -Dit.test=TagIT verify -DskipTests=false -DfailIfNoTests=false -B
 }
 
@@ -123,7 +123,7 @@ function test_tagger_with_auth() {
 #        -e ARLAS_SERVER_NODE=${ARLAS_SERVER_NODE} \
 #        -e ALIASED_COLLECTION=${ALIASED_COLLECTION} \
 #        --net arlas_default \
-#        maven:3.8.4-openjdk-17 \
+#        maven:3.8.5-openjdk-17 \
 #        mvn -Dit.test=TagAuthIT verify -DskipTests=false -DfailIfNoTests=false -B
 }
 
