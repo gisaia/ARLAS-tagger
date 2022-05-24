@@ -97,34 +97,33 @@ function test_tagger() {
 }
 
 function test_tagger_with_auth() {
-  echo "Auth tests skipped until a solution is found to test with UMS"
-#    export ARLAS_PREFIX="/arlastest"
-#    export ARLAS_APP_PATH="/pathtest"
-#    export ARLAS_AUTH_ENABLED=true
-#    export ARLAS_SERVICE_EXPLORE_ENABLE=true
-#    export ARLAS_TAGGER_PREFIX="/arlastaggertest"
-#    export ARLAS_TAGGER_APP_PATH="/pathtaggertest"
-#    export ARLAS_SERVER_NODE="arlas-server:9999"
-#    export ARLAS_AUTH_LOCAL_CERT_FILE="/opt/app/arlas-test.pem"
-#    start_stack
-#    docker run --rm \
-#        -w /opt/maven \
-#        -v $PWD:/opt/maven \
-#        -v $HOME/.m2:/root/.m2 \
-#        -e ARLAS_HOST="arlas-server" \
-#        -e ARLAS_PORT="9999" \
-#        -e ARLAS_PREFIX=${ARLAS_PREFIX} \
-#        -e ARLAS_APP_PATH=${ARLAS_APP_PATH} \
-#        -e ARLAS_TAGGER_HOST="arlas-tagger" \
-#        -e ARLAS_TAGGER_PORT="9998" \
-#        -e ARLAS_TAGGER_PREFIX=${ARLAS_TAGGER_PREFIX} \
-#        -e ARLAS_TAGGER_APP_PATH=${ARLAS_TAGGER_APP_PATH} \
-#        -e ARLAS_ELASTIC_NODES="elasticsearch:9200" \
-#        -e ARLAS_SERVER_NODE=${ARLAS_SERVER_NODE} \
-#        -e ALIASED_COLLECTION=${ALIASED_COLLECTION} \
-#        --net arlas_default \
-#        maven:3.8.5-openjdk-17 \
-#        mvn -Dit.test=TagAuthIT verify -DskipTests=false -DfailIfNoTests=false -B
+    export ARLAS_PREFIX="/arlastest"
+    export ARLAS_APP_PATH="/pathtest"
+    export ARLAS_AUTH_POLICY_CLASS="io.arlas.filter.impl.Auth0PolicyEnforcer"
+    export ARLAS_SERVICE_EXPLORE_ENABLE=true
+    export ARLAS_TAGGER_PREFIX="/arlastaggertest"
+    export ARLAS_TAGGER_APP_PATH="/pathtaggertest"
+    export ARLAS_SERVER_NODE="arlas-server:9999"
+    export ARLAS_AUTH_LOCAL_CERT_FILE="/opt/app/arlas-test.pem"
+    start_stack
+    docker run --rm \
+        -w /opt/maven \
+        -v $PWD:/opt/maven \
+        -v $HOME/.m2:/root/.m2 \
+        -e ARLAS_HOST="arlas-server" \
+        -e ARLAS_PORT="9999" \
+        -e ARLAS_PREFIX=${ARLAS_PREFIX} \
+        -e ARLAS_APP_PATH=${ARLAS_APP_PATH} \
+        -e ARLAS_TAGGER_HOST="arlas-tagger" \
+        -e ARLAS_TAGGER_PORT="9998" \
+        -e ARLAS_TAGGER_PREFIX=${ARLAS_TAGGER_PREFIX} \
+        -e ARLAS_TAGGER_APP_PATH=${ARLAS_TAGGER_APP_PATH} \
+        -e ARLAS_ELASTIC_NODES="elasticsearch:9200" \
+        -e ARLAS_SERVER_NODE=${ARLAS_SERVER_NODE} \
+        -e ALIASED_COLLECTION=${ALIASED_COLLECTION} \
+        --net arlas_default \
+        maven:3.8.5-openjdk-17 \
+        mvn -Dit.test=TagAuthIT verify -DskipTests=false -DfailIfNoTests=false -B
 }
 
 function test_doc() {
