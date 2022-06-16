@@ -21,6 +21,7 @@ package io.arlas.tagger.rest.tag;
 
 import com.codahale.metrics.annotation.Timed;
 import io.arlas.commons.exceptions.ArlasException;
+import io.arlas.commons.rest.response.Error;
 import io.arlas.server.core.model.CollectionReference;
 import io.arlas.server.core.utils.ColumnFilterUtil;
 import io.arlas.tagger.app.Documentation;

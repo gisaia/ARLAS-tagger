@@ -17,22 +17,16 @@ RUN mvn install \
 ###################
 # PACKAGING STAGE #
 ###################
-FROM gisaia/arlas-openjdk:17
-WORKDIR /opt/app
-
-# install script dependencies
-RUN apt-get update && apt-get install -y netcat-openbsd curl
+FROM gisaia/arlas-openjdk:17-distroless
 
 # application placed into /opt/app
 WORKDIR /opt/app
 COPY --from=build /opt/build/arlas-tagger.jar /opt/app/
 COPY --from=build /opt/build/conf/configuration.yaml /opt/app/
-COPY --from=build /opt/build/docker/docker-resources/wait-for-elasticsearch.sh /opt/app/
-COPY --from=build /opt/build/docker/docker-resources/wait-for-tagger-deps.sh /opt/app/
-COPY --from=build /opt/build/docker/docker-resources/start.sh /opt/app/
 EXPOSE 9998
 
 HEALTHCHECK --interval=5m --timeout=3s \
   CMD curl http://localhost:9998/admin/healthcheck | grep -v "\"healthy\":false" || exit 1
 
-CMD /opt/app/start.sh
+ENV JDK_JAVA_OPTIONS="-Xmx512m -XX:+ExitOnOutOfMemoryError"
+CMD ["arlas-tagger.jar", "server", "/opt/app/configuration.yaml"]
