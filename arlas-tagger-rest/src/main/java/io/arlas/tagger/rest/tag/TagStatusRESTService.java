@@ -20,6 +20,7 @@
 package io.arlas.tagger.rest.tag;
 
 import com.codahale.metrics.annotation.Timed;
+import io.arlas.commons.rest.response.Error;
 import io.arlas.tagger.app.Documentation;
 import io.arlas.tagger.model.TaggingStatus;
 import io.arlas.tagger.model.request.TagRefRequest;
