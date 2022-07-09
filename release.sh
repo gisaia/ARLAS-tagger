@@ -16,13 +16,14 @@ SKIP_API="NO"
 BASEDIR=$PWD
 DOCKER_COMPOSE_TAGGER="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compose.yml"
 DOCKER_COMPOSE_ES="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compose-elasticsearch.yml"
+DOCKER_COMPOSE_KAFKA="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compose-kafka.yml"
 
 #########################################
 #### Cleaning functions #################
 #########################################
 function clean_docker {
     echo "===> Stop arlas-tagger stack"
-    docker-compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} --project-name arlas down -v
+    docker-compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} -f {DOCKER_COMPOSE_KAFKA} --project-name arlas down -v
 }
 
 function clean_exit {
@@ -176,7 +177,16 @@ echo "=> Start arlas-tagger stack"
 export ARLAS_SERVER_NODE=""
 export ELASTIC_DATADIR="/tmp"
 export KAFKA_DATADIR="/tmp"
-docker-compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} --project-name arlas up -d --build
+docker-compose -f ${DOCKER_COMPOSE_ES} --project-name arlas up -d --build
+echo "Waiting for ES readiness"
+docker run --net arlas_default --rm busybox sh -c 'i=1; until nc -w 2 elasticsearch 9200; do if [ $i -lt 30 ]; then sleep 1; else break; fi; i=$(($i + 1)); done'
+
+docker-compose -f ${DOCKER_COMPOSE_KAFKA} --project-name arlas up -d --build
+echo "Waiting for KAFKA readiness"
+docker run --net arlas_default --rm busybox sh -c 'i=1; until nc -w 2 kafka 29092; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i + 1)); done'
+
+docker-compose -f ${DOCKER_COMPOSE_TAGGER} --project-name arlas up -d --build
+
 DOCKER_IP=$(docker-machine ip || echo "localhost")
 
 echo "=> Wait for arlas-tagger up and running"
@@ -188,7 +198,7 @@ i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/swagger.json -o tar
 i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/swagger.yaml -o target/tmp/swagger.yaml; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i + 1)); done
 
 echo "=> Stop arlas-tagger stack"
-docker-compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} --project-name arlas down -v
+docker-compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} -f ${DOCKER_COMPOSE_KAFKA} --project-name arlas down -v
 
 echo "=> Generate API documentation"
 mvn "-Dswagger.output=docs/api" swagger2markup:convertSwagger2markup
