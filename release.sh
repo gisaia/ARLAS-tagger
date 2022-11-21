@@ -23,7 +23,7 @@ DOCKER_COMPOSE_KAFKA="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compo
 #########################################
 function clean_docker {
     echo "===> Stop arlas-tagger stack"
-    docker-compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} -f {DOCKER_COMPOSE_KAFKA} --project-name arlas down -v
+    docker-compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} -f ${DOCKER_COMPOSE_KAFKA} --project-name arlas down -v
 }
 
 function clean_exit {
