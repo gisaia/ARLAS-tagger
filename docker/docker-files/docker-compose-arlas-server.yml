@@ -2,7 +2,7 @@ version: '3'
 
 services:
   arlas-server:
-    image: gisaia/arlas-server:${ARLAS_VERSION:-22.0.1}
+    image: gisaia/arlas-server:${ARLAS_VERSION:-23.0.5}
     container_name: arlas-server
     environment:
       - ARLAS_HOST="arlas-server"
@@ -16,5 +16,4 @@ services:
       - ARLAS_SERVICE_EXPLORE_ENABLE="${ARLAS_SERVICE_EXPLORE_ENABLE:-true}"
     ports:
       - 19999:9999
-    command: ["/opt/app/wait-for-elasticsearch.sh"]
 
