@@ -13,7 +13,7 @@
     <parent>
         <artifactId>arlas-tagger-parent</artifactId>
         <groupId>io.arlas</groupId>
-        <version>23.0.2-SNAPSHOT</version>
+        <version>23.0.2</version>
     </parent>
 
     <dependencies>
