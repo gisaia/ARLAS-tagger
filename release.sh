@@ -197,6 +197,10 @@ mkdir -p target/tmp || echo "target/tmp exists"
 i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/swagger.json -o target/tmp/swagger.json; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i + 1)); done
 i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/swagger.yaml -o target/tmp/swagger.yaml; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i + 1)); done
 
+mkdir -p openapi
+cp target/tmp/swagger.yaml openapi
+cp target/tmp/swagger.json openapi
+
 echo "=> Stop arlas-tagger stack"
 docker-compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} -f ${DOCKER_COMPOSE_KAFKA} --project-name arlas down -v
 
@@ -311,6 +315,8 @@ if [ "$RELEASE" == "YES" ]; then
     git push origin :v${ARLAS_TAGGER_VERSION}
     echo "=> Commit release version"
     git add docs/api
+    git add openapi/swagger.json
+    git add openapi/swagger.yaml
     git commit -a -m "release version ${ARLAS_TAGGER_VERSION}"
     git tag v${ARLAS_TAGGER_VERSION}
     git push origin v${ARLAS_TAGGER_VERSION}
@@ -335,6 +341,10 @@ echo "=> Update REST API version in JAVA source code"
 sed -i.bak 's/\"'${FULL_API_VERSION}'\"/\"API_VERSION\"/' arlas-tagger-rest/src/main/java/io/arlas/tagger/rest/tag/TagRESTService.java
 
 if [ "$RELEASE" == "YES" ]; then
+    sed -i.bak 's/\"'${FULL_API_VERSION}'\"/\"'${API_DEV_VERSION}-SNAPSHOT'\"/' openapi/swagger.yaml
+    sed -i.bak 's/\"'${FULL_API_VERSION}'\"/\"'${API_DEV_VERSION}-SNAPSHOT'\"/' openapi/swagger.json
+    git add openapi/swagger.json
+    git add openapi/swagger.yaml
     git commit -a -m "development version ${ARLAS_DEV_VERSION}-SNAPSHOT"
     git push origin develop
 else echo "=> Skip git push develop"; fi
