@@ -40,7 +40,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * /!\ With the current implementation, the topic read by TagRefService *MUST* have only 1 partition.
@@ -145,7 +148,7 @@ public class TagRefService extends KafkaConsumerRunner {
 
     private AggregationResponse getArlasAggregation(final TagRefRequest tagRequest) throws ArlasException, IOException {
         CollectionReference collectionReference = Optional
-                .ofNullable(updateServices.getCollectionReferenceService().getCollectionReference(tagRequest.collection))
+                .ofNullable(updateServices.getCollectionReferenceService().getCollectionReference(tagRequest.collection, Optional.empty()))
                 .orElseThrow(() -> new NotFoundException(tagRequest.collection));
 
         Aggregation aggregation = new Aggregation();

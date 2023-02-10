@@ -27,9 +27,9 @@ import io.arlas.tagger.util.SelfExpiringMap;
 import java.util.Optional;
 
 public class TaggingStatus {
-    private static TaggingStatus INSTANCE = new TaggingStatus();
+    private static final TaggingStatus INSTANCE = new TaggingStatus();
 
-    private SelfExpiringMap<String, UpdateResponse> statusMap;
+    private final SelfExpiringMap<String, UpdateResponse> statusMap;
 
     private volatile boolean doReset;
 
@@ -54,7 +54,7 @@ public class TaggingStatus {
             statusMap.clear();
             doReset = false;
         }
-        UpdateResponse updateResponse = getStatus(tagRequest.id).orElse(new UpdateResponse());
+        UpdateResponse updateResponse = getStatus(tagRequest.id).orElseGet(UpdateResponse::new);
         updateResponse.id = tagRequest.id;
         updateResponse.label = tagRequest.label;
         updateResponse.action = tagRequest.action;

@@ -39,6 +39,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
 
+import static io.arlas.commons.rest.utils.ServerConstants.*;
+
 @Path("/write")
 @Api(value = "/write")
 @SwaggerDefinition(
@@ -87,10 +89,13 @@ public class TagRESTService {
             // --------------------------------------------------------
 
             @ApiParam(hidden = true)
-            @HeaderParam(value="Partition-Filter") String partitionFilter,
+            @HeaderParam(value= PARTITION_FILTER) String partitionFilter,
 
             @ApiParam(hidden = true)
-            @HeaderParam(value = "Column-Filter") Optional<String> columnFilter,
+            @HeaderParam(value = COLUMN_FILTER) String columnFilter,
+
+            @ApiParam(hidden = true)
+            @HeaderParam(value = ARLAS_ORGANISATION) String organisations,
 
             // --------------------------------------------------------
             // ----------------------- FORM     -----------------------
@@ -99,7 +104,7 @@ public class TagRESTService {
                     defaultValue = "false")
             @QueryParam(value="pretty") Boolean pretty
     ) throws ArlasException {
-        assertColumnFilter(collection, tagRequest, columnFilter);
+        assertColumnFilter(collection, tagRequest, Optional.ofNullable(columnFilter), Optional.ofNullable(organisations));
         if (tagRequest.tag != null && tagRequest.tag.path != null && tagRequest.tag.value != null) {
             TagRefRequest tagRefRequest = TagRefRequest.fromTagRequest(tagRequest, collection, partitionFilter, Action.ADD);
             return doAction(tagRefRequest);
@@ -171,10 +176,13 @@ public class TagRESTService {
             // --------------------------------------------------------
 
             @ApiParam(hidden = true)
-            @HeaderParam(value="Partition-Filter") String partitionFilter,
+            @HeaderParam(value=PARTITION_FILTER) String partitionFilter,
 
             @ApiParam(hidden = true)
-            @HeaderParam(value = "Column-Filter") Optional<String> columnFilter,
+            @HeaderParam(value = COLUMN_FILTER) String columnFilter,
+
+            @ApiParam(hidden = true)
+            @HeaderParam(value = ARLAS_ORGANISATION) String organisations,
 
             // --------------------------------------------------------
             // ----------------------- FORM     -----------------------
@@ -183,7 +191,7 @@ public class TagRESTService {
                     defaultValue = "false")
             @QueryParam(value="pretty") Boolean pretty
     ) throws ArlasException {
-        assertColumnFilter(collection, tagRequest, columnFilter);
+        assertColumnFilter(collection, tagRequest, Optional.ofNullable(columnFilter), Optional.ofNullable(organisations));
 
         if (tagRequest.tag != null && tagRequest.tag.path != null) {
             TagRefRequest tagRefRequest = TagRefRequest.fromTagRequest(tagRequest, collection, partitionFilter,
@@ -194,9 +202,12 @@ public class TagRESTService {
         }
     }
 
-    private void assertColumnFilter(String collection, TagRequest tagRequest, Optional<String> columnFilter) throws ArlasException {
+    private void assertColumnFilter(String collection,
+                                    TagRequest tagRequest,
+                                    Optional<String> columnFilter,
+                                    Optional<String> organisations) throws ArlasException {
         CollectionReference collectionReference = consumersManager.getUpdateServices().getCollectionReferenceService()
-                .getCollectionReference(collection);
+                .getCollectionReference(collection, organisations);
         if (collectionReference == null) {
             throw new NotFoundException(collection);
         }

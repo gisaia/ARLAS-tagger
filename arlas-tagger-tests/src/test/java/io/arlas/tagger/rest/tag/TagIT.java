@@ -20,6 +20,7 @@
 package io.arlas.tagger.rest.tag;
 
 import io.arlas.commons.exceptions.ArlasException;
+import io.arlas.commons.rest.utils.ServerConstants;
 import io.arlas.tagger.AbstractTaggerTestContext;
 import io.arlas.tagger.ArlasServerContext;
 import io.arlas.tagger.CollectionTool;
@@ -73,14 +74,14 @@ public class TagIT extends AbstractTaggerTestContext {
         tr.tag.value="v1";
 
         given().contentType("application/json")
-                .header("Column-Filter","params.tags")
+                .header(ServerConstants.COLUMN_FILTER,"params.tags")
                 .body(tr)
                 .when()
                 .post(getTaggerUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
                 .then()
                 .statusCode(200);
 
-        Thread.currentThread().sleep(30000);
+        Thread.sleep(30000);
 
         super.setServerRestAssured();
         given()
@@ -101,7 +102,7 @@ public class TagIT extends AbstractTaggerTestContext {
                 .then()
                 .statusCode(200);
 
-        Thread.currentThread().sleep(30000);
+        Thread.sleep(30000);
 
         super.setServerRestAssured();
         given()
@@ -110,19 +111,7 @@ public class TagIT extends AbstractTaggerTestContext {
                 .statusCode(200)
                 .body("hits[0].data.params.tags.size()",equalTo(2))
                 .body("hits[0].data.params.tags[0]", (equalTo("v1")))
-                .body("hits[0].data.params.tags[1]", (equalTo("v2")))
-        ;
-        // No longer relevant as the tagging is now asynchronous and we cannot get this error in real time
-//        Thread.currentThread().sleep(5000);
-//        tr.tag.path="params.not.allowed.tags";
-//        given().contentType("application/json")
-//                .body(tr)
-//                .when()
-//                .post(getUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
-//                .then()
-//                .statusCode(400)
-//                .body("error",equalTo("io.arlas.server.exceptions.NotAllowedException"))
-//        ;
+                .body("hits[0].data.params.tags[1]", (equalTo("v2")));
     }
 
 
@@ -141,7 +130,7 @@ public class TagIT extends AbstractTaggerTestContext {
                 .then()
                 .statusCode(200);
 
-        Thread.currentThread().sleep(30000);
+        Thread.sleep(30000);
 
         super.setServerRestAssured();
         given()
@@ -170,7 +159,7 @@ public class TagIT extends AbstractTaggerTestContext {
                 .then()
                 .statusCode(200);
 
-        Thread.currentThread().sleep(32000);
+        Thread.sleep(32000);
 
         // TAG v2
         tr.tag.value = "v2";
@@ -181,7 +170,7 @@ public class TagIT extends AbstractTaggerTestContext {
                 .then()
                 .statusCode(200);
 
-        Thread.currentThread().sleep(32000);
+        Thread.sleep(32000);
 
         // UNTAG v1
         tr.tag.value = "v1";
@@ -192,7 +181,7 @@ public class TagIT extends AbstractTaggerTestContext {
                 .then()
                 .statusCode(200);
 
-        Thread.currentThread().sleep(35000);
+        Thread.sleep(35000);
 
         super.setServerRestAssured();
         // Only v2 remains
@@ -213,7 +202,7 @@ public class TagIT extends AbstractTaggerTestContext {
                 .post(getTaggerUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
                 .then()
                 .statusCode(200);
-        Thread.currentThread().sleep(30000);
+        Thread.sleep(30000);
 
         // UNTAG all
         TagRequest remove = new TagRequest();
@@ -231,22 +220,10 @@ public class TagIT extends AbstractTaggerTestContext {
                     return given()
                             .get(ArlasServerContext.getArlasServerUrlPath(CollectionTool.COLLECTION_NAME))
                             .then()
-                            .extract().path("hits.data.params.tags"); }
-                , everyItem(nullValue()), 10, 10);
+                            .extract().path("hits.data.params.tags");
+                }, everyItem(nullValue()), 10, 10);
         Assert.assertTrue("hits.data.params.tags are not null", success);
 
-        // No longer relevant as the tagging is now asynchronous and we cannot get this error in real time
-        // Not allowed tag
-//        Thread.currentThread().sleep(5000);
-//        tr.tag.path="params.not.allowed.tags";
-//        given().contentType("application/json")
-//                .body(tr)
-//                .when()
-//                .post(getUrlPath(CollectionTool.COLLECTION_NAME)+UNTAG_SUFFIX)
-//                .then()
-//                .statusCode(400)
-//                .body("error",equalTo("io.arlas.server.exceptions.NotAllowedException"))
-//        ;
     }
 
     @Test
@@ -258,7 +235,7 @@ public class TagIT extends AbstractTaggerTestContext {
         tr.tag.value="Another job";
 
         given().contentType("application/json")
-                .header("Column-Filter","params.tags")
+                .header(ServerConstants.COLUMN_FILTER,"params.tags")
                 .body(tr)
                 .when()
                 .post(getTaggerUrlPath(CollectionTool.COLLECTION_NAME)+TAG_SUFFIX)
@@ -269,7 +246,7 @@ public class TagIT extends AbstractTaggerTestContext {
 
     public <R> boolean doUntil(Function<R, Object> function, Matcher matcher, int tries, int waitseconds) throws InterruptedException {
         for (int i = 0; i < tries; i++) {
-            Thread.sleep(waitseconds * 1000);
+            Thread.sleep(waitseconds * 1000L);
             Object o = function.apply(null);
             if (matcher.matches(o)) {
                 return true;

@@ -32,8 +32,11 @@ public class TagRequestFieldsExtractor implements RequestFieldsExtractor.IReques
         Stream<String> searchCols = tagRequest.search != null ?
                 new RequestFieldsExtractor.SearchRequestFieldsExtractor().getCols(tagRequest.search, includeFields) : Stream.of();
         Stream<String> fCols = tagRequest.propagation != null && tagRequest.propagation.filter != null ?
-                Optional.ofNullable(tagRequest.propagation.filter).flatMap(filter -> Optional.ofNullable(filter.f))
-                .map(f -> f.stream().flatMap(fList -> fList.stream().map(fFilter -> fFilter.field))).orElse(Stream.of()) : Stream.of();
+                Optional.of(tagRequest.propagation.filter)
+                        .flatMap(filter -> Optional.ofNullable(filter.f))
+                        .map(f -> f.stream().flatMap(fList -> fList.stream().map(fFilter -> fFilter.field)))
+                        .orElseGet(Stream::of)
+                : Stream.of();
         Stream<String> propagationCol = tagRequest.propagation != null && tagRequest.propagation.field != null ?
                 Stream.of(tagRequest.propagation.field) : Stream.of();
         Stream<String> tagCol = Stream.of(tagRequest.tag.path);

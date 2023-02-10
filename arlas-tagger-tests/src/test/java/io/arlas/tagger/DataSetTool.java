@@ -28,7 +28,6 @@ import io.arlas.server.core.impl.elastic.utils.ElasticTool;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.http.HttpHost;
 import org.apache.logging.log4j.core.util.IOUtils;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.sniff.Sniffer;
 import org.slf4j.Logger;
@@ -42,7 +41,6 @@ public class DataSetTool {
     static Logger LOGGER = LoggerFactory.getLogger(DataSetTool.class);
 
     public final static String DATASET_INDEX_NAME="dataset";
-    public final static String DATASET_TYPE_NAME="mytype";
     public final static String DATASET_ID_PATH="id";
     public final static String DATASET_GEOMETRY_PATH="geo_params.geometry";
     public final static String DATASET_CENTROID_PATH="geo_params.centroid";
@@ -56,7 +54,7 @@ public class DataSetTool {
 
     static {
         HttpHost[] nodes = ElasticConfiguration.getElasticNodes(Optional.ofNullable(System.getenv("ARLAS_ELASTIC_NODES")).orElse("localhost:9200"), false);
-        ImmutablePair<RestHighLevelClient, Sniffer> pair = ElasticTool.getRestHighLevelClient(nodes,false, null, true, true);
+        ImmutablePair<RestHighLevelClient, Sniffer> pair = ElasticTool.getRestHighLevelClient(nodes,false, null, true, true, 30000);
         client = new ElasticClient(pair.getLeft(), pair.getRight());
         LOGGER.info("Load data in " + nodes[0].getHostName() + ":" + nodes[0].getPort());
 
@@ -76,7 +74,7 @@ public class DataSetTool {
         String mapping = IOUtils.toString(new InputStreamReader(DataSetTool.class.getClassLoader().getResourceAsStream(mappingFileName)));
         try {
             client.deleteIndex(indexName);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         client.createIndex(indexName, mapping);
     }
@@ -88,9 +86,9 @@ public class DataSetTool {
         for (int i = lonMin; i <= lonMax; i += 10) {
             for (int j = latMin; j <= latMax; j += 10) {
                 data = new Data();
-                data.id = String.valueOf("ID_" + i + "_" + j + "DI").replace("-", "_");
+                data.id = ("ID_" + i + "_" + j + "DI").replace("-", "_");
                 data.params.job = jobs[((Math.abs(i) + Math.abs(j)) / 10) % (jobs.length - 1)];
-                IndexResponse response = client.index(indexName, "ES_ID_TEST" + data.id, mapper.writer().writeValueAsString(data));
+                client.index(indexName, "ES_ID_TEST" + data.id, mapper.writer().writeValueAsString(data));
             }
         }
     }

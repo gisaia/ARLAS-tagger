@@ -42,23 +42,25 @@ import java.util.Collections;
 
 public class FilteredUpdater extends ElasticFluidSearch {
     private final ElasticClient client;
-    public FilteredUpdater(CollectionReference collectionReference, ElasticClient client) {
-        super(collectionReference);
+    public FilteredUpdater(CollectionReference collectionReference,
+                           ElasticClient client,
+                           int arlasElasticMaxPrecisionThreshold) {
+        super(collectionReference, arlasElasticMaxPrecisionThreshold);
         this.client = client;
         this.setClient(client);
     }
 
-    public UpdateResponse doAction(Action action, CollectionReference collectionReference, Tag tag, int max_updates) throws IOException, ArlasException {
-        return doAction(action, collectionReference, tag, max_updates, 1);
-    }
-
-    public UpdateResponse doAction(Action action, CollectionReference collectionReference, Tag tag, int max_updates, int slices) throws IOException, ArlasException {
+    public UpdateResponse doAction(Action action,
+                                   CollectionReference collectionReference,
+                                   Tag tag,
+                                   int max_updates,
+                                   int slices) throws IOException, ArlasException {
         if(Strings.isNullOrEmpty(tag.path)){
             throw new BadRequestException("The tag path must be provided and must not be empty");
         }
         // The collection can be tagged on that field only if the path belongs to collectionReference.params.taggableFields
         if(Strings.isNullOrEmpty(collectionReference.params.taggableFields) || Arrays.stream(collectionReference.params.taggableFields.split(",")).noneMatch(f->tag.path.equals(f.trim()))){
-            throw new NotAllowedException("The path "+tag.path+" is not part of the fields that can be tagged.");
+            throw new NotAllowedException("The path " + tag.path + " is not part of the fields that can be tagged.");
         }
 
         UpdateByQueryRequest request = new UpdateByQueryRequest(collectionReference.params.indexName)
@@ -73,55 +75,67 @@ public class FilteredUpdater extends ElasticFluidSearch {
         updateResponse.failures.addAll(response.getBulkFailures()
                 .stream().map(f -> new UpdateResponse.Failure(f.getId(), f.getMessage(), "BulkFailure")).toList());
         updateResponse.failed = updateResponse.failures.size();
-        updateResponse.updated=response.getUpdated();
-        updateResponse.action=action;
+        updateResponse.updated = response.getUpdated();
+        updateResponse.action = action;
         return updateResponse;
     }
 
 
     public Script getTagScript(Tag tag, Action action) throws BadRequestException, NotImplementedException {
-        String script="";
-        if(action.equals(Action.ADD)){
-            script+="if (ctx._source."+tag.path+" == null) {\n" +
-                    "\tctx._source."+tag.path+" = new ArrayList(); \n" +
-                    "}\n";
-            script+="if (!(ctx._source."+tag.path+" instanceof List)) {\n" +
-                    "\tObject o = ctx._source."+tag.path+"; \n"+
-                    "\tctx._source."+tag.path+" = new ArrayList(); \n" +
-                    "\tctx._source."+tag.path+".add(o)\n"+
-                    "}\n";
-            if(tag.value == null || Strings.isNullOrEmpty(tag.value.toString())){
+        String script = "";
+        if (action.equals(Action.ADD)) {
+            script += """
+                    if (ctx._source.%s == null) {
+                        ctx._source.%s = new ArrayList();
+                    }
+                    """.formatted(tag.path, tag.path);
+            script += """
+                    if (!(ctx._source.%s instanceof List)) {
+                        Object o = ctx._source.%s;
+                        ctx._source.%s = new ArrayList();
+                        ctx._source.%s.add(o)
+                    }
+                    """.formatted(tag.path, tag.path, tag.path, tag.path);
+            if (tag.value == null || Strings.isNullOrEmpty(tag.value.toString())) {
                 throw new BadRequestException("The tag value must be provided and must not be empty");
             }
-            if(tag.value instanceof Number){
-                script+="if (!(ctx._source."+tag.path+".contains("+tag.value+"))) {\n";
-                script+="ctx._source."+tag.path+".add("+tag.value+")\n";
-                script+="}\n";
-            }else{
-                script+="if (!(ctx._source."+tag.path+".contains('"+tag.value.toString()+"'))) {\n";
-                script+="ctx._source."+tag.path+".add('"+tag.value.toString()+"')\n";
-                script+="}\n";
+            if (tag.value instanceof Number) {
+                script += """
+                if (!(ctx._source.%s.contains(%s))) {
+                    ctx._source.%s.add(%s)
+                }
+                """.formatted(tag.path, tag.value, tag.path, tag.value);
+            } else {
+                script += """
+                if (!(ctx._source.%s.contains('%s'))) {
+                    ctx._source.%s.add('%s')
+                }
+                """.formatted(tag.path, tag.value.toString(), tag.path, tag.value.toString());
             }
         }
-        if(action.equals(Action.REMOVE)){
-            if(tag.value==null){
+
+        if (action.equals(Action.REMOVE)) {
+            if (tag.value == null) {
                 throw new BadRequestException("The tag value must be provided and must not be empty");
             }
-            script+="if (ctx._source."+tag.path+" != null) {\n";
 
-            if(tag.value instanceof Number){
+            if (tag.value instanceof Number) {
                 throw new NotImplementedException("Removal of a number tag is not yet supported");
                 //script+="\tctx._source."+tag.path+".remove("+tag.value+")\n";
-            }else{
-                if(Strings.isNullOrEmpty(tag.value.toString())){
+            } else {
+                if (Strings.isNullOrEmpty(tag.value.toString())) {
                     throw new BadRequestException("The tag value must be provided and must not be empty");
                 }
-                script+="ctx._source."+tag.path+".removeAll(Collections.singleton(\""+tag.value.toString()+"\"))\n";
+                script += """
+                if (ctx._source.%s != null) {
+                    ctx._source.%s.removeAll(Collections.singleton("%s"))
+                }
+                """.formatted(tag.path, tag.path, tag.value.toString());
             }
-            script+="}\n";
         }
-        if(action.equals(Action.REMOVEALL)){
-            script+="ctx._source."+tag.path+" = null";
+
+        if (action.equals(Action.REMOVEALL)) {
+            script += "ctx._source.%s = null".formatted(tag.path);
         }
         return new Script(ScriptType.INLINE,"painless", script, Collections.emptyMap());
     }

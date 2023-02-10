@@ -32,7 +32,6 @@ import io.arlas.filter.core.PolicyEnforcer;
 import io.arlas.server.core.impl.elastic.exceptions.ElasticsearchExceptionMapper;
 import io.arlas.server.core.managers.CacheManager;
 import io.arlas.server.core.managers.CollectionReferenceManager;
-import io.arlas.server.core.utils.ColumnFilterUtil;
 import io.arlas.tagger.kafka.TagKafkaProducer;
 import io.arlas.tagger.rest.tag.TagRESTService;
 import io.arlas.tagger.rest.tag.TagStatusRESTService;
@@ -81,7 +80,6 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
     @Override
     public void run(ArlasTaggerConfiguration configuration, Environment environment) throws Exception {
         configuration.check();
-        ColumnFilterUtil.COLUMN_FILTER_REQUIRED = configuration.arlasAuthColumnFilterRequired;
 
         CacheFactory cacheFactory = (CacheFactory) Class
                 .forName(configuration.arlasCacheFactoryClass)
