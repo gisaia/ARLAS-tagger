@@ -38,9 +38,6 @@ public class ArlasTaggerConfiguration extends ArlasBaseConfiguration {
     @JsonProperty("tagging_status_timeout")
     public Long statusTimeout;
 
-    @JsonProperty("arlas_auth_column_filter_required")
-    public Boolean arlasAuthColumnFilterRequired;
-
     public void check() throws ArlasConfigurationException {
         super.check();
     }

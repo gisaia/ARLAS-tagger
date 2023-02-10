@@ -20,49 +20,54 @@
 package io.arlas.tagger.service;
 
 import io.arlas.commons.exceptions.ArlasException;
-import io.arlas.server.core.services.CollectionReferenceService;
 import io.arlas.server.core.impl.elastic.services.ElasticExploreService;
 import io.arlas.server.core.impl.elastic.utils.ElasticClient;
 import io.arlas.server.core.model.CollectionReference;
 import io.arlas.server.core.model.request.MixedRequest;
 import io.arlas.server.core.model.request.Search;
+import io.arlas.server.core.services.CollectionReferenceService;
 import io.arlas.tagger.core.FilteredUpdater;
 import io.arlas.tagger.model.Tag;
 import io.arlas.tagger.model.enumerations.Action;
 import io.arlas.tagger.model.response.UpdateResponse;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class UpdateServices extends ElasticExploreService {
 
-    public UpdateServices(ElasticClient client, CollectionReferenceService collectionReferenceService, int arlasRestCacheTimeout) {
-        super(client, collectionReferenceService, "", arlasRestCacheTimeout);
+    public UpdateServices(ElasticClient client, CollectionReferenceService collectionReferenceService,
+                          int arlasRestCacheTimeout, int arlasElasticMaxPrecisionThreshold) {
+        super(client, collectionReferenceService, "", arlasRestCacheTimeout, arlasElasticMaxPrecisionThreshold);
     }
 
-    public UpdateResponse tag(CollectionReference collectionReference, MixedRequest request, Tag tag, int max_updates) throws IOException, ArlasException {
-        return this.getFilteredTagger(collectionReference, request).doAction(Action.ADD,collectionReference, tag, max_updates,0);
+    public UpdateResponse tag(CollectionReference collectionReference, MixedRequest request, Tag tag, int max_updates)
+            throws IOException, ArlasException {
+        return this.getFilteredTagger(collectionReference, request, arlasElasticMaxPrecisionThreshold)
+                .doAction(Action.ADD, collectionReference, tag, max_updates,0);
     }
 
-    public UpdateResponse unTag(CollectionReference collectionReference, MixedRequest request, Tag tag, int max_updates) throws IOException, ArlasException {
-        return this.getFilteredTagger(collectionReference, request).doAction(Action.REMOVE,collectionReference, tag, max_updates, 0);
+    public UpdateResponse unTag(CollectionReference collectionReference, MixedRequest request, Tag tag, int max_updates)
+            throws IOException, ArlasException {
+        return this.getFilteredTagger(collectionReference, request, arlasElasticMaxPrecisionThreshold)
+                .doAction(Action.REMOVE, collectionReference, tag, max_updates, 0);
     }
 
-    public UpdateResponse removeAll(CollectionReference collectionReference, MixedRequest request, Tag tag, int max_updates) throws IOException, ArlasException {
-        return this.getFilteredTagger(collectionReference, request).doAction(Action.REMOVEALL,collectionReference, tag, max_updates, 0);
+    public UpdateResponse removeAll(CollectionReference collectionReference, MixedRequest request, Tag tag, int max_updates)
+            throws IOException, ArlasException {
+        return this.getFilteredTagger(collectionReference, request, arlasElasticMaxPrecisionThreshold)
+                .doAction(Action.REMOVEALL, collectionReference, tag, max_updates, 0);
     }
 
-    protected FilteredUpdater getFilteredTagger(CollectionReference collectionReference, MixedRequest request) throws ArlasException {
-        FilteredUpdater updater = new FilteredUpdater(collectionReference, this.getClient());
+    protected FilteredUpdater getFilteredTagger(CollectionReference collectionReference,
+                                                MixedRequest request,
+                                                int arlasElasticMaxPrecisionThreshold) throws ArlasException {
+        FilteredUpdater updater = new FilteredUpdater(collectionReference, this.getClient(), arlasElasticMaxPrecisionThreshold);
         applyFilter(request.headerRequest.filter, updater);
-        if(request.basicRequest!=null){
+        if (request.basicRequest != null) {
             applyFilter(request.basicRequest.filter,updater);
             setPageSizeAndFrom(((Search)request.basicRequest).page,updater);
             sortPage(((Search) request.basicRequest).page, updater);
-            applyProjection(((Search) request.basicRequest).projection,
-                    updater,
-                    !request.columnFilter.isPresent() ? Optional.empty() : request.columnFilter,
-                    collectionReference);
+            applyProjection(((Search) request.basicRequest).projection, updater, request.columnFilter, collectionReference);
         }
         return updater;
     }

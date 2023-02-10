@@ -72,7 +72,7 @@ public class TagStatusRESTService {
                     defaultValue = "false")
             @QueryParam(value="pretty") Boolean pretty
     ) {
-        return Response.ok(status.getStatus(id).orElse(new UpdateResponse())).build();
+        return Response.ok(status.getStatus(id).orElseGet(UpdateResponse::new)).build();
     }
 
     @Timed

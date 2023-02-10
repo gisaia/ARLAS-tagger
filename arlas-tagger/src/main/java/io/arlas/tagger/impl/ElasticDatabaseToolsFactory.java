@@ -44,7 +44,8 @@ public class ElasticDatabaseToolsFactory extends DatabaseToolsFactory {
                 configuration.arlasCollectionsConfiguration.arlasIndex, cacheManager);
         this.updateServices = new UpdateServices(elasticClient,
                 collectionReferenceService,
-                configuration.arlasRestCacheTimeout);
+                configuration.arlasRestCacheTimeout,
+                configuration.elasticConfiguration.elasticMaxPrecisionThreshold);
     }
 
     @Override
