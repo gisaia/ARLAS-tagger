@@ -24,12 +24,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.arlas.commons.exceptions.ArlasException;
 import io.arlas.server.core.app.ElasticConfiguration;
 import io.arlas.server.core.impl.elastic.utils.ElasticClient;
-import io.arlas.server.core.impl.elastic.utils.ElasticTool;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.http.HttpHost;
-import org.apache.logging.log4j.core.util.IOUtils;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.sniff.Sniffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,10 +47,12 @@ public class DataSetTool {
     public static ElasticClient client;
 
     static {
-        HttpHost[] nodes = ElasticConfiguration.getElasticNodes(Optional.ofNullable(System.getenv("ARLAS_ELASTIC_NODES")).orElse("localhost:9200"), false);
-        ImmutablePair<RestHighLevelClient, Sniffer> pair = ElasticTool.getRestHighLevelClient(nodes,false, null, true, true, 30000);
-        client = new ElasticClient(pair.getLeft(), pair.getRight());
-        LOGGER.info("Load data in " + nodes[0].getHostName() + ":" + nodes[0].getPort());
+        ElasticConfiguration conf = new ElasticConfiguration();
+        conf.elasticnodes = Optional.ofNullable(System.getenv("ARLAS_ELASTIC_NODES")).orElse("localhost:9200");
+        conf.elasticEnableSsl = false;
+        conf.elasticSocketTimeout = 30000;
+        client = new ElasticClient(conf);
+        LOGGER.info("Load data in " + conf.elasticnodes);
 
     }
 
@@ -71,12 +67,11 @@ public class DataSetTool {
     }
 
     private static void createIndex(String indexName, String mappingFileName) throws IOException, ArlasException {
-        String mapping = IOUtils.toString(new InputStreamReader(DataSetTool.class.getClassLoader().getResourceAsStream(mappingFileName)));
         try {
             client.deleteIndex(indexName);
         } catch (Exception ignored) {
         }
-        client.createIndex(indexName, mapping);
+        client.getClient().indices().create(b -> b.index(indexName).withJson(new InputStreamReader(DataSetTool.class.getClassLoader().getResourceAsStream(mappingFileName))));
     }
 
     private static void fillIndex(String indexName, int lonMin, int lonMax, int latMin, int latMax) throws JsonProcessingException, ArlasException {
@@ -88,7 +83,7 @@ public class DataSetTool {
                 data = new Data();
                 data.id = ("ID_" + i + "_" + j + "DI").replace("-", "_");
                 data.params.job = jobs[((Math.abs(i) + Math.abs(j)) / 10) % (jobs.length - 1)];
-                client.index(indexName, "ES_ID_TEST" + data.id, mapper.writer().writeValueAsString(data));
+                client.index(indexName, "ES_ID_TEST" + data.id, data);
             }
         }
     }
@@ -97,7 +92,7 @@ public class DataSetTool {
         client.deleteIndex(DATASET_INDEX_NAME);
     }
 
-    public static void close() {
-        client.close();
+    public static void close() throws IOException {
+        client.getClient()._transport().close();
     }
 }

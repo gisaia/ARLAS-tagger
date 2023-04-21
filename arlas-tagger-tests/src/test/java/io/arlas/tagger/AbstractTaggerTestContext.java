@@ -54,7 +54,7 @@ public abstract class AbstractTaggerTestContext {
     }
     protected void setServerRestAssured() {
         String arlasHost = Optional.ofNullable(System.getenv("ARLAS_HOST")).orElse("localhost");
-        int arlasPort = Integer.parseInt(Optional.ofNullable(System.getenv("ARLAS_PORT")).orElse("9999"));
+        int arlasPort = Integer.parseInt(Optional.ofNullable(System.getenv("ARLAS_PORT")).orElse("19999"));
         RestAssured.baseURI = "http://" + arlasHost;
         RestAssured.port = arlasPort;
         RestAssured.basePath = "";

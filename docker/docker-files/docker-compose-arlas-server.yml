@@ -2,7 +2,7 @@ version: '3'
 
 services:
   arlas-server:
-    image: gisaia/arlas-server:${ARLAS_VERSION:-23.0.5}
+    image: gisaia/arlas-server:${ARLAS_VERSION:-24.0.1}
     container_name: arlas-server
     environment:
       - ARLAS_HOST="arlas-server"
