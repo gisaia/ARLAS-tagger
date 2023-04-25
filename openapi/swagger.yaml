@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: "(Un)Tag fields of ARLAS collections"
-  version: "24.0.1"
+  version: "24.0.2-SNAPSHOT"
   title: "ARLAS Tagger API"
   contact:
     name: "Gisaia"

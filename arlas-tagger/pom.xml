@@ -6,21 +6,21 @@
 
     <groupId>io.arlas</groupId>
     <artifactId>arlas-tagger</artifactId>
-    <version>24.0.1</version>
+    <version>24.0.2-SNAPSHOT</version>
     <name>ARLAS Tagger</name>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>io.arlas</groupId>
         <artifactId>arlas-tagger-parent</artifactId>
-        <version>24.0.1</version>
+        <version>24.0.2-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>io.arlas</groupId>
             <artifactId>arlas-tagger-rest</artifactId>
-            <version>24.0.1</version>
+            <version>24.0.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
