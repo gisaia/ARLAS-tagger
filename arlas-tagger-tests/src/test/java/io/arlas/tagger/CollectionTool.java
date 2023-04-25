@@ -32,6 +32,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
@@ -41,14 +42,10 @@ public class CollectionTool extends ArlasServerContext {
         public static String COLLECTION_NAME = "geodata";
         public static String COLLECTION_NAME_ACTOR = "geodata_actor";
 
-        public static void main(String[] args) throws ArlasException {
+        public static void main(String[] args) throws ArlasException, IOException {
             switch (args[0]) {
-                case "load":
-                    new CollectionTool().load();
-                    break;
-                case "delete":
-                    new CollectionTool().delete();
-                    break;
+                case "load" -> new CollectionTool().load();
+                case "delete" -> new CollectionTool().delete();
             }
             DataSetTool.close();
         }
@@ -79,7 +76,7 @@ public class CollectionTool extends ArlasServerContext {
             // PUT new collection
             given().contentType("application/json").body(params).when().put(getUrlPath()).then().statusCode(200);
             Filter filter = new Filter();
-            filter.f =Arrays.asList(new MultiValueFilter<>(new Expression("params.job", OperatorEnum.eq, DataSetTool.jobs[0])));
+            filter.f = List.of(new MultiValueFilter<>(new Expression("params.job", OperatorEnum.eq, DataSetTool.jobs[0])));
             params.filter =filter;
             given().contentType("application/json").body(params).when().put(arlasPath + "collections/" + COLLECTION_NAME_ACTOR).then().statusCode(200);
 

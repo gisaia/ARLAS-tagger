@@ -19,22 +19,20 @@
 
 package io.arlas.tagger.core;
 
+import co.elastic.clients.elasticsearch._types.Script;
+import co.elastic.clients.elasticsearch.core.UpdateByQueryRequest;
+import co.elastic.clients.elasticsearch.core.UpdateByQueryResponse;
 import io.arlas.commons.exceptions.ArlasException;
 import io.arlas.commons.exceptions.BadRequestException;
 import io.arlas.commons.exceptions.NotAllowedException;
 import io.arlas.commons.exceptions.NotImplementedException;
+import io.arlas.commons.utils.StringUtil;
 import io.arlas.server.core.impl.elastic.services.ElasticFluidSearch;
 import io.arlas.server.core.impl.elastic.utils.ElasticClient;
 import io.arlas.server.core.model.CollectionReference;
 import io.arlas.tagger.model.Tag;
 import io.arlas.tagger.model.enumerations.Action;
 import io.arlas.tagger.model.response.UpdateResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.common.Strings;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.index.reindex.UpdateByQueryRequest;
-import org.elasticsearch.script.Script;
-import org.elasticsearch.script.ScriptType;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -55,27 +53,29 @@ public class FilteredUpdater extends ElasticFluidSearch {
                                    Tag tag,
                                    int max_updates,
                                    int slices) throws IOException, ArlasException {
-        if(Strings.isNullOrEmpty(tag.path)){
+        if(StringUtil.isNullOrEmpty(tag.path)){
             throw new BadRequestException("The tag path must be provided and must not be empty");
         }
         // The collection can be tagged on that field only if the path belongs to collectionReference.params.taggableFields
-        if(Strings.isNullOrEmpty(collectionReference.params.taggableFields) || Arrays.stream(collectionReference.params.taggableFields.split(",")).noneMatch(f->tag.path.equals(f.trim()))){
+        if(StringUtil.isNullOrEmpty(collectionReference.params.taggableFields) || Arrays.stream(collectionReference.params.taggableFields.split(",")).noneMatch(f->tag.path.equals(f.trim()))){
             throw new NotAllowedException("The path " + tag.path + " is not part of the fields that can be tagged.");
         }
 
-        UpdateByQueryRequest request = new UpdateByQueryRequest(collectionReference.params.indexName)
-                .setQuery(this.getBoolQueryBuilder())
-                .setMaxDocs(Math.min(collectionReference.params.updateMaxHits,max_updates))
-                .setSlices(slices)
-                .setScript(this.getTagScript(tag, action));
-        BulkByScrollResponse response = this.client.getClient().updateByQuery(request, RequestOptions.DEFAULT);
+        UpdateByQueryRequest request = new UpdateByQueryRequest.Builder()
+                .index(collectionReference.params.indexName)
+                .query(this.getBoolQueryBuilder().build()._toQuery())
+                .maxDocs((long) Math.min(collectionReference.params.updateMaxHits, max_updates))
+                // bug in ES java client: auto slicing is not supported in 8.7.0
+//                .slice(s -> s.id("0").max(slices))
+                .script(this.getTagScript(tag, action))
+                .build();
+
+        UpdateByQueryResponse response = this.client.getClient().updateByQuery(request);
         UpdateResponse updateResponse = new UpdateResponse();
-        updateResponse.failures.addAll(response.getSearchFailures()
-                .stream().map(f -> new UpdateResponse.Failure(f.getIndex(), f.getReason().getMessage(), "SearchFailure")).toList());
-        updateResponse.failures.addAll(response.getBulkFailures()
-                .stream().map(f -> new UpdateResponse.Failure(f.getId(), f.getMessage(), "BulkFailure")).toList());
+        updateResponse.failures.addAll(response.failures()
+                .stream().map(f -> new UpdateResponse.Failure(f.id(), f.cause().reason(), "BulkFailure")).toList());
         updateResponse.failed = updateResponse.failures.size();
-        updateResponse.updated = response.getUpdated();
+        updateResponse.updated = response.updated() != null ? response.updated() : 0;
         updateResponse.action = action;
         return updateResponse;
     }
@@ -96,7 +96,7 @@ public class FilteredUpdater extends ElasticFluidSearch {
                         ctx._source.%s.add(o)
                     }
                     """.formatted(tag.path, tag.path, tag.path, tag.path);
-            if (tag.value == null || Strings.isNullOrEmpty(tag.value.toString())) {
+            if (tag.value == null || StringUtil.isNullOrEmpty(tag.value.toString())) {
                 throw new BadRequestException("The tag value must be provided and must not be empty");
             }
             if (tag.value instanceof Number) {
@@ -123,7 +123,7 @@ public class FilteredUpdater extends ElasticFluidSearch {
                 throw new NotImplementedException("Removal of a number tag is not yet supported");
                 //script+="\tctx._source."+tag.path+".remove("+tag.value+")\n";
             } else {
-                if (Strings.isNullOrEmpty(tag.value.toString())) {
+                if (StringUtil.isNullOrEmpty(tag.value.toString())) {
                     throw new BadRequestException("The tag value must be provided and must not be empty");
                 }
                 script += """
@@ -137,6 +137,11 @@ public class FilteredUpdater extends ElasticFluidSearch {
         if (action.equals(Action.REMOVEALL)) {
             script += "ctx._source.%s = null".formatted(tag.path);
         }
-        return new Script(ScriptType.INLINE,"painless", script, Collections.emptyMap());
+        String finalScript = script;
+        return new Script.Builder().inline(b -> b
+                .lang("painless")
+                .source(finalScript)
+                .params(Collections.emptyMap()))
+                .build();
     }
 }
