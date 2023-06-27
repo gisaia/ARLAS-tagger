@@ -23,9 +23,9 @@
         <surefire.version>2.22.2</surefire.version>
         <log4j.version>2.19.0</log4j.version>
 
-        <arlas-server.version>24.0.1</arlas-server.version>
+        <arlas-server.version>24.0.2</arlas-server.version>
         <!-- KAFKA-->
-        <kafka.version>3.4.0</kafka.version>
+        <kafka.version>3.5.0</kafka.version>
 
         <!-- DEV TOOLS -->
         <cyclops.version>10.4.1</cyclops.version>
