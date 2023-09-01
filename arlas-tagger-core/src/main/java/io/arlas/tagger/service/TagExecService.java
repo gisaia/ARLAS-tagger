@@ -73,6 +73,7 @@ public class TagExecService extends KafkaConsumerRunner {
                 Search searchHeader = new Search();
                 searchHeader.filter = ParamsParser.getFilter(collectionReference, tagRequest.partitionFilter);
                 MixedRequest request = new MixedRequest();
+                request.columnFilter = Optional.empty();
                 request.basicRequest = tagRequest.search;
                 request.headerRequest = searchHeader;
                 UpdateResponse opUpdateResponse = null;
