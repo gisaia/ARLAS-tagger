@@ -8,19 +8,19 @@
     <artifactId>arlas-tagger-rest</artifactId>
     <name>ARLAS Tagger rest</name>
     <packaging>jar</packaging>
-    <version>24.0.3</version>
+    <version>24.0.4-SNAPSHOT</version>
 
     <parent>
         <artifactId>arlas-tagger-parent</artifactId>
         <groupId>io.arlas</groupId>
-        <version>24.0.3</version>
+        <version>24.0.4-SNAPSHOT</version>
     </parent>
     
     <dependencies>
         <dependency>
             <groupId>io.arlas</groupId>
             <artifactId>arlas-tagger-core</artifactId>
-            <version>24.0.3</version>
+            <version>24.0.4-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
