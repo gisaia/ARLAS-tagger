@@ -23,7 +23,7 @@
         <surefire.version>2.22.2</surefire.version>
         <log4j.version>2.19.0</log4j.version>
 
-        <arlas-server.version>24.1.0</arlas-server.version>
+        <arlas-server.version>24.1.1</arlas-server.version>
         <!-- KAFKA-->
         <kafka.version>3.6.1</kafka.version>
 
