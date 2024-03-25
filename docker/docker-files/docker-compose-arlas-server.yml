@@ -2,7 +2,7 @@ version: '3'
 
 services:
   arlas-server:
-    image: gisaia/arlas-server:${ARLAS_VERSION:-24.0.1}
+    image: gisaia/arlas-server:${ARLAS_VERSION:-24.1.2}
     container_name: arlas-server
     environment:
       - ARLAS_HOST="arlas-server"
@@ -16,4 +16,9 @@ services:
       - ARLAS_SERVICE_EXPLORE_ENABLE="${ARLAS_SERVICE_EXPLORE_ENABLE:-true}"
     ports:
       - 19999:9999
+    healthcheck:
+      test: ["CMD","java","HttpHealthcheck.java","http://localhost:9999/admin/healthcheck"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
 
