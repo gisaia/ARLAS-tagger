@@ -4,18 +4,21 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: "zookeeper"
+    restart: always
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - 22181:2181
+      - 22181:2181 # !EXPOSE!
+
   kafka:
     image: confluentinc/cp-kafka:latest
     container_name: "kafka"
+    restart: always
     depends_on:
       - zookeeper
     ports:
-      - 29092:9092
+      - 29092:9092 # !EXPOSE!
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
