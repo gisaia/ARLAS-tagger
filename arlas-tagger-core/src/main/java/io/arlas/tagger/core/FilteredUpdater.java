@@ -66,6 +66,7 @@ public class FilteredUpdater extends ElasticFluidSearch {
                 .query(this.getBoolQueryBuilder().build()._toQuery())
                 .maxDocs((long) Math.min(collectionReference.params.updateMaxHits, max_updates))
                 // bug in ES java client: auto slicing is not supported in 8.7.0
+                // https://github.com/elastic/elasticsearch-java/issues/560
 //                .slice(s -> s.id("0").max(slices))
                 .script(this.getTagScript(tag, action))
                 .build();

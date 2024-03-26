@@ -1,8 +1,8 @@
 #!/bin/bash
 set -o errexit -o pipefail
 
-export ELASTIC_VERSION="8.7.0"
-export ARLAS_VERSION="24.0.1"
+export ELASTIC_VERSION="8.11.4"
+export ARLAS_VERSION="25.0.0-beta.2"
 
 function clean_exit {
   ARG=$?

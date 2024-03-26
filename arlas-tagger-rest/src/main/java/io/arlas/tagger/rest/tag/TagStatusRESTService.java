@@ -26,14 +26,42 @@ import io.arlas.tagger.model.TaggingStatus;
 import io.arlas.tagger.model.request.TagRefRequest;
 import io.arlas.tagger.model.response.UpdateResponse;
 import io.arlas.tagger.service.TagExploreService;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.License;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.servers.Server;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @Path("/status")
-@Api(value = "/status")
+@Tag(name="status", description="Tagger status API")
+@OpenAPIDefinition(
+        info = @Info(
+                title = "ARLAS Tagger APIs",
+                description = "(Un)Tag fields of ARLAS collections",
+                license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0.html"),
+                contact = @Contact(email = "contact@gisaia.com", name = "Gisaia", url = "http://www.gisaia.com/"),
+                version = "API_VERSION"),
+        externalDocs = @ExternalDocumentation(
+                description = "API documentation",
+                url="https://docs.arlas.io/arlas-api/"),
+        servers = {
+                @Server(url = "/arlas_tagger", description = "default server")
+        }
+)
+
 public class TagStatusRESTService {
     public static final String UTF8JSON = MediaType.APPLICATION_JSON + ";charset=utf-8";
     private final TaggingStatus status;
@@ -49,27 +77,37 @@ public class TagStatusRESTService {
     @GET
     @Produces(UTF8JSON)
     @Consumes(UTF8JSON)
-    @ApiOperation(value = "TagStatus", produces = UTF8JSON, notes = Documentation.TAGSTATUS_OPERATION, consumes = UTF8JSON, response = UpdateResponse.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful operation", response = UpdateResponse.class),
-            @ApiResponse(code = 500, message = "Arlas Server Error.", response = Error.class), @ApiResponse(code = 400, message = "Bad request.", response = Error.class) })
+    @Operation(
+            summary = "TagStatus",
+            description = Documentation.TAGSTATUS_OPERATION
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation",
+                    content = @Content(schema = @Schema(implementation = UpdateResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Arlas Server Error.",
+                    content = @Content(schema = @Schema(implementation = Error.class))),
+            @ApiResponse(responseCode = "400", description = "Bad request.",
+                    content = @Content(schema = @Schema(implementation = Error.class)))
+    })
     public Response taggingGet(
             // --------------------------------------------------------
             // ----------------------- PATH     -----------------------
             // --------------------------------------------------------
-            @ApiParam(
+            @Parameter(
                     name = "collection",
-                    value = "collection",
+                    description = "collection",
                     required = true)
             @PathParam(value = "collection") String collection,
 
-            @ApiParam(name = "id", value = Documentation.TAGSTATUS_PARAM_ID,
+            @Parameter(name = "id", description = Documentation.TAGSTATUS_PARAM_ID,
                     required = true)
             @PathParam(value = "id") String id,
             // --------------------------------------------------------
             // ----------------------- FORM     -----------------------
             // --------------------------------------------------------
-            @ApiParam(name ="pretty", value=Documentation.FORM_PRETTY,
-                    defaultValue = "false")
+            @Parameter(name ="pretty",
+                    description=Documentation.FORM_PRETTY,
+                    schema = @Schema(defaultValue = "false"))
             @QueryParam(value="pretty") Boolean pretty
     ) {
         return Response.ok(status.getStatus(id).orElseGet(UpdateResponse::new)).build();
@@ -80,24 +118,33 @@ public class TagStatusRESTService {
     @GET
     @Produces(UTF8JSON)
     @Consumes(UTF8JSON)
-    @ApiOperation(value = "TagList", produces = UTF8JSON, notes = Documentation.TAGLIST_OPERATION, consumes = UTF8JSON, response = TagRefRequest.class, responseContainer = "List")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful operation", response = TagRefRequest.class, responseContainer = "List"),
-            @ApiResponse(code = 500, message = "Arlas Server Error.", response = Error.class), @ApiResponse(code = 400, message = "Bad request.", response = Error.class) })
+    @Operation(
+            summary = "TagList",
+            description = Documentation.TAGLIST_OPERATION
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = TagRefRequest.class)))),
+            @ApiResponse(responseCode = "500", description = "Arlas Server Error.",
+                    content = @Content(schema = @Schema(implementation = Error.class))),
+            @ApiResponse(responseCode = "400", description = "Bad request.",
+                    content = @Content(schema = @Schema(implementation = Error.class)))
+    })
     public Response taggingGetList(
             // --------------------------------------------------------
             // ----------------------- PATH     -----------------------
             // --------------------------------------------------------
-            @ApiParam(
+            @Parameter(
                     name = "collection",
-                    value = "collection",
+                    description = "collection",
                     required = true)
             @PathParam(value = "collection") String collection,
 
             // --------------------------------------------------------
             // ----------------------- FORM     -----------------------
             // --------------------------------------------------------
-            @ApiParam(name ="pretty", value=Documentation.FORM_PRETTY,
-                    defaultValue = "false")
+            @Parameter(name ="pretty", description=Documentation.FORM_PRETTY,
+                    schema = @Schema(defaultValue = "false"))
             @QueryParam(value="pretty") Boolean pretty
     ) {
 

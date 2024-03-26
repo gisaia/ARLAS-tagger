@@ -38,22 +38,22 @@ import io.arlas.tagger.rest.tag.TagStatusRESTService;
 import io.arlas.tagger.service.ManagedKafkaConsumers;
 import io.arlas.tagger.service.TagExploreService;
 import io.arlas.tagger.service.UpdateServices;
-import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
+import io.dropwizard.core.Application;
+import io.dropwizard.core.setup.Bootstrap;
+import io.dropwizard.core.setup.Environment;
 import io.federecio.dropwizard.swagger.SwaggerBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.FilterRegistration;
+import jakarta.ws.rs.core.HttpHeaders;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-import javax.ws.rs.core.HttpHeaders;
 import java.util.EnumSet;
 
 public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
@@ -80,6 +80,7 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
     @Override
     public void run(ArlasTaggerConfiguration configuration, Environment environment) throws Exception {
         configuration.check();
+        LOGGER.info("Checked configuration: " + environment.getObjectMapper().writer().writeValueAsString(configuration));
 
         CacheFactory cacheFactory = (CacheFactory) Class
                 .forName(configuration.arlasCacheFactoryClass)
