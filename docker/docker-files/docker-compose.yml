@@ -7,6 +7,7 @@ services:
       dockerfile: ${DOCKERFILE:-docker/docker-files/Dockerfile-package-only}
     image: gisaia/arlas-tagger:${ARLAS_TAGGER_VERSION:-latest}
     container_name: arlas-tagger
+    restart: always
     environment:
       # ES
       - ARLAS_ELASTIC_NODES=${ARLAS_ELASTIC_NODES:-elasticsearch:9200}
@@ -45,7 +46,7 @@ services:
       - ARLAS_CACHE_FACTORY_CLASS="${ARLAS_CACHE_FACTORY_CLASS:-io.arlas.tagger.impl.HazelcastCacheFactory}"
       - ARLAS_CACHE_TIMEOUT="${ARLAS_CACHE_TIMEOUT:-5}"
     ports:
-      - 19998:9998
+      - 19998:9998 # !EXPOSE!
     volumes:
       - ${ARLAS_AUTH_LOCAL_CERT_FILE:-/tmp}:${ARLAS_AUTH_CERT_FILE:-/opt/app/arlas.pem}:ro
     healthcheck:
