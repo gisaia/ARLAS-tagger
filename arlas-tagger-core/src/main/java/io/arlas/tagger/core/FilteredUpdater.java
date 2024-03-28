@@ -20,6 +20,8 @@
 package io.arlas.tagger.core;
 
 import co.elastic.clients.elasticsearch._types.Script;
+import co.elastic.clients.elasticsearch._types.Slices;
+import co.elastic.clients.elasticsearch._types.SlicesCalculation;
 import co.elastic.clients.elasticsearch.core.UpdateByQueryRequest;
 import co.elastic.clients.elasticsearch.core.UpdateByQueryResponse;
 import io.arlas.commons.exceptions.ArlasException;
@@ -65,8 +67,9 @@ public class FilteredUpdater extends ElasticFluidSearch {
                 .index(collectionReference.params.indexName)
                 .query(this.getBoolQueryBuilder().build()._toQuery())
                 .maxDocs((long) Math.min(collectionReference.params.updateMaxHits, max_updates))
-                // bug in ES java client: auto slicing is not supported in 8.7.0
-//                .slice(s -> s.id("0").max(slices))
+                .slices(slices == 0 ?
+                        new Slices.Builder().computed(SlicesCalculation.Auto).build() :
+                        new Slices.Builder().value(slices).build())
                 .script(this.getTagScript(tag, action))
                 .build();
 
