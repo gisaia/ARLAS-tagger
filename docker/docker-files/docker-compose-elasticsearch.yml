@@ -2,7 +2,7 @@ version: '3'
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION:-8.7.0}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION:-8.13.3}
     container_name: elasticsearch
     restart: always
     environment:
@@ -19,6 +19,6 @@ services:
         hard: -1
     volumes:
 #      - /var/lib/elasticsearch:/usr/share/elasticsearch/data
-      - ${ELASTIC_DATADIR}:/usr/share/elasticsearch/data
+      - ${ELASTIC_DATADIR:-/tmp}:/usr/share/elasticsearch/data
     ports:
       - 9200:9200 # !EXPOSE!

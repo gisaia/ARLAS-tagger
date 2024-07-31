@@ -61,7 +61,7 @@ if [ -z "${ELASTIC_DATADIR}" ]; then
   echo "An external ES is used"
 else
   echo "Starting ES"
-  docker-compose -f ${DOCKER_COMPOSE_ES} --project-name arlas up -d
+  docker compose -f ${DOCKER_COMPOSE_ES} --project-name arlas up -d
   echo "Waiting for ES readiness"
   docker run --net arlas_default --rm busybox sh -c 'i=1; until nc -w 2 elasticsearch 9200; do if [ $i -lt 30 ]; then sleep 1; else break; fi; i=$(($i + 1)); done'
   echo "ES is ready"
@@ -71,7 +71,7 @@ if [ -z "${KAFKA_DATADIR}" ]; then
   echo "An external Kafka is used"
 else
   echo "Starting Kafka"
-  docker-compose -f ${DOCKER_COMPOSE_KAFKA} --project-name arlas up -d
+  docker compose -f ${DOCKER_COMPOSE_KAFKA} --project-name arlas up -d
   echo "Waiting for Kafka readiness"
   docker run --net arlas_default --rm busybox sh -c 'i=1; until nc -w 2 kafka 9092; do if [ $i -lt 30 ]; then sleep 1; else break; fi; i=$(($i + 1)); done'
   echo "Kafka is ready"
@@ -81,13 +81,13 @@ if [ -z "${SERVER_ENABLED}" ]; then
   echo "An external ARLAS Server is used"
 else
   echo "Starting ARLAS Server"
-  docker-compose -f ${DOCKER_COMPOSE_ARLAS_SERVER} --project-name arlas up -d
+  docker compose -f ${DOCKER_COMPOSE_ARLAS_SERVER} --project-name arlas up -d
   echo "Waiting for ARLAS Server readiness"
   docker run --net arlas_default --rm busybox sh -c 'i=1; until nc -w 2 arlas-server 9999; do if [ $i -lt 30 ]; then sleep 1; else break; fi; i=$(($i + 1)); done'
   echo "ARLAS Server is ready"
 fi
 
-docker-compose -f ${DOCKER_COMPOSE_TAGGER} --project-name arlas up -d ${BUILD_OPTS}
+docker compose -f ${DOCKER_COMPOSE_TAGGER} --project-name arlas up -d ${BUILD_OPTS}
 
 #docker logs -f arlas-tagger &
 

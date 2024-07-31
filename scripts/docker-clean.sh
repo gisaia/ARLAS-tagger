@@ -15,4 +15,4 @@ function clean_exit {
 trap clean_exit EXIT
 
 echo "===> stop arlas-tagger stack"
-docker-compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ARLAS_SERVER} -f ${DOCKER_COMPOSE_ES} -f ${DOCKER_COMPOSE_KAFKA} --project-name arlas down -v
+docker compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ARLAS_SERVER} -f ${DOCKER_COMPOSE_ES} -f ${DOCKER_COMPOSE_KAFKA} --project-name arlas down -v

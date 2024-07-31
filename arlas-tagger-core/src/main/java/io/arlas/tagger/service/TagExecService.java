@@ -35,7 +35,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.NotFoundException;
+import jakarta.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -71,7 +71,7 @@ public class TagExecService extends KafkaConsumerRunner {
                                 .getCollectionReference(tagRequest.collection, Optional.empty()))
                         .orElseThrow(() -> new NotFoundException(tagRequest.collection));
                 Search searchHeader = new Search();
-                searchHeader.filter = ParamsParser.getFilter(collectionReference, tagRequest.partitionFilter);
+                searchHeader.partitionFilter = ParamsParser.getPartitionFilter(collectionReference, tagRequest.partitionFilter);
                 MixedRequest request = new MixedRequest();
                 request.columnFilter = Optional.empty();
                 request.basicRequest = tagRequest.search;

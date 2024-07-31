@@ -11,18 +11,18 @@ The ARLAS Tagger offers 3 APIs:
 
 The monitoring API provides some information about the health and the performances of the ARLAS Tagger that can be of interest:
 
-| URL | Description |
-| --- | --- |
-| http://.../admin/metrics?pretty=true  |  Metrics about the performances of the ARLAS Tagger. Metrics about the `write` and `status` APIs are prefixed with `io.arlas.tagger`|
-| http://.../admin/ping | Returns pong  |
-| http://.../admin/threads | List of running threads |
-| http://.../admin/healthcheck?pretty=true  |  Whether the service is healthy or not |
+| URL                                      | Description                                                                                                                         |
+|------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
+| http://.../admin/metrics?pretty=true     | Metrics about the performances of the ARLAS Tagger. Metrics about the `write` and `status` APIs are prefixed with `io.arlas.tagger` |
+| http://.../admin/ping                    | Returns pong                                                                                                                        |
+| http://.../admin/threads                 | List of running threads                                                                                                             |
+| http://.../admin/healthcheck?pretty=true | Whether the service is healthy or not                                                                                               |
 
 
 ## Swagger
 
-| URL | Description |
-| --- | --- |
-| http://.../arlas/swagger  | The web application for testing the API  |
-| http://.../arlas/swagger.yaml  | The swagger definition of the collections/exploration API with YAML format |
-| http://.../arlas/swagger.json  | The swagger definition of the collections/exploration API with JSON format |
+| URL                                  | Description                                                                |
+|--------------------------------------|----------------------------------------------------------------------------|
+| http://.../arlas_tagger/swagger      | The web application for testing the API                                    |
+| http://.../arlas_tagger/openapi.yaml | The swagger definition of the collections/exploration API with YAML format |
+| http://.../arlas_tagger/openapi.json | The swagger definition of the collections/exploration API with JSON format |

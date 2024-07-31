@@ -139,10 +139,10 @@ docker run -ti -d \
 
 ### CACHE
 
-| Environment variable                  | ARLAS Server configuration variable | Default                                    | Description                            |
-|---------------------------------------|-------------------------------------|--------------------------------------------|----------------------------------------|
-| ARLAS_PERSISTENCE_CACHE_FACTORY_CLASS | arlas_cache_factory_class           | io.arlas.tagger.impl.HazelcastCacheFactory | Factory class to get the cache manager |
-| ARLAS_CACHE_TIMEOUT                   | arlas-cache-timeout                 | 60                                         | TTL in seconds of items in the cache   |
+| Environment variable                  | ARLAS Server configuration variable | Default                               | Description                            |
+|---------------------------------------|-------------------------------------|---------------------------------------|----------------------------------------|
+| ARLAS_PERSISTENCE_CACHE_FACTORY_CLASS | arlas_cache_factory_class           | io.arlas.commons.cache.NoCacheFactory | Factory class to get the cache manager |
+| ARLAS_CACHE_TIMEOUT                   | arlas-cache-timeout                 | 60                                    | TTL in seconds of items in the cache   |
 
 ### JAVA
 
