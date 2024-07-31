@@ -32,24 +32,43 @@ import io.arlas.tagger.model.request.TagRequest;
 import io.arlas.tagger.model.response.UpdateResponse;
 import io.arlas.tagger.service.ManagedKafkaConsumers;
 import io.arlas.tagger.util.TagRequestFieldsExtractor;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.License;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.servers.Server;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.Optional;
 
 import static io.arlas.commons.rest.utils.ServerConstants.*;
 
 @Path("/write")
-@Api(value = "/write")
-@SwaggerDefinition(
-        info = @Info(contact = @Contact(email = "contact@gisaia.com", name = "Gisaia", url = "http://www.gisaia.com/"),
-                title = "ARLAS Tagger API",
+@Tag(name="write", description="Tagger API")
+@OpenAPIDefinition(
+        info = @Info(
+                title = "ARLAS Tagger APIs",
                 description = "(Un)Tag fields of ARLAS collections",
                 license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0.html"),
+                contact = @Contact(email = "contact@gisaia.com", name = "Gisaia", url = "http://www.gisaia.com/"),
                 version = "API_VERSION"),
-        schemes = { SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS })
+        externalDocs = @ExternalDocumentation(
+                description = "API documentation",
+                url="https://docs.arlas.io/arlas-api/"),
+        servers = {
+                @Server(url = "/arlas_tagger", description = "default server")
+        }
+)
 
 public class TagRESTService {
     public static final String UTF8JSON = MediaType.APPLICATION_JSON + ";charset=utf-8";
@@ -67,16 +86,25 @@ public class TagRESTService {
     @POST
     @Produces(UTF8JSON)
     @Consumes(UTF8JSON)
-    @ApiOperation(value = "Tag", produces = UTF8JSON, notes = Documentation.TAG_OPERATION, consumes = UTF8JSON, response = UpdateResponse.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful operation", response = UpdateResponse.class),
-            @ApiResponse(code = 500, message = "Arlas Server Error.", response = Error.class), @ApiResponse(code = 400, message = "Bad request.", response = Error.class) })
+    @Operation(
+            summary = "Tag",
+            description = Documentation.TAG_OPERATION
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation",
+                    content = @Content(schema = @Schema(implementation = UpdateResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Arlas Server Error.",
+                    content = @Content(schema = @Schema(implementation = Error.class))),
+            @ApiResponse(responseCode = "400", description = "Bad request.",
+                    content = @Content(schema = @Schema(implementation = Error.class)))
+    })
     public Response tagPost(
             // --------------------------------------------------------
             // ----------------------- PATH     -----------------------
             // --------------------------------------------------------
-            @ApiParam(
+            @Parameter(
                     name = "collection",
-                    value = "collection",
+                    description = "collection",
                     required = true)
             @PathParam(value = "collection") String collection,
             // --------------------------------------------------------
@@ -88,20 +116,20 @@ public class TagRESTService {
             // -----------------------  FILTER  -----------------------
             // --------------------------------------------------------
 
-            @ApiParam(hidden = true)
-            @HeaderParam(value= PARTITION_FILTER) String partitionFilter,
+            @Parameter(hidden = true)
+            @HeaderParam(value = PARTITION_FILTER) String partitionFilter,
 
-            @ApiParam(hidden = true)
+            @Parameter(hidden = true)
             @HeaderParam(value = COLUMN_FILTER) String columnFilter,
 
-            @ApiParam(hidden = true)
+            @Parameter(hidden = true)
             @HeaderParam(value = ARLAS_ORGANISATION) String organisations,
 
             // --------------------------------------------------------
             // ----------------------- FORM     -----------------------
             // --------------------------------------------------------
-            @ApiParam(name ="pretty", value=Documentation.FORM_PRETTY,
-                    defaultValue = "false")
+            @Parameter(name ="pretty", description=Documentation.FORM_PRETTY,
+                    schema = @Schema(defaultValue = "false"))
             @QueryParam(value="pretty") Boolean pretty
     ) throws ArlasException {
         assertColumnFilter(collection, tagRequest, Optional.ofNullable(columnFilter), Optional.ofNullable(organisations));
@@ -118,30 +146,38 @@ public class TagRESTService {
     @POST
     @Produces(UTF8JSON)
     @Consumes(UTF8JSON)
-    @ApiOperation(value = "TagReplay", produces = UTF8JSON, notes = Documentation.TAG_REPLAY, consumes = UTF8JSON, response = Long.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful operation", response = Long.class),
-            @ApiResponse(code = 500, message = "Arlas Server Error.", response = Error.class), @ApiResponse(code = 400, message = "Bad request.", response = Error.class) })
+    @Operation(
+            summary = "TagReplay",
+            description = Documentation.TAG_REPLAY
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation",
+                    content = @Content(schema = @Schema(implementation = Long.class))),
+            @ApiResponse(responseCode = "500", description = "Arlas Server Error.",
+                    content = @Content(schema = @Schema(implementation = Error.class))),
+            @ApiResponse(responseCode = "400", description = "Bad request.",
+                    content = @Content(schema = @Schema(implementation = Error.class))) })
     public Response tagReplay(
             // --------------------------------------------------------
             // ----------------------- PATH     -----------------------
             // --------------------------------------------------------
-            @ApiParam(
+            @Parameter(
                     name = "collection",
-                    value = "collection",
+                    description = "collection",
                     required = true)
             @PathParam(value = "collection") String collection,
             // --------------------------------------------------------
             // ----------------------- SEARCH   -----------------------
             // --------------------------------------------------------
-            @ApiParam(name = "offset", value = Documentation.TAG_REPLAY_PARAM_OFFSET,
+            @Parameter(name = "offset", description = Documentation.TAG_REPLAY_PARAM_OFFSET,
                     required = true)
             @QueryParam(value = "offset") Long offset,
 
             // --------------------------------------------------------
             // ----------------------- FORM     -----------------------
             // --------------------------------------------------------
-            @ApiParam(name ="pretty", value=Documentation.FORM_PRETTY,
-                    defaultValue = "false")
+            @Parameter(name ="pretty", description=Documentation.FORM_PRETTY,
+                    schema = @Schema(defaultValue = "false"))
             @QueryParam(value="pretty") Boolean pretty
     ) {
 
@@ -154,16 +190,21 @@ public class TagRESTService {
     @POST
     @Produces(UTF8JSON)
     @Consumes(UTF8JSON)
-    @ApiOperation(value = "Untag", produces = UTF8JSON, notes = Documentation.UNTAG_OPERATION, consumes = UTF8JSON, response = UpdateResponse.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful operation", response = UpdateResponse.class),
-            @ApiResponse(code = 500, message = "Arlas Server Error.", response = Error.class), @ApiResponse(code = 400, message = "Bad request.", response = Error.class) })
+    @Operation(summary = "Untag", description = Documentation.UNTAG_OPERATION)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation",
+                    content = @Content(schema = @Schema(implementation = UpdateResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Arlas Server Error.",
+                    content = @Content(schema = @Schema(implementation = Error.class))),
+            @ApiResponse(responseCode = "400", description = "Bad request.",
+                    content = @Content(schema = @Schema(implementation = Error.class))) })
     public Response untagPost(
             // --------------------------------------------------------
             // ----------------------- PATH     -----------------------
             // --------------------------------------------------------
-            @ApiParam(
+            @Parameter(
                     name = "collection",
-                    value = "collection",
+                    description = "collection",
                     required = true)
             @PathParam(value = "collection") String collection,
             // --------------------------------------------------------
@@ -175,20 +216,20 @@ public class TagRESTService {
             // -----------------------  FILTER  -----------------------
             // --------------------------------------------------------
 
-            @ApiParam(hidden = true)
-            @HeaderParam(value=PARTITION_FILTER) String partitionFilter,
+            @Parameter(hidden = true)
+            @HeaderParam(value = PARTITION_FILTER) String partitionFilter,
 
-            @ApiParam(hidden = true)
+            @Parameter(hidden = true)
             @HeaderParam(value = COLUMN_FILTER) String columnFilter,
 
-            @ApiParam(hidden = true)
+            @Parameter(hidden = true)
             @HeaderParam(value = ARLAS_ORGANISATION) String organisations,
 
             // --------------------------------------------------------
             // ----------------------- FORM     -----------------------
             // --------------------------------------------------------
-            @ApiParam(name ="pretty", value=Documentation.FORM_PRETTY,
-                    defaultValue = "false")
+            @Parameter(name ="pretty", description=Documentation.FORM_PRETTY,
+                    schema = @Schema(defaultValue = "false"))
             @QueryParam(value="pretty") Boolean pretty
     ) throws ArlasException {
         assertColumnFilter(collection, tagRequest, Optional.ofNullable(columnFilter), Optional.ofNullable(organisations));

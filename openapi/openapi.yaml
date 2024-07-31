@@ -1,0 +1,479 @@
+openapi: 3.0.1
+info:
+  title: ARLAS Tagger APIs
+  description: (Un)Tag fields of ARLAS collections
+  contact:
+    name: Gisaia
+    url: http://www.gisaia.com/
+    email: contact@gisaia.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: API_VERSION
+externalDocs:
+  description: API documentation
+  url: https://docs.arlas.io/arlas-api/
+servers:
+- url: /arlas_tagger
+  description: default server
+tags:
+- name: write
+  description: Tagger API
+- name: status
+  description: Tagger status API
+paths:
+  /write/{collection}/_tag:
+    post:
+      tags:
+      - write
+      summary: Tag
+      description: "Search and tag the elements found in the collection, given the\
+        \ filters"
+      operationId: tagPost
+      parameters:
+      - name: collection
+        in: path
+        description: collection
+        required: true
+        schema:
+          type: string
+      - name: pretty
+        in: query
+        description: Pretty print
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json;charset=utf-8:
+            schema:
+              $ref: '#/components/schemas/TagRequest'
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/UpdateResponse'
+        "500":
+          description: Arlas Server Error.
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "400":
+          description: Bad request.
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /write/{collection}/_tagreplay:
+    post:
+      tags:
+      - write
+      summary: TagReplay
+      description: Scan the tagref topic and replay tagging operations from the given
+        offset
+      operationId: tagReplay
+      parameters:
+      - name: collection
+        in: path
+        description: collection
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: The offset from which the replay must be done.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: pretty
+        in: query
+        description: Pretty print
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json;charset=utf-8:
+              schema:
+                type: integer
+                format: int64
+        "500":
+          description: Arlas Server Error.
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "400":
+          description: Bad request.
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /write/{collection}/_untag:
+    post:
+      tags:
+      - write
+      summary: Untag
+      description: "Search and untag the elements found in the collection, given the\
+        \ filters"
+      operationId: untagPost
+      parameters:
+      - name: collection
+        in: path
+        description: collection
+        required: true
+        schema:
+          type: string
+      - name: pretty
+        in: query
+        description: Pretty print
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json;charset=utf-8:
+            schema:
+              $ref: '#/components/schemas/TagRequest'
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/UpdateResponse'
+        "500":
+          description: Arlas Server Error.
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "400":
+          description: Bad request.
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /status/{collection}/_tag/{id}:
+    get:
+      tags:
+      - status
+      summary: TagStatus
+      description: "Get the status of the (un)tagging operation, given the id of a\
+        \ previously requested operation"
+      operationId: taggingGet
+      parameters:
+      - name: collection
+        in: path
+        description: collection
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The id of a previously requested (un)tag operation.
+        required: true
+        schema:
+          type: string
+      - name: pretty
+        in: query
+        description: Pretty print
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/UpdateResponse'
+        "500":
+          description: Arlas Server Error.
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "400":
+          description: Bad request.
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /status/{collection}/_taglist:
+    get:
+      tags:
+      - status
+      summary: TagList
+      description: Get the list of previously submitted tag requests
+      operationId: taggingGetList
+      parameters:
+      - name: collection
+        in: path
+        description: collection
+        required: true
+        schema:
+          type: string
+      - name: pretty
+        in: query
+        description: Pretty print
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json;charset=utf-8:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TagRefRequest'
+        "500":
+          description: Arlas Server Error.
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "400":
+          description: Bad request.
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Failure:
+      type: object
+      properties:
+        id:
+          type: string
+        message:
+          type: string
+        type:
+          type: string
+    UpdateResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        action:
+          type: string
+          enum:
+          - ADD
+          - REMOVE
+          - REMOVEALL
+        failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/Failure'
+        failed:
+          type: integer
+          format: int64
+        updated:
+          type: integer
+          format: int64
+        progress:
+          type: number
+          format: float
+        nbRequest:
+          type: integer
+          format: int64
+        propagated:
+          type: integer
+          format: int64
+        startTime:
+          type: integer
+          format: int64
+        endTime:
+          type: integer
+          format: int64
+        processingTimeMs:
+          type: integer
+          format: int64
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        message:
+          type: string
+        error:
+          type: string
+    Expression:
+      type: object
+      properties:
+        field:
+          type: string
+        op:
+          type: string
+          enum:
+          - eq
+          - gte
+          - gt
+          - lte
+          - lt
+          - like
+          - ne
+          - range
+          - within
+          - notwithin
+          - intersects
+          - notintersects
+        value:
+          type: string
+    Filter:
+      type: object
+      properties:
+        f:
+          type: array
+          items:
+            type: array
+            properties:
+              empty:
+                type: boolean
+            items:
+              $ref: '#/components/schemas/Expression'
+        q:
+          type: array
+          items:
+            type: array
+            properties:
+              empty:
+                type: boolean
+            items:
+              type: string
+        dateformat:
+          type: string
+        righthand:
+          type: boolean
+    Form:
+      type: object
+      properties:
+        pretty:
+          type: boolean
+        flat:
+          type: boolean
+    MultiValueFilterExpression:
+      type: array
+      properties:
+        empty:
+          type: boolean
+      items:
+        $ref: '#/components/schemas/Expression'
+    MultiValueFilterString:
+      type: array
+      properties:
+        empty:
+          type: boolean
+      items:
+        type: string
+    Page:
+      type: object
+      properties:
+        size:
+          type: integer
+          format: int32
+        from:
+          type: integer
+          format: int32
+        sort:
+          type: string
+        after:
+          type: string
+        before:
+          type: string
+    Projection:
+      type: object
+      properties:
+        includes:
+          type: string
+        excludes:
+          type: string
+    Propagation:
+      type: object
+      properties:
+        field:
+          type: string
+        filter:
+          $ref: '#/components/schemas/Filter'
+    Search:
+      type: object
+      properties:
+        filter:
+          $ref: '#/components/schemas/Filter'
+        form:
+          $ref: '#/components/schemas/Form'
+        page:
+          $ref: '#/components/schemas/Page'
+        projection:
+          $ref: '#/components/schemas/Projection'
+        returned_geometries:
+          type: string
+    Tag:
+      type: object
+      properties:
+        path:
+          type: string
+        value:
+          type: object
+    TagRequest:
+      type: object
+      properties:
+        filter:
+          $ref: '#/components/schemas/Filter'
+        form:
+          $ref: '#/components/schemas/Form'
+        search:
+          $ref: '#/components/schemas/Search'
+        tag:
+          $ref: '#/components/schemas/Tag'
+        propagation:
+          $ref: '#/components/schemas/Propagation'
+        label:
+          type: string
+    TagRefRequest:
+      type: object
+      properties:
+        filter:
+          $ref: '#/components/schemas/Filter'
+        form:
+          $ref: '#/components/schemas/Form'
+        search:
+          $ref: '#/components/schemas/Search'
+        tag:
+          $ref: '#/components/schemas/Tag'
+        propagation:
+          $ref: '#/components/schemas/Propagation'
+        label:
+          type: string
+        id:
+          type: string
+        action:
+          type: string
+          enum:
+          - ADD
+          - REMOVE
+          - REMOVEALL
+        collection:
+          type: string
+        partitionFilter:
+          type: string
+        propagated:
+          type: integer
+          format: int64
+        creationTime:
+          type: integer
+          format: int64
+        offset:
+          type: integer
+          format: int64

@@ -46,9 +46,12 @@ logging:
 ########################################################
 swagger: # Configuration of SWAGGER for generating documentation and APIs
   resourcePackage: io.arlas.tagger.rest # The java package to process for extracting the APIs
-  # temporary patch for bug https://github.com/smoketurner/dropwizard-swagger/issues/206
-  # to be removed when version of dropwizard.swagger.version is upgraded
-  customJavascript: ${ARLAS_TAGGER_CUSTOM_JS:-/arlas/swagger-static/custom-request-interceptor.js}
+  # not supported in 3.0.0-1 but PR existing and merged
+  servers:
+  - url: ${ARLAS_TAGGER_PREFIX:-/arlas_tagger}
+    description: "Backend server from client browser"
+  - url: http://arlas-tagger{ARLAS_TAGGER_PREFIX:-/arlas_tagger}
+    description: "Backend server from docker network"
 
 kafka_configuration:
   kafka_commit_max_retries: ${KAFKA_COMMIT_MAX_RETRIES:-3}
@@ -89,7 +92,8 @@ arlas_cors:
   exposed_headers: ${ARLAS_CORS_EXPOSED_HEADERS:-"Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,Location,WWW-Authenticate"}
 
 arlas_database_factory_class: ${ARLAS_DATABASE_FACTORY_CLASS:-io.arlas.tagger.impl.ElasticDatabaseToolsFactory}
-arlas_cache_factory_class: ${ARLAS_CACHE_FACTORY_CLASS:-io.arlas.tagger.impl.HazelcastCacheFactory}
+#arlas_cache_factory_class: ${ARLAS_CACHE_FACTORY_CLASS:-io.arlas.tagger.impl.HazelcastCacheFactory}
+arlas_cache_factory_class: ${ARLAS_CACHE_FACTORY_CLASS:-io.arlas.tagger.impl.NoCacheFactory}
 
 ########################################################
 ############ AUTHENTICATION              ###############

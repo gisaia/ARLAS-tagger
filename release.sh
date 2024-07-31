@@ -23,7 +23,7 @@ DOCKER_COMPOSE_KAFKA="${PROJECT_ROOT_DIRECTORY}/docker/docker-files/docker-compo
 #########################################
 function clean_docker {
     echo "===> Stop arlas-tagger stack"
-    docker-compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} -f ${DOCKER_COMPOSE_KAFKA} --project-name arlas down -v
+    docker compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} -f ${DOCKER_COMPOSE_KAFKA} --project-name arlas down -v
 }
 
 function clean_exit {
@@ -177,15 +177,15 @@ echo "=> Start arlas-tagger stack"
 export ARLAS_SERVER_NODE=""
 export ELASTIC_DATADIR="/tmp"
 export KAFKA_DATADIR="/tmp"
-docker-compose -f ${DOCKER_COMPOSE_ES} --project-name arlas up -d --build
+docker compose -f ${DOCKER_COMPOSE_ES} --project-name arlas up -d --build
 echo "Waiting for ES readiness"
 docker run --net arlas_default --rm busybox sh -c 'i=1; until nc -w 2 elasticsearch 9200; do if [ $i -lt 30 ]; then sleep 1; else break; fi; i=$(($i + 1)); done'
 
-docker-compose -f ${DOCKER_COMPOSE_KAFKA} --project-name arlas up -d --build
+docker compose -f ${DOCKER_COMPOSE_KAFKA} --project-name arlas up -d --build
 echo "Waiting for KAFKA readiness"
 docker run --net arlas_default --rm busybox sh -c 'i=1; until nc -w 2 kafka 29092; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i + 1)); done'
 
-docker-compose -f ${DOCKER_COMPOSE_TAGGER} --project-name arlas up -d --build
+docker compose -f ${DOCKER_COMPOSE_TAGGER} --project-name arlas up -d --build
 
 DOCKER_IP=$(docker-machine ip || echo "localhost")
 
@@ -194,18 +194,23 @@ i=1; until nc -w 2 ${DOCKER_IP} 19998; do if [ $i -lt 30 ]; then sleep 1; else b
 
 echo "=> Get swagger documentation"
 mkdir -p target/tmp || echo "target/tmp exists"
-i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/swagger.json -o target/tmp/swagger.json; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i + 1)); done
-i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/swagger.yaml -o target/tmp/swagger.yaml; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i + 1)); done
+i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/openapi.json -o target/tmp/openapi.json; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i + 1)); done
+i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/openapi.yaml -o target/tmp/openapi.yaml; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i + 1)); done
 
 mkdir -p openapi
-cp target/tmp/swagger.yaml openapi
-cp target/tmp/swagger.json openapi
+cp target/tmp/openapi.yaml openapi
+cp target/tmp/openapi.json openapi
 
 echo "=> Stop arlas-tagger stack"
-docker-compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} -f ${DOCKER_COMPOSE_KAFKA} --project-name arlas down -v
+docker compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} -f ${DOCKER_COMPOSE_KAFKA} --project-name arlas down -v
 
 echo "=> Generate API documentation"
-mvn "-Dswagger.output=docs/api" swagger2markup:convertSwagger2markup
+mkdir -p docs/api
+docker run --rm \
+    --mount dst=/input/api.json,src="$PWD/openapi/openapi.json",type=bind,ro \
+    --mount dst=/input/env.json,src="$PWD/conf/doc/widdershins.json",type=bind,ro \
+    --mount dst=/output,src="$PWD/docs/api",type=bind \
+	gisaia/widdershins:4.0.1
 
 itests() {
 	echo "=> Run integration tests"
@@ -228,9 +233,9 @@ else
   docker run --rm \
       -e GROUP_ID="$(id -g)" \
       -e USER_ID="$(id -u)" \
-      --mount dst=/input/api.json,src="$PWD/target/tmp/swagger.json",type=bind,ro \
+      --mount dst=/input/api.json,src="$PWD/target/tmp/openapi.json",type=bind,ro \
       --mount dst=/output,src="$PWD/target/tmp/typescript-fetch",type=bind \
-    gisaia/swagger-codegen-2.3.1 \
+    gisaia/swagger-codegen-3.0.42 \
           -l typescript-fetch --additional-properties modelPropertyNaming=snake_case
 
   echo "=> Build Typescript API "${FULL_API_VERSION}
@@ -282,8 +287,8 @@ if [ "$RELEASE" == "YES" ]; then
     git push origin :v${ARLAS_TAGGER_VERSION}
     echo "=> Commit release version"
     git add docs/api
-    git add openapi/swagger.json
-    git add openapi/swagger.yaml
+    git add openapi/openapi.json
+    git add openapi/openapi.yaml
     git commit -a -m "release version ${ARLAS_TAGGER_VERSION}"
     git tag v${ARLAS_TAGGER_VERSION}
     git push origin v${ARLAS_TAGGER_VERSION}
@@ -308,10 +313,10 @@ echo "=> Update REST API version in JAVA source code"
 sed -i.bak 's/\"'${FULL_API_VERSION}'\"/\"API_VERSION\"/' arlas-tagger-rest/src/main/java/io/arlas/tagger/rest/tag/TagRESTService.java
 
 if [ "$RELEASE" == "YES" ]; then
-    sed -i.bak 's/\"'${FULL_API_VERSION}'\"/\"'${API_DEV_VERSION}-SNAPSHOT'\"/' openapi/swagger.yaml
-    sed -i.bak 's/\"'${FULL_API_VERSION}'\"/\"'${API_DEV_VERSION}-SNAPSHOT'\"/' openapi/swagger.json
-    git add openapi/swagger.json
-    git add openapi/swagger.yaml
+    sed -i.bak 's/\"'${FULL_API_VERSION}'\"/\"'${API_DEV_VERSION}-SNAPSHOT'\"/' openapi/openapi.yaml
+    sed -i.bak 's/\"'${FULL_API_VERSION}'\"/\"'${API_DEV_VERSION}-SNAPSHOT'\"/' openapi/openapi.json
+    git add openapi/openapi.json
+    git add openapi/openapi.yaml
     git commit -a -m "development version ${ARLAS_DEV_VERSION}-SNAPSHOT"
     git push origin develop
 else echo "=> Skip git push develop"; fi

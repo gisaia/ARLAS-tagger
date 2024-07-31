@@ -30,4 +30,4 @@ services:
       LOG4J_LOGGER_KAFKA: INFO
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${KAFKA_DATADIR}:/tmp/kafka-logs
+      - ${KAFKA_DATADIR:-/tmp}:/tmp/kafka-logs
