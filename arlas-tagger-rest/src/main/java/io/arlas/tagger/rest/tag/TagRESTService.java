@@ -61,7 +61,7 @@ import static io.arlas.commons.rest.utils.ServerConstants.*;
                 description = "(Un)Tag fields of ARLAS collections",
                 license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0.html"),
                 contact = @Contact(email = "contact@gisaia.com", name = "Gisaia", url = "http://www.gisaia.com/"),
-                version = "API_VERSION"),
+                version = "26.0.0"),
         externalDocs = @ExternalDocumentation(
                 description = "API documentation",
                 url="https://docs.arlas.io/arlas-api/"),
