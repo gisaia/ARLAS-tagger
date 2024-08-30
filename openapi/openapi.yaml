@@ -409,6 +409,10 @@ components:
     Search:
       type: object
       properties:
+        partitionFilter:
+          type: array
+          items:
+            $ref: '#/components/schemas/Filter'
         filter:
           $ref: '#/components/schemas/Filter'
         form:
@@ -429,6 +433,10 @@ components:
     TagRequest:
       type: object
       properties:
+        partitionFilter:
+          type: array
+          items:
+            $ref: '#/components/schemas/Filter'
         filter:
           $ref: '#/components/schemas/Filter'
         form:
@@ -444,6 +452,8 @@ components:
     TagRefRequest:
       type: object
       properties:
+        partitionFilter:
+          type: string
         filter:
           $ref: '#/components/schemas/Filter'
         form:
@@ -465,8 +475,6 @@ components:
           - REMOVE
           - REMOVEALL
         collection:
-          type: string
-        partitionFilter:
           type: string
         propagated:
           type: integer

@@ -29,6 +29,26 @@ Search and tag the elements found in the collection, given the filters
 
 ```json
 {
+  "partitionFilter": [
+    {
+      "f": [
+        [
+          {
+            "field": "string",
+            "op": "eq",
+            "value": "string"
+          }
+        ]
+      ],
+      "q": [
+        [
+          "string"
+        ]
+      ],
+      "dateformat": "string",
+      "righthand": true
+    }
+  ],
   "filter": {
     "f": [
       [
@@ -52,6 +72,26 @@ Search and tag the elements found in the collection, given the filters
     "flat": true
   },
   "search": {
+    "partitionFilter": [
+      {
+        "f": [
+          [
+            {
+              "field": "string",
+              "op": "eq",
+              "value": "string"
+            }
+          ]
+        ],
+        "q": [
+          [
+            "string"
+          ]
+        ],
+        "dateformat": "string",
+        "righthand": true
+      }
+    ],
     "filter": {
       "f": [
         [
@@ -211,6 +251,26 @@ Search and untag the elements found in the collection, given the filters
 
 ```json
 {
+  "partitionFilter": [
+    {
+      "f": [
+        [
+          {
+            "field": "string",
+            "op": "eq",
+            "value": "string"
+          }
+        ]
+      ],
+      "q": [
+        [
+          "string"
+        ]
+      ],
+      "dateformat": "string",
+      "righthand": true
+    }
+  ],
   "filter": {
     "f": [
       [
@@ -234,6 +294,26 @@ Search and untag the elements found in the collection, given the filters
     "flat": true
   },
   "search": {
+    "partitionFilter": [
+      {
+        "f": [
+          [
+            {
+              "field": "string",
+              "op": "eq",
+              "value": "string"
+            }
+          ]
+        ],
+        "q": [
+          [
+            "string"
+          ]
+        ],
+        "dateformat": "string",
+        "righthand": true
+      }
+    ],
     "filter": {
       "f": [
         [
@@ -426,6 +506,7 @@ Get the list of previously submitted tag requests
 ```json
 [
   {
+    "partitionFilter": "string",
     "filter": {
       "f": [
         [
@@ -449,6 +530,26 @@ Get the list of previously submitted tag requests
       "flat": true
     },
     "search": {
+      "partitionFilter": [
+        {
+          "f": [
+            [
+              {
+                "field": "string",
+                "op": "eq",
+                "value": "string"
+              }
+            ]
+          ],
+          "q": [
+            [
+              "string"
+            ]
+          ],
+          "dateformat": "string",
+          "righthand": true
+        }
+      ],
       "filter": {
         "f": [
           [
@@ -513,7 +614,6 @@ Get the list of previously submitted tag requests
     "id": "string",
     "action": "ADD",
     "collection": "string",
-    "partitionFilter": "string",
     "propagated": 0,
     "creationTime": 0,
     "offset": 0
@@ -536,6 +636,7 @@ Status Code **200**
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |*anonymous*|[[TagRefRequest](#schematagrefrequest)]|false|none|none|
+|» partitionFilter|string|false|none|none|
 |» filter|[Filter](#schemafilter)|false|none|none|
 |»» f|[array]|false|none|none|
 |»»» field|string|false|none|none|
@@ -550,6 +651,7 @@ Status Code **200**
 |» pretty|boolean|false|none|none|
 |» flat|boolean|false|none|none|
 |search|[Search](#schemasearch)|false|none|none|
+|» partitionFilter|[[Filter](#schemafilter)]|false|none|none|
 |» filter|[Filter](#schemafilter)|false|none|none|
 |» form|[Form](#schemaform)|false|none|none|
 |» page|[Page](#schemapage)|false|none|none|
@@ -572,7 +674,6 @@ Status Code **200**
 |id|string|false|none|none|
 |action|string|false|none|none|
 |collection|string|false|none|none|
-|partitionFilter|string|false|none|none|
 |propagated|integer(int64)|false|none|none|
 |creationTime|integer(int64)|false|none|none|
 |offset|integer(int64)|false|none|none|
@@ -953,6 +1054,26 @@ This operation does not require authentication
 
 ```json
 {
+  "partitionFilter": [
+    {
+      "f": [
+        [
+          {
+            "field": "string",
+            "op": "eq",
+            "value": "string"
+          }
+        ]
+      ],
+      "q": [
+        [
+          "string"
+        ]
+      ],
+      "dateformat": "string",
+      "righthand": true
+    }
+  ],
   "filter": {
     "f": [
       [
@@ -995,6 +1116,7 @@ This operation does not require authentication
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
+|partitionFilter|[[Filter](#schemafilter)]|false|none|none|
 |filter|[Filter](#schemafilter)|false|none|none|
 |form|[Form](#schemaform)|false|none|none|
 |page|[Page](#schemapage)|false|none|none|
@@ -1032,6 +1154,26 @@ This operation does not require authentication
 
 ```json
 {
+  "partitionFilter": [
+    {
+      "f": [
+        [
+          {
+            "field": "string",
+            "op": "eq",
+            "value": "string"
+          }
+        ]
+      ],
+      "q": [
+        [
+          "string"
+        ]
+      ],
+      "dateformat": "string",
+      "righthand": true
+    }
+  ],
   "filter": {
     "f": [
       [
@@ -1055,6 +1197,26 @@ This operation does not require authentication
     "flat": true
   },
   "search": {
+    "partitionFilter": [
+      {
+        "f": [
+          [
+            {
+              "field": "string",
+              "op": "eq",
+              "value": "string"
+            }
+          ]
+        ],
+        "q": [
+          [
+            "string"
+          ]
+        ],
+        "dateformat": "string",
+        "righthand": true
+      }
+    ],
     "filter": {
       "f": [
         [
@@ -1124,6 +1286,7 @@ This operation does not require authentication
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
+|partitionFilter|[[Filter](#schemafilter)]|false|none|none|
 |filter|[Filter](#schemafilter)|false|none|none|
 |form|[Form](#schemaform)|false|none|none|
 |search|[Search](#schemasearch)|false|none|none|
@@ -1140,6 +1303,7 @@ This operation does not require authentication
 
 ```json
 {
+  "partitionFilter": "string",
   "filter": {
     "f": [
       [
@@ -1163,6 +1327,26 @@ This operation does not require authentication
     "flat": true
   },
   "search": {
+    "partitionFilter": [
+      {
+        "f": [
+          [
+            {
+              "field": "string",
+              "op": "eq",
+              "value": "string"
+            }
+          ]
+        ],
+        "q": [
+          [
+            "string"
+          ]
+        ],
+        "dateformat": "string",
+        "righthand": true
+      }
+    ],
     "filter": {
       "f": [
         [
@@ -1227,7 +1411,6 @@ This operation does not require authentication
   "id": "string",
   "action": "ADD",
   "collection": "string",
-  "partitionFilter": "string",
   "propagated": 0,
   "creationTime": 0,
   "offset": 0
@@ -1239,6 +1422,7 @@ This operation does not require authentication
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
+|partitionFilter|string|false|none|none|
 |filter|[Filter](#schemafilter)|false|none|none|
 |form|[Form](#schemaform)|false|none|none|
 |search|[Search](#schemasearch)|false|none|none|
@@ -1248,7 +1432,6 @@ This operation does not require authentication
 |id|string|false|none|none|
 |action|string|false|none|none|
 |collection|string|false|none|none|
-|partitionFilter|string|false|none|none|
 |propagated|integer(int64)|false|none|none|
 |creationTime|integer(int64)|false|none|none|
 |offset|integer(int64)|false|none|none|

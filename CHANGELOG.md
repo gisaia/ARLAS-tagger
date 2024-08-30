@@ -1,5 +1,9 @@
 # Change Log
 
+## [v25.1.0](https://github.com/gisaia/ARLAS-tagger/tree/v25.1.0) (2024-07-31)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v24.1.0...v25.1.0)
+
 ## [v24.1.0](https://github.com/gisaia/ARLAS-tagger/tree/v24.1.0) (2023-12-12)
 
 [Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v24.0.3...v24.1.0)

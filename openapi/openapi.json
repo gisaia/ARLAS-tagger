@@ -573,6 +573,12 @@
       "Search" : {
         "type" : "object",
         "properties" : {
+          "partitionFilter" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Filter"
+            }
+          },
           "filter" : {
             "$ref" : "#/components/schemas/Filter"
           },
@@ -604,6 +610,12 @@
       "TagRequest" : {
         "type" : "object",
         "properties" : {
+          "partitionFilter" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Filter"
+            }
+          },
           "filter" : {
             "$ref" : "#/components/schemas/Filter"
           },
@@ -627,6 +639,9 @@
       "TagRefRequest" : {
         "type" : "object",
         "properties" : {
+          "partitionFilter" : {
+            "type" : "string"
+          },
           "filter" : {
             "$ref" : "#/components/schemas/Filter"
           },
@@ -653,9 +668,6 @@
             "enum" : [ "ADD", "REMOVE", "REMOVEALL" ]
           },
           "collection" : {
-            "type" : "string"
-          },
-          "partitionFilter" : {
             "type" : "string"
           },
           "propagated" : {
