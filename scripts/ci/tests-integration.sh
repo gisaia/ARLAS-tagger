@@ -2,7 +2,7 @@
 set -o errexit -o pipefail
 
 export ELASTIC_VERSION="8.13.3"
-export ARLAS_VERSION="25.1.0"
+export ARLAS_VERSION="26.0.0"
 
 function clean_exit {
   ARG=$?
