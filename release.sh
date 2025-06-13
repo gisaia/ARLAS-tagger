@@ -219,14 +219,6 @@ cp target/tmp/openapi.json openapi
 echo "=> Stop arlas-tagger stack"
 docker compose -f ${DOCKER_COMPOSE_TAGGER} -f ${DOCKER_COMPOSE_ES} -f ${DOCKER_COMPOSE_KAFKA} --project-name arlas down -v
 
-echo "=> Generate API documentation"
-mkdir -p docs/api
-docker run --rm \
-    --mount dst=/input/api.json,src="$PWD/openapi/openapi.json",type=bind,ro \
-    --mount dst=/input/env.json,src="$PWD/conf/doc/widdershins.json",type=bind,ro \
-    --mount dst=/output,src="$PWD/docs/api",type=bind \
-	gisaia/widdershins:4.0.1
-
 itests() {
 	echo "=> Run integration tests"
     ./scripts/tests-integration.sh
