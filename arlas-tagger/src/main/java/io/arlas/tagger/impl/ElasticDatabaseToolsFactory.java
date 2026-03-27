@@ -41,7 +41,7 @@ public class ElasticDatabaseToolsFactory extends DatabaseToolsFactory {
         super(configuration);
         this.elasticClient = new ElasticClient(configuration.elasticConfiguration);
         this.collectionReferenceService = new ElasticCollectionReferenceService(elasticClient,
-                configuration.arlasCollectionsConfiguration.arlasIndex, cacheManager);
+                configuration.arlasCollectionsConfiguration.arlasIndex, cacheManager, configuration);
         this.updateServices = new UpdateServices(elasticClient,
                 collectionReferenceService,
                 configuration.arlasRestCacheTimeout,

@@ -28,7 +28,10 @@ import io.arlas.commons.exceptions.IllegalArgumentExceptionMapper;
 import io.arlas.commons.exceptions.JsonProcessingExceptionMapper;
 import io.arlas.commons.rest.utils.InsensitiveCaseFilter;
 import io.arlas.commons.rest.utils.PrettyPrintFilter;
+import io.arlas.filter.config.ResourceDefinitions;
+import io.arlas.filter.config.TechnicalRoles;
 import io.arlas.filter.core.PolicyEnforcer;
+import io.arlas.filter.impl.KeycloakPolicyEnforcer;
 import io.arlas.server.core.impl.elastic.exceptions.ElasticsearchExceptionMapper;
 import io.arlas.server.core.managers.CacheManager;
 import io.arlas.server.core.managers.CollectionReferenceManager;
@@ -123,6 +126,22 @@ public class ArlasTagger extends Application<ArlasTaggerConfiguration> {
         PolicyEnforcer policyEnforcer = PolicyEnforcer.newInstance(configuration.arlasAuthPolicyClass)
                 .setAuthConf(configuration.arlasAuthConfiguration)
                 .setCacheManager(cacheFactory.getCacheManager());
+        String rolesPath = configuration.arlasAuthConfiguration.initConfiguration.rolesPath;
+        TechnicalRoles technicalRoles = rolesPath != null && !rolesPath.isEmpty()
+                ? new TechnicalRoles(rolesPath)
+                : new TechnicalRoles();
+
+        if (policyEnforcer != null) {
+            policyEnforcer.setTechnicalRoles(technicalRoles);
+            if (policyEnforcer instanceof KeycloakPolicyEnforcer keycloakEnforcer) {
+                String resourcesPath = configuration.arlasAuthConfiguration.initConfiguration.resourcesPath;
+                ResourceDefinitions resourceDefinitions = resourcesPath != null && !resourcesPath.isEmpty()
+                        ? new ResourceDefinitions(resourcesPath)
+                        : new ResourceDefinitions();
+                keycloakEnforcer.setResourceDefinitions(resourceDefinitions);
+            }
+        }
+
         LOGGER.info("PolicyEnforcer: " + policyEnforcer.getClass().getCanonicalName());
         environment.jersey().register(policyEnforcer);
 
