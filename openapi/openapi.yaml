@@ -47,26 +47,26 @@ paths:
         content:
           application/json;charset=utf-8:
             schema:
-              $ref: '#/components/schemas/TagRequest'
+              $ref: "#/components/schemas/TagRequest"
       responses:
         "200":
           description: Successful operation
           content:
             application/json;charset=utf-8:
               schema:
-                $ref: '#/components/schemas/UpdateResponse'
+                $ref: "#/components/schemas/UpdateResponse"
         "500":
           description: Arlas Server Error.
           content:
             application/json;charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
         "400":
           description: Bad request.
           content:
             application/json;charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
   /write/{collection}/_tagreplay:
     post:
       tags:
@@ -108,13 +108,13 @@ paths:
           content:
             application/json;charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
         "400":
           description: Bad request.
           content:
             application/json;charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
   /write/{collection}/_untag:
     post:
       tags:
@@ -140,26 +140,26 @@ paths:
         content:
           application/json;charset=utf-8:
             schema:
-              $ref: '#/components/schemas/TagRequest'
+              $ref: "#/components/schemas/TagRequest"
       responses:
         "200":
           description: Successful operation
           content:
             application/json;charset=utf-8:
               schema:
-                $ref: '#/components/schemas/UpdateResponse'
+                $ref: "#/components/schemas/UpdateResponse"
         "500":
           description: Arlas Server Error.
           content:
             application/json;charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
         "400":
           description: Bad request.
           content:
             application/json;charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
   /status/{collection}/_tag/{id}:
     get:
       tags:
@@ -193,19 +193,19 @@ paths:
           content:
             application/json;charset=utf-8:
               schema:
-                $ref: '#/components/schemas/UpdateResponse'
+                $ref: "#/components/schemas/UpdateResponse"
         "500":
           description: Arlas Server Error.
           content:
             application/json;charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
         "400":
           description: Bad request.
           content:
             application/json;charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
   /status/{collection}/_taglist:
     get:
       tags:
@@ -234,19 +234,19 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/TagRefRequest'
+                  $ref: "#/components/schemas/TagRefRequest"
         "500":
           description: Arlas Server Error.
           content:
             application/json;charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
         "400":
           description: Bad request.
           content:
             application/json;charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
     Failure:
@@ -274,7 +274,7 @@ components:
         failures:
           type: array
           items:
-            $ref: '#/components/schemas/Failure'
+            $ref: "#/components/schemas/Failure"
         failed:
           type: integer
           format: int64
@@ -342,7 +342,7 @@ components:
               empty:
                 type: boolean
             items:
-              $ref: '#/components/schemas/Expression'
+              $ref: "#/components/schemas/Expression"
         q:
           type: array
           items:
@@ -369,7 +369,7 @@ components:
         empty:
           type: boolean
       items:
-        $ref: '#/components/schemas/Expression'
+        $ref: "#/components/schemas/Expression"
     MultiValueFilterString:
       type: array
       properties:
@@ -405,22 +405,22 @@ components:
         field:
           type: string
         filter:
-          $ref: '#/components/schemas/Filter'
+          $ref: "#/components/schemas/Filter"
     Search:
       type: object
       properties:
         partitionFilter:
           type: array
           items:
-            $ref: '#/components/schemas/Filter'
+            $ref: "#/components/schemas/Filter"
         filter:
-          $ref: '#/components/schemas/Filter'
+          $ref: "#/components/schemas/Filter"
         form:
-          $ref: '#/components/schemas/Form'
+          $ref: "#/components/schemas/Form"
         page:
-          $ref: '#/components/schemas/Page'
+          $ref: "#/components/schemas/Page"
         projection:
-          $ref: '#/components/schemas/Projection'
+          $ref: "#/components/schemas/Projection"
         returned_geometries:
           type: string
     Tag:
@@ -436,17 +436,17 @@ components:
         partitionFilter:
           type: array
           items:
-            $ref: '#/components/schemas/Filter'
+            $ref: "#/components/schemas/Filter"
         filter:
-          $ref: '#/components/schemas/Filter'
+          $ref: "#/components/schemas/Filter"
         form:
-          $ref: '#/components/schemas/Form'
+          $ref: "#/components/schemas/Form"
         search:
-          $ref: '#/components/schemas/Search'
+          $ref: "#/components/schemas/Search"
         tag:
-          $ref: '#/components/schemas/Tag'
+          $ref: "#/components/schemas/Tag"
         propagation:
-          $ref: '#/components/schemas/Propagation'
+          $ref: "#/components/schemas/Propagation"
         label:
           type: string
     TagRefRequest:
@@ -455,15 +455,15 @@ components:
         partitionFilter:
           type: string
         filter:
-          $ref: '#/components/schemas/Filter'
+          $ref: "#/components/schemas/Filter"
         form:
-          $ref: '#/components/schemas/Form'
+          $ref: "#/components/schemas/Form"
         search:
-          $ref: '#/components/schemas/Search'
+          $ref: "#/components/schemas/Search"
         tag:
-          $ref: '#/components/schemas/Tag'
+          $ref: "#/components/schemas/Tag"
         propagation:
-          $ref: '#/components/schemas/Propagation'
+          $ref: "#/components/schemas/Propagation"
         label:
           type: string
         id:
