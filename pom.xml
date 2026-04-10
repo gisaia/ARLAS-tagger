@@ -21,7 +21,7 @@
         <maven.version>3.10.1</maven.version>
         <failsafe.version>2.22.2</failsafe.version>
         <surefire.version>2.22.2</surefire.version>
-        <log4j.version>2.23.1</log4j.version>
+        <log4j.version>2.25.4</log4j.version>
 
         <arlas-admin.version>27.3.0</arlas-admin.version>
         <!-- KAFKA-->
