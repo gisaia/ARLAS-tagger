@@ -152,8 +152,8 @@ jobs:
       # Integration tests
       # -------------------------------------------------------
       - name: Run integration tests
-        if: ${{ !inputs.run_tests }}
-        run: ./scripts/tests-integration.sh
+        if: ${{ inputs.run_tests }}
+        run: ./scripts/ci/tests-integration.sh
 
       # -------------------------------------------------------
       # Generate API clients
