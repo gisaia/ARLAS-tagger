@@ -82,8 +82,8 @@ jobs:
       - name: Update project version
         run: |
           mvn clean
-          mvn versions:set -DnewVersion=${FULL_API_VERSION}
-          sed -i 's/"API_VERSION"/"'"${FULL_API_VERSION}"'"/' arlas-tagger-rest/src/main/java/io/arlas/tagger/rest/tag/TagRESTService.java
+          mvn versions:set -DnewVersion=${{ env.FULL_API_VERSION }}
+          sed -i 's/"API_VERSION"/"'"${{ env.FULL_API_VERSION }}"'"/' arlas-tagger-rest/src/main/java/io/arlas/tagger/rest/tag/TagRESTService.java
 
       # ----------------------------------------
       # Build
@@ -176,7 +176,7 @@ jobs:
           cd target/tmp/typescript-fetch/
           cp ../../../conf/npm/package-build.json package.json
           cp ../../../conf/npm/tsconfig-build.json .
-          npm version --no-git-tag-version ${FULL_API_VERSION}
+          npm version --no-git-tag-version ${{ env.FULL_API_VERSION }}
           npm install
           npm run build-release
           npm run postbuild
@@ -189,7 +189,7 @@ jobs:
         run: |
           cp conf/npm/package-publish.json target/tmp/typescript-fetch/dist/package.json
           cd target/tmp/typescript-fetch/dist
-          npm version --no-git-tag-version ${FULL_API_VERSION}
+          npm version --no-git-tag-version ${{ env.FULL_API_VERSION }}
           npm publish || echo "Publishing on npm failed ... continue ..."
 
       # -------------------------------------------------------
@@ -203,8 +203,8 @@ jobs:
 
       - name: Tag and push Docker image
         run: |
-          docker tag  gisaia/arlas-tagger:latest gisaia/arlas-tagger:${FULL_API_VERSION}
-          docker push gisaia/arlas-tagger:${FULL_API_VERSION}
+          docker tag  gisaia/arlas-tagger:latest gisaia/arlas-tagger:${{ env.FULL_API_VERSION }}
+          docker push gisaia/arlas-tagger:${{ env.FULL_API_VERSION }}
           docker push gisaia/arlas-tagger:latest
 
       # -------------------------------------------------------
