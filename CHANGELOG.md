@@ -1,5 +1,14 @@
 # Change Log
 
+## [v28.0.0-rc.1](https://github.com/gisaia/ARLAS-tagger/tree/v28.0.0-rc.1) (2026-04-16)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v27.1.4...v28.0.0-rc.1)
+
+**New stuff:**
+
+- Add send message on chat when release [\#123](https://github.com/gisaia/ARLAS-tagger/issues/123)
+- implement the release script in github actions  [\#120](https://github.com/gisaia/ARLAS-tagger/issues/120)
+
 ## [v27.1.4](https://github.com/gisaia/ARLAS-tagger/tree/v27.1.4) (2026-04-16)
 
 [Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v27.1.0...v27.1.4)
