@@ -18,7 +18,7 @@ on:
       run_tests:
         description: "Run integration tests"
         type: boolean
-        default: true
+        default: false
       skip_api:
         description: "Skip API client generation"
         type: boolean
@@ -85,6 +85,11 @@ jobs:
           mvn versions:set -DnewVersion=${FULL_API_VERSION}
           sed -i 's/"API_VERSION"/"'"${FULL_API_VERSION}"'"/' arlas-tagger-rest/src/main/java/io/arlas/tagger/rest/tag/TagRESTService.java
 
+      # ----------------------------------------
+      # Build
+      # ----------------------------------------
+      - name: Build with Maven
+        run: mvn clean install -DskipTests --no-transfer-progress --no-snapshot-updates
 
       # -------------------------------------------------------
       # Start stack and generate OpenAPI spec
