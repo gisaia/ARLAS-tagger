@@ -187,8 +187,6 @@ jobs:
 
       - name: Publish TypeScript API client to npm
         if: ${{ !inputs.skip_api }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
         run: |
           cp conf/npm/package-publish.json target/tmp/typescript-fetch/dist/package.json
           cd target/tmp/typescript-fetch/dist
