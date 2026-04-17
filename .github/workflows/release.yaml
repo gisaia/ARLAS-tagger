@@ -191,7 +191,17 @@ jobs:
           cp conf/npm/package-publish.json target/tmp/typescript-fetch/dist/package.json
           cd target/tmp/typescript-fetch/dist
           npm version --no-git-tag-version ${FULL_API_VERSION}
-          npm publish || echo "Publishing on npm failed ... continue ..."
+          case ${FULL_API_VERSION} in
+            *rc* )
+              npm publish --tag=rc || echo "Publishing on npm failed ... continue ..."
+              ;;
+            *beta* )
+              npm publish --tag=beta || echo "Publishing on npm failed ... continue ..."
+              ;;
+            *)
+              npm publish || echo "Publishing on npm failed ... continue ..."
+              ;;
+          esac
 
       # -------------------------------------------------------
       # Docker push (release only)
