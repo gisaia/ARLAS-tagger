@@ -8,7 +8,7 @@ ARLAS-tagger provides a **REST API** for tagging data collections available in *
 
 ### Building
 
-ARLAS-tagger is a Dropwizard project. You need JDK 8 and Maven 3 to be installed.
+ARLAS-tagger is a Dropwizard project. You need JDK 17 and Maven 3 to be installed.
 
 ### Running
 
@@ -17,14 +17,8 @@ You need a Java Runtime (JRE) 17, a Kafka node and an ElasticSearch server runni
 ARLAS-tagger is compliant with the following versions:
 
 | ElasticSearch Version |
-|  ---  |
-| 7.0.1 |
-| 7.1.0 |
-| 7.2.1 |
-| 7.3.2 |
-| 7.4.2 |
-| 7.5.2 |
-| 7.6.0 |
+|-----------------------|
+| >= 8.13.13            |
 
 > Note : data collections tagged by ARLAS-tagger should be referenced in Elasticsearch by ARLAS-server
 
