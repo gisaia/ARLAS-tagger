@@ -12,9 +12,8 @@ server:
   connector:
     type: http
     port: ${ARLAS_TAGGER_PORT:-9998}
-  maxThreads: ${ARLAS_TAGGER_MAX_THREADS:-1024}
-  minThreads: ${ARLAS_TAGGER_MIN_THREADS:-8}
-  maxQueuedRequests: ${ARLAS_TAGGER_MAX_QUEUED_REQUESTS:-1024}
+  maxThreads: ${ARLAS_TAGGER_MAX_THREADS:-200}
+  minThreads: ${ARLAS_TAGGER_MIN_THREADS:-10}
 
 ########################################################
 ############ LOGGING                     ###############

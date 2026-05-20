@@ -23,7 +23,7 @@
         <dependency>
             <groupId>io.arlas</groupId>
             <artifactId>arlas-admin</artifactId>
-            <version>${arlas-admin.version}</version>
+            <version>${arlas.version}</version>
         </dependency>
 
         <!-- ____________________________________________________ -->
