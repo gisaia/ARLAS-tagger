@@ -1,6 +1,18 @@
 # Change Log
 
-## [v28.0.0-rc5](https://github.com/gisaia/ARLAS-tagger/tree/v28.0.0-rc5) (2026-04-17)
+## [v28.0.0](https://github.com/gisaia/ARLAS-tagger/tree/v28.0.0) (2026-05-20)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v28.0.0-rc7...v28.0.0)
+
+## [v28.0.0-rc7](https://github.com/gisaia/ARLAS-tagger/tree/v28.0.0-rc7) (2026-05-11)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v28.0.0-rc6...v28.0.0-rc7)
+
+## [v28.0.0-rc6](https://github.com/gisaia/ARLAS-tagger/tree/v28.0.0-rc6) (2026-04-23)
+
+[Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v28.0.0-rc5...v28.0.0-rc6)
+
+## [v28.0.0-rc5](https://github.com/gisaia/ARLAS-tagger/tree/v28.0.0-rc5) (2026-04-22)
 
 [Full Changelog](https://github.com/gisaia/ARLAS-tagger/compare/v28.0.0-rc.4...v28.0.0-rc5)
 
