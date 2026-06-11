@@ -129,6 +129,7 @@ jobs:
           i=1; until curl -XGET http://${DOCKER_IP}:19998/arlas_tagger/openapi.yaml -o target/tmp/openapi.yaml; do if [ $i -lt 60 ]; then sleep 1; else break; fi; i=$(($i+1)); done
           cp target/tmp/openapi.yaml openapi/
           cp target/tmp/openapi.json openapi/
+          cp target/tmp/openapi.json docs/api/openapi.json
 
       - name: Stop arlas-tagger stack
         if: always()
