@@ -115,11 +115,11 @@ Search and tag the elements found in the collection, given the filters
       "flat": true
     },
     "page": {
-      "size": 0,
       "from": 0,
       "sort": "string",
       "after": "string",
-      "before": "string"
+      "before": "string",
+      "size": 0
     },
     "projection": {
       "includes": "string",
@@ -337,11 +337,11 @@ Search and untag the elements found in the collection, given the filters
       "flat": true
     },
     "page": {
-      "size": 0,
       "from": 0,
       "sort": "string",
       "after": "string",
-      "before": "string"
+      "before": "string",
+      "size": 0
     },
     "projection": {
       "includes": "string",
@@ -573,11 +573,11 @@ Get the list of previously submitted tag requests
         "flat": true
       },
       "page": {
-        "size": 0,
         "from": 0,
         "sort": "string",
         "after": "string",
-        "before": "string"
+        "before": "string",
+        "size": 0
       },
       "projection": {
         "includes": "string",
@@ -639,9 +639,9 @@ Status Code **200**
 |» partitionFilter|string|false|none|none|
 |» filter|[Filter](#schemafilter)|false|none|none|
 |»» f|[array]|false|none|none|
-|»»» field|string|false|none|none|
-|»»» op|string|false|none|none|
-|»»» value|string|false|none|none|
+|»»» field|string|true|none|none|
+|»»» op|string|true|none|none|
+|»»» value|string|true|none|none|
 |»»» empty|boolean|false|none|none|
 |q|[array]|false|none|none|
 |» empty|boolean|false|none|none|
@@ -655,11 +655,11 @@ Status Code **200**
 |» filter|[Filter](#schemafilter)|false|none|none|
 |» form|[Form](#schemaform)|false|none|none|
 |» page|[Page](#schemapage)|false|none|none|
-|»» size|integer(int32)|false|none|none|
 |»» from|integer(int32)|false|none|none|
 |»» sort|string|false|none|none|
 |»» after|string|false|none|none|
 |»» before|string|false|none|none|
+|»» size|integer(int32)|true|none|none|
 |» projection|[Projection](#schemaprojection)|false|none|none|
 |»» includes|string|false|none|none|
 |»» excludes|string|false|none|none|
@@ -804,9 +804,9 @@ This operation does not require authentication
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|status|integer(int32)|false|none|none|
-|message|string|false|none|none|
-|error|string|false|none|none|
+|status|integer(int32)|true|none|none|
+|message|string|true|none|none|
+|error|string|true|none|none|
 
 <h2 id="tocS_Expression">Expression</h2>
 <!-- backwards compatibility -->
@@ -828,9 +828,9 @@ This operation does not require authentication
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|field|string|false|none|none|
-|op|string|false|none|none|
-|value|string|false|none|none|
+|field|string|true|none|none|
+|op|string|true|none|none|
+|value|string|true|none|none|
 
 #### Enumerated Values
 
@@ -965,11 +965,11 @@ This operation does not require authentication
 
 ```json
 {
-  "size": 0,
   "from": 0,
   "sort": "string",
   "after": "string",
-  "before": "string"
+  "before": "string",
+  "size": 0
 }
 
 ```
@@ -978,11 +978,11 @@ This operation does not require authentication
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|size|integer(int32)|false|none|none|
 |from|integer(int32)|false|none|none|
 |sort|string|false|none|none|
 |after|string|false|none|none|
 |before|string|false|none|none|
+|size|integer(int32)|true|none|none|
 
 <h2 id="tocS_Projection">Projection</h2>
 <!-- backwards compatibility -->
@@ -1097,11 +1097,11 @@ This operation does not require authentication
     "flat": true
   },
   "page": {
-    "size": 0,
     "from": 0,
     "sort": "string",
     "after": "string",
-    "before": "string"
+    "before": "string",
+    "size": 0
   },
   "projection": {
     "includes": "string",
@@ -1240,11 +1240,11 @@ This operation does not require authentication
       "flat": true
     },
     "page": {
-      "size": 0,
       "from": 0,
       "sort": "string",
       "after": "string",
-      "before": "string"
+      "before": "string",
+      "size": 0
     },
     "projection": {
       "includes": "string",
@@ -1370,11 +1370,11 @@ This operation does not require authentication
       "flat": true
     },
     "page": {
-      "size": 0,
       "from": 0,
       "sort": "string",
       "after": "string",
-      "before": "string"
+      "before": "string",
+      "size": 0
     },
     "projection": {
       "includes": "string",
