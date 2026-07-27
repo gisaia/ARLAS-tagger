@@ -372,11 +372,9 @@
         }
       },
       "UpdateResponse" : {
+        "required" : [ "id" ],
         "type" : "object",
         "properties" : {
-          "id" : {
-            "type" : "string"
-          },
           "label" : {
             "type" : "string"
           },
@@ -421,6 +419,9 @@
           "processingTimeMs" : {
             "type" : "integer",
             "format" : "int64"
+          },
+          "id" : {
+            "type" : "string"
           }
         }
       },

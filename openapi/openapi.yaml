@@ -259,10 +259,10 @@ components:
         type:
           type: string
     UpdateResponse:
+      required:
+      - id
       type: object
       properties:
-        id:
-          type: string
         label:
           type: string
         action:
@@ -299,6 +299,8 @@ components:
         processingTimeMs:
           type: integer
           format: int64
+        id:
+          type: string
     Error:
       required:
       - error

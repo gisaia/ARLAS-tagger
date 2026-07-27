@@ -170,7 +170,6 @@ Search and tag the elements found in the collection, given the filters
 
 ```json
 {
-  "id": "string",
   "label": "string",
   "action": "ADD",
   "failures": [
@@ -187,7 +186,8 @@ Search and tag the elements found in the collection, given the filters
   "propagated": 0,
   "startTime": 0,
   "endTime": 0,
-  "processingTimeMs": 0
+  "processingTimeMs": 0,
+  "id": "string"
 }
 ```
 
@@ -392,7 +392,6 @@ Search and untag the elements found in the collection, given the filters
 
 ```json
 {
-  "id": "string",
   "label": "string",
   "action": "ADD",
   "failures": [
@@ -409,7 +408,8 @@ Search and untag the elements found in the collection, given the filters
   "propagated": 0,
   "startTime": 0,
   "endTime": 0,
-  "processingTimeMs": 0
+  "processingTimeMs": 0,
+  "id": "string"
 }
 ```
 
@@ -451,7 +451,6 @@ Get the status of the (un)tagging operation, given the id of a previously reques
 
 ```json
 {
-  "id": "string",
   "label": "string",
   "action": "ADD",
   "failures": [
@@ -468,7 +467,8 @@ Get the status of the (un)tagging operation, given the id of a previously reques
   "propagated": 0,
   "startTime": 0,
   "endTime": 0,
-  "processingTimeMs": 0
+  "processingTimeMs": 0,
+  "id": "string"
 }
 ```
 
@@ -737,7 +737,6 @@ This operation does not require authentication
 
 ```json
 {
-  "id": "string",
   "label": "string",
   "action": "ADD",
   "failures": [
@@ -754,7 +753,8 @@ This operation does not require authentication
   "propagated": 0,
   "startTime": 0,
   "endTime": 0,
-  "processingTimeMs": 0
+  "processingTimeMs": 0,
+  "id": "string"
 }
 
 ```
@@ -763,7 +763,6 @@ This operation does not require authentication
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|id|string|false|none|none|
 |label|string|false|none|none|
 |action|string|false|none|none|
 |failures|[[Failure](#schemafailure)]|false|none|none|
@@ -775,6 +774,7 @@ This operation does not require authentication
 |startTime|integer(int64)|false|none|none|
 |endTime|integer(int64)|false|none|none|
 |processingTimeMs|integer(int64)|false|none|none|
+|id|string|true|none|none|
 
 #### Enumerated Values
 
