@@ -23,8 +23,10 @@ import io.arlas.tagger.model.enumerations.Action;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UpdateResponse {
+    @JsonProperty(value = "id", required = true)
     public String id;
     public String label;
     public Action action;
