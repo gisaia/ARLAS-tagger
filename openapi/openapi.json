@@ -372,11 +372,9 @@
         }
       },
       "UpdateResponse" : {
+        "required" : [ "id" ],
         "type" : "object",
         "properties" : {
-          "id" : {
-            "type" : "string"
-          },
           "label" : {
             "type" : "string"
           },
@@ -421,10 +419,14 @@
           "processingTimeMs" : {
             "type" : "integer",
             "format" : "int64"
+          },
+          "id" : {
+            "type" : "string"
           }
         }
       },
       "Error" : {
+        "required" : [ "error", "message", "status" ],
         "type" : "object",
         "properties" : {
           "status" : {
@@ -440,6 +442,7 @@
         }
       },
       "Expression" : {
+        "required" : [ "field", "op", "value" ],
         "type" : "object",
         "properties" : {
           "field" : {
@@ -527,12 +530,9 @@
         }
       },
       "Page" : {
+        "required" : [ "size" ],
         "type" : "object",
         "properties" : {
-          "size" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
           "from" : {
             "type" : "integer",
             "format" : "int32"
@@ -545,6 +545,10 @@
           },
           "before" : {
             "type" : "string"
+          },
+          "size" : {
+            "type" : "integer",
+            "format" : "int32"
           }
         }
       },
