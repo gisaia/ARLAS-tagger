@@ -78,7 +78,8 @@ jobs:
         with:
           node-version: 24
           registry-url: "https://registry.npmjs.org"
-
+      - name: Install npm version 12.2.0
+        run: npm install -g npm@12.2.0
       # -------------------------------------------------------
       # Version bump
       # -------------------------------------------------------
