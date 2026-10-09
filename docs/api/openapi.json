@@ -426,7 +426,6 @@
         }
       },
       "Error" : {
-        "required" : [ "error", "message", "status" ],
         "type" : "object",
         "properties" : {
           "status" : {
@@ -442,7 +441,6 @@
         }
       },
       "Expression" : {
-        "required" : [ "field", "op", "value" ],
         "type" : "object",
         "properties" : {
           "field" : {
@@ -530,9 +528,12 @@
         }
       },
       "Page" : {
-        "required" : [ "size" ],
         "type" : "object",
         "properties" : {
+          "size" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
           "from" : {
             "type" : "integer",
             "format" : "int32"
@@ -545,10 +546,6 @@
           },
           "before" : {
             "type" : "string"
-          },
-          "size" : {
-            "type" : "integer",
-            "format" : "int32"
           }
         }
       },
