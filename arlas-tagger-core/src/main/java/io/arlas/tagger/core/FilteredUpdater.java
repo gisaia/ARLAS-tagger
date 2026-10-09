@@ -141,10 +141,9 @@ public class FilteredUpdater extends ElasticFluidSearch {
             script += "ctx._source.%s = null".formatted(tag.path);
         }
         String finalScript = script;
-        return new Script.Builder().inline(b -> b
-                .lang("painless")
-                .source(finalScript)
-                .params(Collections.emptyMap()))
+        return new Script.Builder()
+                .lang("painless").source(s -> s.scriptString(finalScript))
+                .params(Collections.emptyMap())
                 .build();
     }
 }
