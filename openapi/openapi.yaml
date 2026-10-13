@@ -302,6 +302,10 @@ components:
         id:
           type: string
     Error:
+      required:
+      - error
+      - message
+      - status
       type: object
       properties:
         status:
@@ -312,6 +316,10 @@ components:
         error:
           type: string
     Expression:
+      required:
+      - field
+      - op
+      - value
       type: object
       properties:
         field:
@@ -380,11 +388,10 @@ components:
       items:
         type: string
     Page:
+      required:
+      - size
       type: object
       properties:
-        size:
-          type: integer
-          format: int32
         from:
           type: integer
           format: int32
@@ -394,6 +401,9 @@ components:
           type: string
         before:
           type: string
+        size:
+          type: integer
+          format: int32
     Projection:
       type: object
       properties:
